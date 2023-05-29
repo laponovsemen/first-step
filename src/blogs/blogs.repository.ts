@@ -104,7 +104,7 @@ export class BlogsRepository {
       };
     }
   }
-  createNewBlog(DTO: any) {
+  async createNewBlog(DTO: any) {
     const createdAt = new Date()
     const description = DTO.description
     const isMembership = false
@@ -118,10 +118,9 @@ export class BlogsRepository {
       isMembership,
       createdAt
     }
-    const createdBlog = new this.blogModel(blogToCreate);
-    createdBlog.save();
+    const createdBlog = await this.blogModel.create(blogToCreate);
     return {
-      id : createdBlog._id,
+      id: createdBlog._id,
       name,
       description,
       websiteUrl,

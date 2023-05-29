@@ -16,6 +16,6 @@ export class PostsService{
   }
 
   getAllCommentsForSpecificPosts(paginationCriteria :paginationCriteriaType, id : string){
-
+    return this.postsRepository.getAllCommentsForSpecificPosts(paginationCriteria, id)
   }
 }

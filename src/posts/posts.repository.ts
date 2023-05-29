@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { APIPost, Blog, BlogDocument } from "../mongo/mongooseSchemas";
 import { Model } from "mongoose";
 import { ObjectId } from "mongodb";
+import { paginationCriteriaType } from "../appTypes";
 
 @Injectable()
 export class PostsRepository{
@@ -30,5 +31,15 @@ export class PostsRepository{
   }
   async deleteAllData(){
     await this.postsModel.deleteMany({})
+  }
+
+  async getAllCommentsForSpecificPosts(paginationCriteria: paginationCriteriaType, id: string) {
+    const foundPost = await this.postsModel.findOne({ _id: new ObjectId(id) })
+    if (!foundPost) {
+      return null
+    } else {
+      return foundPost
+    }
+
   }
 }
