@@ -1,6 +1,8 @@
 import { BlogsRepository } from './blogs.repository';
 import { paginationCriteriaType } from '../appTypes';
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class BlogsService {
   constructor(protected readonly blogsRepository: BlogsRepository) {}
   getAllBlogs(paginationCriteria) {

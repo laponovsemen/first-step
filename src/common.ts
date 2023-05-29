@@ -2,7 +2,9 @@ import { ObjectId } from 'mongodb';
 import { Mongoose } from 'mongoose';
 import { BlogViewModelType, PostDBModel } from './appTypes';
 import { WithMongoId } from './mongo/mongooseSchemas';
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class Common {
   getPaginationCriteria(QueryParams: any) {
     const searchNameTerm = QueryParams.searchNameTerm

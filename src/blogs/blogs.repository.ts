@@ -9,7 +9,9 @@ import { Model } from 'mongoose';
 import { paginationCriteriaType } from '../appTypes';
 import { Common } from '../common';
 import { ObjectId } from 'mongodb';
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class BlogsRepository {
   constructor(
     @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
