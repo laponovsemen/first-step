@@ -7,7 +7,7 @@ import { Blog, BlogsSchema } from './mongo/mongooseSchemas';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb+srv://simsbury65:incubator@cluster0.vai5lbz.mongodb.net/forum?retryWrites=true&w=majority',
+      'mongodb+srv://simsbury65:incubator@cluster0.vai5lbz.mongodb.net/?retryWrites=true&w=majority',
       MongooseModule.forFeature([
         {
           name: Blog.name,
