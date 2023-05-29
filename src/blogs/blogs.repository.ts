@@ -115,7 +115,7 @@ export class BlogsRepository {
       createdAt
     }
     const createdBlog = new this.blogModel(blogToCreate);
-     createdBlog.save();
+    createdBlog.save();
     return {
       id : createdBlog._id,
       name,
