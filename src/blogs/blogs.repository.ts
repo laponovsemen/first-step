@@ -1,15 +1,19 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument, PostDocument } from '../mongo/mongooseSchemas';
+import {
+  APIPost,
+  Blog,
+  BlogDocument,
+  PostDocument,
+} from '../mongo/mongooseSchemas';
 import { Model } from 'mongoose';
 import { paginationCriteriaType } from '../appTypes';
 import { Common } from '../common';
 import { ObjectId } from 'mongodb';
-import { Post } from '@nestjs/common';
 
 export class BlogsRepository {
   constructor(
     @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
-    @InjectModel(Post.name) private postModel: Model<PostDocument>,
+    @InjectModel(APIPost.name) private postModel: Model<PostDocument>,
     protected readonly common: Common,
   ) {}
   async getAllBlogs(postsPagination: paginationCriteriaType) {
