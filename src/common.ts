@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { Mongoose } from 'mongoose';
 import { BlogViewModelType, PostDBModel } from './appTypes';
-import { WithMongoId } from './mongo/mongooseSchemas';
+import { APIPost, WithMongoId } from "./mongo/mongooseSchemas";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
@@ -29,7 +29,7 @@ export class Common {
       sortDirection,
     };
   }
-  mongoPostSlicing = (Obj2: WithMongoId<PostDBModel>) => {
+  mongoPostSlicing = (Obj2: WithMongoId<APIPost>) => {
     return {
       id: Obj2._id,
       title: Obj2.title,
@@ -39,10 +39,10 @@ export class Common {
       blogName: Obj2.blogName,
       createdAt: Obj2.createdAt,
       extendedLikesInfo: {
-        likesCount: Obj2.extendedLikesInfo.likesCount,
-        dislikesCount: Obj2.extendedLikesInfo.dislikesCount,
-        myStatus: Obj2.extendedLikesInfo.myStatus,
-        newestLikes: Obj2.extendedLikesInfo.newestLikes,
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: "None",
+        newestLikes: [],
       },
     };
   };

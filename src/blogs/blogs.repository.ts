@@ -142,18 +142,19 @@ export class BlogsRepository {
   deleteBlogById(id: string) {
     return this.blogModel.deleteOne({ _id: new ObjectId(id) });
   }
-  createPostForSpecificBlog(DTO: any, id: string) {
+  async createPostForSpecificBlog(DTO: any, id: string) {
     const createdAt = new Date()
-    const newPost : APIPost = {
+    const newPost: APIPost = {
       title: DTO.title, //    maxLength: 30
       shortDescription: DTO.shortDescription, //maxLength: 100
       content: DTO.string, // maxLength: 1000
-      blogId: DTO.blogId,
+      blogId: new ObjectId(id),
       blogName: DTO.blogName,
       createdAt: createdAt,
 
     }
-    return this.postModel.create(newPost);
+    const createdPostForSpecificBlog = await this.postModel.create(newPost);
+    return this.common.mongoPostSlicing(createdPostForSpecificBlog)
   }
   async deleteAllData(){
     await this.blogModel.deleteMany({})

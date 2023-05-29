@@ -52,10 +52,9 @@ export type PostDBModel = WithMongoId<{
   title: string;
   shortDescription: string;
   content: string;
-  blogId: string;
+  blogId: ObjectId;
   blogName: string;
-  createdAt: string;
-  extendedLikesInfo: ExtendedLikesInfoType;
+  createdAt: Date;
 }>;
 export type ExtendedLikesInfoType = {
   likesCount: number;

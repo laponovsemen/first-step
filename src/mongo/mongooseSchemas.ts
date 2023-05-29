@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, ObjectId } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { paginationCriteriaType } from '../appTypes';
+import { ObjectId } from "mongodb";
 
 
 export type WithMongoId<Type> = Type & { _id: ObjectId };
@@ -25,7 +26,7 @@ export class APIPost {
   @Prop()
   content: string; // maxLength: 1000
   @Prop()
-  blogId: string;
+  blogId: ObjectId;
   @Prop()
   blogName: string;
   @Prop()
