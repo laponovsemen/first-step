@@ -101,7 +101,7 @@ export class BlogsRepository {
     }
   }
   createNewBlog(DTO: any) {
-    const dateOfCreation = new Date()
+    const createdAt = new Date()
     const description = DTO.description
     const isMembership = false
     const name = DTO.name
@@ -112,6 +112,7 @@ export class BlogsRepository {
       description,
       websiteUrl,
       isMembership,
+      createdAt
     }
     const createdBlog = new this.blogModel(blogToCreate);
      createdBlog.save();
@@ -121,6 +122,7 @@ export class BlogsRepository {
       description,
       websiteUrl,
       isMembership,
+      createdAt
     }
   }
   getBlogById(id: string) {

@@ -40,7 +40,7 @@ export class BlogsController {
   }
   @Post()
   async createNewBlog(@Body() DTO): Promise<Blog> {
-    return await this.blogsService.createNewBlog(DTO);
+    return this.blogsService.createNewBlog(DTO);
   }
   /*@Get(':id/posts')
   async getAllPostsForSpecificBlog(

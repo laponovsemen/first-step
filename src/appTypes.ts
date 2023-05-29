@@ -32,7 +32,7 @@ export type BlogViewModelType = {
   description: string;
   websiteUrl: string;
   isMembership: boolean;
-  createdAt: string;
+  createdAt: Date;
 };
 export type BlogInsertModelType = {
   name: string;

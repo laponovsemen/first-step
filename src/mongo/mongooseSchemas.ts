@@ -53,7 +53,7 @@ export class Blog {
   @Prop()
   isMembership: boolean;
   @Prop()
-  createdAt: string;
+  createdAt: Date;
 }
 export class APIComment {
   id: ObjectId;
