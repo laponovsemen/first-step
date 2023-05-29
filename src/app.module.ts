@@ -8,13 +8,13 @@ import { Blog, BlogsSchema } from './mongo/mongooseSchemas';
   imports: [
     MongooseModule.forRoot(
       'mongodb+srv://simsbury65:incubator@cluster0.vai5lbz.mongodb.net/?retryWrites=true&w=majority',
-      MongooseModule.forFeature([
-        {
-          name: Blog.name,
-          schema: BlogsSchema,
-        },
-      ]),
     ),
+    MongooseModule.forFeature([
+      {
+        name: Blog.name,
+        schema: BlogsSchema,
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService],
