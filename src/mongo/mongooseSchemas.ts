@@ -1,0 +1,56 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument, ObjectId } from 'mongoose';
+import { paginationCriteriaType } from '../appTypes';
+
+export type NewestLikeDocument = HydratedDocument<NewestLike>;
+export type WithMongoId<Type> = Type & { _id: ObjectId };
+export type WithPagination<Type> = Type & paginationCriteriaType;
+@Schema()
+export class NewestLike {
+  @Prop()
+  addedAt: Date;
+  @Prop()
+  userId: ObjectId;
+  @Prop()
+  login: string;
+}
+
+export type APIPostDocument = HydratedDocument<APIPost>;
+@Schema()
+export class APIPost {
+  @Prop()
+  title: string; //    maxLength: 30
+  @Prop()
+  shortDescription: string; //maxLength: 100
+  @Prop()
+  content: string; // maxLength: 1000
+  @Prop()
+  blogId: string;
+  @Prop()
+  blogName: string;
+  @Prop()
+  createdAt: string;
+  @Prop()
+  extendedLikesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: number;
+    newestLikes: [NewestLike];
+  };
+}
+
+export type BlogDocument = HydratedDocument<Blog>;
+@Schema()
+export class Blog {
+  @Prop()
+  name: string;
+  @Prop()
+  description: string;
+  @Prop()
+  websiteUrl: string;
+  @Prop()
+  isMembership: boolean;
+  @Prop()
+  createdAt: string;
+}
+export const BlogsSchema = SchemaFactory.createForClass(Blog);
