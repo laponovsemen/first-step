@@ -15,7 +15,7 @@ export class NewestLike {
   login: string;
 }
 
-export type APIPostDocument = HydratedDocument<APIPost>;
+
 @Schema()
 export class APIPost {
   @Prop()
@@ -25,18 +25,12 @@ export class APIPost {
   @Prop()
   content: string; // maxLength: 1000
   @Prop()
-  blogId: ObjectId;
+  blogId: string;
   @Prop()
   blogName: string;
   @Prop()
   createdAt: Date;
-  @Prop()
-  extendedLikesInfo: {
-    likesCount: number;
-    dislikesCount: number;
-    myStatus: number;
-    newestLikes: [NewestLike] | [];
-  };
+
 }
 @Schema()
 export class APIPostDTO {
@@ -64,3 +58,4 @@ export class Blog {
 export type BlogDocument = HydratedDocument<Blog>;
 export type PostDocument = HydratedDocument<APIPost>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);
+export const PostsSchema = SchemaFactory.createForClass(APIPost);

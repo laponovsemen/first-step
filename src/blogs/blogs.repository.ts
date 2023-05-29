@@ -120,12 +120,7 @@ export class BlogsRepository {
       blogId: DTO.blogId,
       blogName: DTO.blogName,
       createdAt: createdAt,
-      extendedLikesInfo: {
-        likesCount: 0,
-        dislikesCount: 0,
-        myStatus: 0,
-        newestLikes: [],
-      },
+
     }
     return this.postModel.create(newPost);
   }
