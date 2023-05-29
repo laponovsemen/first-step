@@ -1,3 +1,4 @@
+/*
 import { ObjectId } from 'mongodb';
 import { WithMongoId } from './mongo/mongooseSchemas';
 
@@ -250,3 +251,4 @@ export type RequestsDBModel = {
   lastActiveDate: Date;
   baseUrl: string;
 };
+*/

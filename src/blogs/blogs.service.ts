@@ -1,3 +1,4 @@
+/*
 import { BlogsRepository } from './blogs.repository';
 import { paginationCriteriaType } from '../appTypes';
 
@@ -32,3 +33,4 @@ export class BlogsService {
     return this.blogsRepository.createNewBlog(DTO);
   }
 }
+*/

@@ -1,4 +1,4 @@
-import { InjectModel, Prop } from "@nestjs/mongoose";
+/*import { InjectModel, Prop } from "@nestjs/mongoose";
 import {
   APIPost,
   Blog,
@@ -128,4 +128,4 @@ export class BlogsRepository {
     }
     return this.postModel.create(newPost);
   }
-}
+}*/
