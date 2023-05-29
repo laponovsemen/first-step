@@ -55,7 +55,7 @@ export class Blog {
   @Prop()
   createdAt: string;
 }
-export class Comment {
+export class APIComment {
   id: ObjectId;
   content: string;
   commentatorInfo: {
@@ -75,7 +75,7 @@ export class User {
 }
 export type BlogDocument = HydratedDocument<Blog>;
 export type PostDocument = HydratedDocument<APIPost>;
-export type CommentsDocument = HydratedDocument<Comment>;
+export type CommentsDocument = HydratedDocument<APIComment>;
 export type UsersDocument = HydratedDocument<User>;
 export type NewestLikeDocument = HydratedDocument<NewestLike>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);
