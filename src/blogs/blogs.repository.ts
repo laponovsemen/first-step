@@ -75,10 +75,8 @@ export class BlogsRepository {
       .limit(pageSize);
 
     if (result) {
-      const items = result.map((item) => {
-        // @ts-ignore
-        return this.common.mongoPostSlicing(item);
-      });
+      const items = result
+
       const array = await Promise.all(items);
       console.log(
         {
