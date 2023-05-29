@@ -1,4 +1,3 @@
-/*
 import { ObjectId } from 'mongodb';
 import { Mongoose } from 'mongoose';
 import { BlogViewModelType, PostDBModel } from './appTypes';
@@ -56,4 +55,3 @@ export class Common {
     };
   };
 }
-*/

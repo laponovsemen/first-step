@@ -1,4 +1,3 @@
-/*
 import {
   Body,
   Controller,
@@ -43,7 +42,7 @@ export class BlogsController {
   async createNewBlog(@Body() DTO): Promise<Blog> {
     return await this.blogsService.createNewBlog(DTO);
   }
-  @Get(':id/posts')
+  /*@Get(':id/posts')
   async getAllPostsForSpecificBlog(
     @Query() QueryParams,
     @Param('id') blogId,
@@ -54,7 +53,7 @@ export class BlogsController {
       paginationCriteria,
       blogId,
     );
-  }
+  }*/
   @Post(':id/posts')
   async createPostForSpecificBlog(
     @Body() DTO,
@@ -75,4 +74,3 @@ export class BlogsController {
     await this.blogsService.deleteBlogById(id);
   }
 }
-*/

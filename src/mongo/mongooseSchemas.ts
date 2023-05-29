@@ -1,4 +1,3 @@
-/*
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, ObjectId } from 'mongoose';
 import { paginationCriteriaType } from '../appTypes';
@@ -65,4 +64,3 @@ export class Blog {
 export type BlogDocument = HydratedDocument<Blog>;
 export type PostDocument = HydratedDocument<APIPost>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);
-*/

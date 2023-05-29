@@ -1,4 +1,4 @@
-/*import { InjectModel, Prop } from "@nestjs/mongoose";
+import { InjectModel, Prop } from "@nestjs/mongoose";
 import {
   APIPost,
   Blog,
@@ -26,10 +26,11 @@ export class BlogsRepository {
     const ToSkip = postsPagination.pageSize * (postsPagination.pageNumber - 1);
 
     const result = await this.blogModel
-      .find({}) //
+      .find({})
       .sort({ [sortBy]: sortDirection })
       .skip(ToSkip)
-      .limit(pageSize);
+      .limit(pageSize)
+      .lean() //.exec()
 
     if (result) {
       const items = result.map((item) => {
@@ -128,4 +129,4 @@ export class BlogsRepository {
     }
     return this.postModel.create(newPost);
   }
-}*/
+}
