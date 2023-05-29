@@ -125,8 +125,16 @@ export class BlogsRepository {
       createdAt
     }
   }
-  getBlogById(id: string) {
-    return this.blogModel.findOne({ _id: new ObjectId(id) });
+  async getBlogById(id: string) {
+    const foundBlog = await this.blogModel.findOne({ _id: new ObjectId(id) });
+    return {
+      id: foundBlog._id,
+      name: foundBlog.name,
+      description: foundBlog.description,
+      websiteUrl: foundBlog.websiteUrl,
+      isMembership: foundBlog.isMembership,
+      createdAt: foundBlog.createdAt
+    }
   }
   updateBlogById(DTO: any, id: string) {
     return this.blogModel.updateOne({ _id: new ObjectId(id) }, { $set: DTO });
