@@ -8,7 +8,12 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { APIPost, Blog, WithPagination } from '../mongo/mongooseSchemas';
+import {
+  APIPost,
+  APIPostDTO,
+  Blog,
+  WithPagination,
+} from '../mongo/mongooseSchemas';
 import { Common } from '../common';
 import {
   BlogsPaginationCriteriaType,
@@ -41,7 +46,7 @@ export class BlogsController {
   async getAllPostsForSpecificBlog(
     @Query() QueryParams,
     @Param('id') blogId,
-  ): Promise<PaginatorViewModelType<APIPost>> {
+  ): Promise<PaginatorViewModelType<APIPostDTO>> {
     const paginationCriteria: BlogsPaginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
     return this.blogsService.getAllPostsForSpecificBlog(
@@ -53,7 +58,7 @@ export class BlogsController {
   async createPostForSpecificBlog(
     @Body() DTO,
     @Param('id') blogId,
-  ): Promise<APIPost[]> {
+  ): Promise<APIPost> {
     return await this.blogsService.createPostForSpecificBlog(DTO, blogId);
   }
   @Get(':id')

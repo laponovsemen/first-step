@@ -29,14 +29,23 @@ export class APIPost {
   @Prop()
   blogName: string;
   @Prop()
-  createdAt: string;
+  createdAt: Date;
   @Prop()
   extendedLikesInfo: {
     likesCount: number;
     dislikesCount: number;
     myStatus: number;
-    newestLikes: [NewestLike];
+    newestLikes: [NewestLike] | [];
   };
+}
+@Schema()
+export class APIPostDTO {
+  title: string; //    maxLength: 30
+  shortDescription: string; //maxLength: 100
+  content: string; // maxLength: 1000
+  blogId: string;
+  blogName: string;
+  createdAt: string;
 }
 
 @Schema()

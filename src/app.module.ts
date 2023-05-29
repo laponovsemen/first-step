@@ -3,9 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogsSchema } from './mongo/mongooseSchemas';
-import { BlogsController } from "./blogs/blogs.controller";
-import { BlogsService } from "./blogs/blogs.service";
-import { BlogsRepository } from "./blogs/blogs.repository";
+import { BlogsController } from './blogs/blogs.controller';
+import { BlogsService } from './blogs/blogs.service';
+import { BlogsRepository } from './blogs/blogs.repository';
 
 @Module({
   imports: [

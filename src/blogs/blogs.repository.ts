@@ -1,10 +1,10 @@
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel, Prop } from "@nestjs/mongoose";
 import {
   APIPost,
   Blog,
-  BlogDocument,
-  PostDocument,
-} from '../mongo/mongooseSchemas';
+  BlogDocument, NewestLike,
+  PostDocument
+} from "../mongo/mongooseSchemas";
 import { Model } from 'mongoose';
 import { paginationCriteriaType } from '../appTypes';
 import { Common } from '../common';
@@ -76,6 +76,7 @@ export class BlogsRepository {
 
     if (result) {
       const items = result.map((item) => {
+        // @ts-ignore
         return this.common.mongoPostSlicing(item);
       });
       const array = await Promise.all(items);
@@ -112,6 +113,21 @@ export class BlogsRepository {
     return this.blogModel.deleteOne({ _id: new ObjectId(id) });
   }
   createPostForSpecificBlog(DTO: any, id: string) {
-    return this.postModel.create(DTO);
+    const createdAt = new Date()
+    const newPost : APIPost = {
+      title: DTO.title, //    maxLength: 30
+      shortDescription: DTO.shortDescription, //maxLength: 100
+      content: DTO.string, // maxLength: 1000
+      blogId: DTO.blogId,
+      blogName: DTO.blogName,
+      createdAt: createdAt,
+      extendedLikesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: 0,
+        newestLikes: [],
+      },
+    }
+    return this.postModel.create(newPost);
   }
 }
