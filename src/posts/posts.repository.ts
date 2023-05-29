@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { APIPost, Blog, BlogDocument } from "../mongo/mongooseSchemas";
+import { APIComment, APIPost, Blog, BlogDocument } from "../mongo/mongooseSchemas";
 import { Model } from "mongoose";
 import { ObjectId } from "mongodb";
 import { paginationCriteriaType } from "../appTypes";
@@ -9,6 +9,7 @@ import { paginationCriteriaType } from "../appTypes";
 export class PostsRepository{
   constructor( @InjectModel(APIPost.name) private postsModel: Model<APIPost>,
                @InjectModel(Blog.name) private blogsModel: Model<Blog>,
+               @InjectModel(APIComment.name) private commentsModel: Model<APIComment>,
                ) {
   }
   async createNewPost(DTO: any){
@@ -29,6 +30,17 @@ export class PostsRepository{
   async getPostById(id : string) {
     return this.postsModel.findOne({_id: new ObjectId(id)})
   }
+  async getAllPosts(paginationCriteria : paginationCriteriaType) {
+    const posts = this.postsModel.find({})
+  }
+  async deletePostById(id : string) {
+    return this.postsModel.deleteOne({_id: new ObjectId(id)})
+  }
+  async updatePostById( DTO : any, id : string) {
+    return this.postsModel.updateOne({_id: new ObjectId(id)}, {$set : {
+
+      }})
+  }
   async deleteAllData(){
     await this.postsModel.deleteMany({})
   }
@@ -38,7 +50,20 @@ export class PostsRepository{
     if (!foundPost) {
       return null
     } else {
-      return foundPost
+      const pageSize = paginationCriteria.pageSize;
+      const totalCount = await this.commentsModel.countDocuments({postId : new ObjectId(id)});
+      const pagesCount = Math.ceil(totalCount / pageSize);
+      const page = paginationCriteria.pageNumber;
+      const sortBy = paginationCriteria.sortBy;
+      const sortDirection: 'asc' | 'desc' = paginationCriteria.sortDirection;
+      const ToSkip =
+        paginationCriteria.pageSize * (paginationCriteria.pageNumber - 1);
+
+      const result = await this.commentsModel
+        .find({ postId: new ObjectId(id) }) //
+        .sort({ [sortBy]: sortDirection })
+        .skip(ToSkip)
+        .limit(pageSize);
     }
 
   }

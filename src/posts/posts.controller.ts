@@ -16,13 +16,15 @@ export class PostsController {
   @Get(':id/comments')
   async getAllCommentsForSpecificPost(
     @Query() QueryParams, @Param('id') id
-  ): Promise<PaginatorViewModelType<Blog>> {
+  ): Promise<PaginatorViewModelType<Comment>> {
     const paginationCriteria: paginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
-    return await this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
+    return this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
   }
   @Get()
-  async getAllPosts(){
+  async getAllPosts(@Query() QueryParams){
+    const paginationCriteria: paginationCriteriaType =
+      this.common.getPaginationCriteria(QueryParams);
     await this.postsService.getAllPosts(paginationCriteria);
   }
 
@@ -37,12 +39,13 @@ export class PostsController {
   }
 
   @Put()
-  async updatePostById(){
-    await this.postsService.updatePostById(paginationCriteria);
+  async updatePostById(@Param('id') id,
+                       @Body() DTO){
+    await this.postsService.updatePostById(DTO , id);
   }
 
   @Delete()
-  deletePostById(){
-    return this.postsService.deletePostById(paginationCriteria);
+  deletePostById(@Param('id') id){
+    return this.postsService.deletePostById(id);
   }
 }
