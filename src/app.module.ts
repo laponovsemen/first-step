@@ -6,9 +6,23 @@ import { ConfigModule } from "@nestjs/config";
 import { BlogsService } from "./blogs/blogs.service";
 import { BlogsRepository } from "./blogs/blogs.repository";
 import * as process from "process";
-import { APIPost, Blog, BlogsSchema, PostsSchema } from "./mongo/mongooseSchemas";
+import {
+  APIPost,
+  Blog,
+  BlogsSchema,
+  Comment,
+  CommentsSchema,
+  PostsSchema,
+  User,
+  UsersSchema
+} from "./mongo/mongooseSchemas";
 import { Common } from "./common";
 import { BlogsController } from "./blogs/blogs.controller";
+import { testingController } from "./testing/testing.controller";
+import { TestingService } from "./testing/testing.service";
+import { PostsRepository } from "./posts/posts.repository";
+import { UsersRepository } from "./users/users.reposiroty";
+import { CommentsRepository } from "./comments/comments.repository";
 
 @Module({
   imports: [
@@ -20,10 +34,16 @@ import { BlogsController } from "./blogs/blogs.controller";
     }, {
       name: APIPost.name,
       schema: PostsSchema
+    }, {
+      name: Comment.name,
+      schema: CommentsSchema
+    }, {
+      name: User.name,
+      schema: UsersSchema
     }])],
 
-  controllers: [AppController, BlogsController],
-  providers: [AppService, BlogsService, BlogsRepository, Common]
+  controllers: [AppController, BlogsController, testingController],
+  providers: [AppService, BlogsService, BlogsRepository, Common, TestingService, PostsRepository, UsersRepository,CommentsRepository]
 })
 export class AppModule {
 }

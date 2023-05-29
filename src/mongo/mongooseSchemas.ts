@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, ObjectId } from 'mongoose';
 import { paginationCriteriaType } from '../appTypes';
 
-export type NewestLikeDocument = HydratedDocument<NewestLike>;
+
 export type WithMongoId<Type> = Type & { _id: ObjectId };
 export type WithPagination<Type> = Type & paginationCriteriaType;
 @Schema()
@@ -55,7 +55,30 @@ export class Blog {
   @Prop()
   createdAt: string;
 }
+export class Comment {
+  id: ObjectId;
+  content: string;
+  commentatorInfo: {
+    "userId": string,
+    "userLogin": string
+  };
+  createdAt: Date
+}
+export class User {
+
+  id: string;
+  login: string;
+  email: string;
+  password : string
+  createdAt: Date
+
+}
 export type BlogDocument = HydratedDocument<Blog>;
 export type PostDocument = HydratedDocument<APIPost>;
+export type CommentsDocument = HydratedDocument<Comment>;
+export type UsersDocument = HydratedDocument<User>;
+export type NewestLikeDocument = HydratedDocument<NewestLike>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);
 export const PostsSchema = SchemaFactory.createForClass(APIPost);
+export const CommentsSchema = SchemaFactory.createForClass(Comment);
+export const UsersSchema = SchemaFactory.createForClass(User);

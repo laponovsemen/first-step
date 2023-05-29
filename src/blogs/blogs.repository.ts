@@ -126,4 +126,7 @@ export class BlogsRepository {
     }
     return this.postModel.create(newPost);
   }
+  async deleteAllData(){
+    await this.blogModel.deleteMany({})
+  }
 }
