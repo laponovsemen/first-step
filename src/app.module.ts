@@ -11,6 +11,7 @@ import * as process from "process";
 @Module({
   imports: [ConfigModule.forRoot(),
   MongooseModule.forRoot(process.env.MONGO_URL)],
+
   controllers: [AppController,BlogsController],
   providers: [AppService, BlogsService, BlogsRepository],
 })
