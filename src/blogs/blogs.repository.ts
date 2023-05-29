@@ -101,8 +101,27 @@ export class BlogsRepository {
     }
   }
   createNewBlog(DTO: any) {
-    const createdBlog = new this.blogModel(DTO);
-    return createdBlog.save();
+    const dateOfCreation = new Date()
+    const description = DTO.description
+    const isMembership = false
+    const name = DTO.name
+    const websiteUrl = DTO.websiteUrl
+
+    const blogToCreate = {
+      name,
+      description,
+      websiteUrl,
+      isMembership,
+    }
+    const createdBlog = new this.blogModel(blogToCreate);
+     createdBlog.save();
+    return {
+      id : createdBlog._id,
+      name,
+      description,
+      websiteUrl,
+      isMembership,
+    }
   }
   getBlogById(id: string) {
     return this.blogModel.findOne({ _id: new ObjectId(id) });
