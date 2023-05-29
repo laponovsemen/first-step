@@ -75,13 +75,14 @@ export type PaginatorPostViewModelType = {
   totalCount: number;
   items: PostDBModel[];
 };
-export type PaginatorBlogViewModelType = {
+export type PaginatorViewModelType<Data> = {
   pagesCount: number;
   page: number;
   pageSize: number;
   totalCount: number;
-  items: BlogViewModelType[];
+  items: Data[];
 };
+
 export type BlogsPaginationCriteriaType = {
   pageNumber: number;
   pageSize: number;

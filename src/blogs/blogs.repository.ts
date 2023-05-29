@@ -1,17 +1,15 @@
-import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from '../mongo/mongooseSchemas';
+import { Blog, BlogDocument, PostDocument } from '../mongo/mongooseSchemas';
 import { Model } from 'mongoose';
-import {
-  paginationCriteriaType,
-  PaginatorBlogViewModelType,
-} from '../appTypes';
+import { paginationCriteriaType } from '../appTypes';
 import { Common } from '../common';
 import { ObjectId } from 'mongodb';
+import { Post } from '@nestjs/common';
 
 export class BlogsRepository {
   constructor(
     @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
     protected readonly common: Common,
   ) {}
   async getAllBlogs(postsPagination: paginationCriteriaType) {
@@ -53,16 +51,63 @@ export class BlogsRepository {
       };
     }
   }
+  async getAllPostsForSpecificBlog(
+    paginationCriteria: paginationCriteriaType,
+    blogId: string,
+  ) {
+    const pageSize = paginationCriteria.pageSize;
+    const totalCount = await this.blogModel.countDocuments({});
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    const page = paginationCriteria.pageNumber;
+    const sortBy = paginationCriteria.sortBy;
+    const sortDirection: 'asc' | 'desc' = paginationCriteria.sortDirection;
+    const ToSkip =
+      paginationCriteria.pageSize * (paginationCriteria.pageNumber - 1);
+
+    const result = await this.postModel
+      .find({ blogId: new ObjectId(blogId) }) //
+      .sort({ [sortBy]: sortDirection })
+      .skip(ToSkip)
+      .limit(pageSize);
+
+    if (result) {
+      const items = result.map((item) => {
+        return this.common.mongoPostSlicing(item);
+      });
+      const array = await Promise.all(items);
+      console.log(
+        {
+          pageSize: pageSize,
+          totalCount: totalCount,
+          pagesCount: pagesCount,
+          page: page,
+          items: array,
+        },
+        'its fucking result',
+      );
+      return {
+        pageSize: pageSize,
+        totalCount: totalCount,
+        pagesCount: pagesCount,
+        page: page,
+        items: array,
+      };
+    }
+  }
   createNewBlog(DTO: any) {
     const createdBlog = new this.blogModel(DTO);
     return createdBlog.save();
   }
-  getBlogById(id : string) {
-    const foundBlog = this.blogModel.findOne({ _id: new ObjectId(id) });
-    return foundBlog;
+  getBlogById(id: string) {
+    return this.blogModel.findOne({ _id: new ObjectId(id) });
   }
-  updateBlogById(id: string) {
-    const foundBlog = this.blogModel.findOne({ _id: new ObjectId(id) });
-    return foundBlog;
+  updateBlogById(DTO: any, id: string) {
+    return this.blogModel.updateOne({ _id: new ObjectId(id) }, { $set: DTO });
+  }
+  deleteBlogById(id: string) {
+    return this.blogModel.deleteOne({ _id: new ObjectId(id) });
+  }
+  createPostForSpecificBlog(DTO: any, id: string) {
+    return this.postModel.create(DTO);
   }
 }

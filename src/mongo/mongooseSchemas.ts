@@ -25,7 +25,7 @@ export class APIPost {
   @Prop()
   content: string; // maxLength: 1000
   @Prop()
-  blogId: string;
+  blogId: ObjectId;
   @Prop()
   blogName: string;
   @Prop()
@@ -39,7 +39,6 @@ export class APIPost {
   };
 }
 
-export type BlogDocument = HydratedDocument<Blog>;
 @Schema()
 export class Blog {
   @Prop()
@@ -53,4 +52,6 @@ export class Blog {
   @Prop()
   createdAt: string;
 }
+export type BlogDocument = HydratedDocument<Blog>;
+export type PostDocument = HydratedDocument<APIPost>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);

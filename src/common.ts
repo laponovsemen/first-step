@@ -4,7 +4,7 @@ import { BlogViewModelType, PostDBModel } from './appTypes';
 import { WithMongoId } from './mongo/mongooseSchemas';
 
 export class Common {
-  getBlogsPaginationCriteria(QueryParams: any) {
+  getPaginationCriteria(QueryParams: any) {
     const searchNameTerm = QueryParams.searchNameTerm
       ? QueryParams.searchNameTerm.toString()
       : null;
