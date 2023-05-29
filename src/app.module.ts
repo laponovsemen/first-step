@@ -7,10 +7,10 @@ import { BlogsService } from "./blogs/blogs.service";
 import { BlogsRepository } from "./blogs/blogs.repository";
 import * as process from "process";
 import {
+  APIComment,
   APIPost,
   Blog,
   BlogsSchema,
-  Comment,
   CommentsSchema,
   PostsSchema,
   User,
@@ -35,7 +35,7 @@ import { CommentsRepository } from "./comments/comments.repository";
       name: APIPost.name,
       schema: PostsSchema
     }, {
-      name: Comment.name,
+      name: APIComment.name,
       schema: CommentsSchema
     }, {
       name: User.name,

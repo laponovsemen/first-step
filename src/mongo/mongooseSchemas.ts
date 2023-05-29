@@ -80,5 +80,5 @@ export type UsersDocument = HydratedDocument<User>;
 export type NewestLikeDocument = HydratedDocument<NewestLike>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);
 export const PostsSchema = SchemaFactory.createForClass(APIPost);
-export const CommentsSchema = SchemaFactory.createForClass(Comment);
+export const CommentsSchema = SchemaFactory.createForClass(APIComment);
 export const UsersSchema = SchemaFactory.createForClass(User);
