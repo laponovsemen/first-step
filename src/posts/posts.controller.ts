@@ -13,13 +13,13 @@ export class PostsController {
   ) {
   }
 
-  @Get()
+  @Get(':id/comments')
   async getAllCommentsForSpecificPost(
-    @Query() QueryParams,
+    @Query() QueryParams, @Param('id') id
   ): Promise<PaginatorViewModelType<Blog>> {
     const paginationCriteria: paginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
-    return await this.postsService.getAllCommentsForSpecificPosts(paginationCriteria);
+    return await this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
   }
   @Get()
   async getAllPosts(){

@@ -44,16 +44,14 @@ export class BlogsController {
     return this.blogsService.createNewBlog(DTO);
   }
   @Get(':id/posts')
-  async getAllPostsForSpecificBlog(
-    @Query() QueryParams,
-    @Param('id') blogId,
-  ): Promise<PaginatorViewModelType<APIPostDTO>> {
-    const paginationCriteria: BlogsPaginationCriteriaType =
-      this.common.getPaginationCriteria(QueryParams);
-    return this.blogsService.getAllPostsForSpecificBlog(
-      paginationCriteria,
-      blogId,
-    );
+  async getAllPostsForSpecificBlog(@Res() res: Response,@Query() QueryParams,@Param('id') blogId) {
+    const paginationCriteria: BlogsPaginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
+    const result =  this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId,);
+    if(!result){
+      return res.status(HttpStatus.NOT_FOUND).send();
+    } else {
+      return result
+    }
   }
   @Post(':id/posts')
   async createPostForSpecificBlog(
@@ -75,7 +73,7 @@ export class BlogsController {
   }
   @Delete(':id')
   async deleteBlogById(@Res() res: Response,
-                       @Param('id') id): Promise<void> {
+                       @Param('id') id) {
     await this.blogsService.deleteBlogById(id);
     res.status(HttpStatus.NO_CONTENT).send();
   }

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PostsRepository } from "./posts.repository";
+import { paginationCriteriaType } from "../appTypes";
 
 
 @Injectable()
@@ -12,5 +13,9 @@ export class PostsService{
   }
   getPostById(id : string){
     return this.postsRepository.getPostById(id)
+  }
+
+  getAllCommentsForSpecificPosts(paginationCriteria :paginationCriteriaType, id : string){
+
   }
 }
