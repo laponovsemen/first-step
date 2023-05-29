@@ -1,6 +1,6 @@
 
 
-import { Controller, Delete } from "@nestjs/common";
+import { Controller, Delete, HttpCode } from "@nestjs/common";
 import { Common } from "../common";
 import { BlogsRepository } from "../blogs/blogs.repository";
 import { TestingService } from "./testing.service";
@@ -14,6 +14,7 @@ export class testingController {
   ) {}
 
   @Delete()
+  @HttpCode(204)
   async deleteAllData(){
     await this.testingService.deleteAllData()
   }
