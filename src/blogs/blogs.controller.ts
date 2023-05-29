@@ -43,7 +43,7 @@ export class BlogsController {
   async createNewBlog(@Body() DTO): Promise<Blog> {
     return this.blogsService.createNewBlog(DTO);
   }
-  /*@Get(':id/posts')
+  @Get(':id/posts')
   async getAllPostsForSpecificBlog(
     @Query() QueryParams,
     @Param('id') blogId,
@@ -54,7 +54,7 @@ export class BlogsController {
       paginationCriteria,
       blogId,
     );
-  }*/
+  }
   @Post(':id/posts')
   async createPostForSpecificBlog(
     @Body() DTO,

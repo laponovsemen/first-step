@@ -62,8 +62,12 @@ export class BlogsRepository {
     paginationCriteria: paginationCriteriaType,
     blogId: string,
   ) {
+    const foundBlog = await this.blogModel.findOne({_id : new  ObjectId(blogId)}).lean()
+    if(!foundBlog) {
+      return null
+    }
     const pageSize = paginationCriteria.pageSize;
-    const totalCount = await this.blogModel.countDocuments({});
+    const totalCount = await this.postModel.countDocuments({blogId : new ObjectId(blogId)});
     const pagesCount = Math.ceil(totalCount / pageSize);
     const page = paginationCriteria.pageNumber;
     const sortBy = paginationCriteria.sortBy;

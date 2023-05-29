@@ -38,9 +38,9 @@ export class APIPostDTO {
   title: string; //    maxLength: 30
   shortDescription: string; //maxLength: 100
   content: string; // maxLength: 1000
-  blogId: string;
+  blogId: ObjectId;
   blogName: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 @Schema()
