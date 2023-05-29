@@ -2,12 +2,12 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpStatus,
   Param,
   Post,
   Put,
-  Query,
-} from '@nestjs/common';
+  Query, Res
+} from "@nestjs/common";
 import {
   APIPost,
   APIPostDTO,
@@ -21,6 +21,7 @@ import {
   PaginatorViewModelType,
   PostsPaginationCriteriaType,
 } from '../appTypes';
+import express, {Request, Response} from 'express';
 import { BlogsService } from './blogs.service';
 
 @Controller('blogs')
@@ -66,11 +67,16 @@ export class BlogsController {
     return this.blogsService.getBlogById(id);
   }
   @Put(':id')
-  async updateBlogById(@Body() DTO, @Param('id') id): Promise<void> {
+  async updateBlogById(@Res() res: Response,
+                       @Body() DTO,
+                       @Param('id') id): Promise<void> {
     await this.blogsService.updateBlogById(DTO, id);
+    res.status(HttpStatus.NO_CONTENT).send();
   }
   @Delete(':id')
-  async deleteBlogById(@Param('id') id): Promise<void> {
+  async deleteBlogById(@Res() res: Response,
+                       @Param('id') id): Promise<void> {
     await this.blogsService.deleteBlogById(id);
+    res.status(HttpStatus.NO_CONTENT).send();
   }
 }
