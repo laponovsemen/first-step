@@ -19,18 +19,20 @@ export class BlogsRepository {
     protected readonly common: Common,
   ) {}
   async getAllBlogs(blogsPagination: paginationCriteriaType) {
+    const filter: { name?: any } = {}
+    if (blogsPagination.searchNameTerm) {
+      filter.name = {$regex: blogsPagination.searchNameTerm, $options: 'gi'}
+    }
     const pageSize = blogsPagination.pageSize;
     const regex = blogsPagination.searchNameTerm
-    const totalCount = await this.blogModel.countDocuments({ name: { $regex: regex, $options: 'gi' } });
+    const totalCount = await this.blogModel.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
     const page = blogsPagination.pageNumber;
     const sortBy = blogsPagination.sortBy;
     const sortDirection: 'asc' | 'desc' = blogsPagination.sortDirection;
     const ToSkip = blogsPagination.pageSize * (blogsPagination.pageNumber - 1);
-    const filter: { name?: any } = {}
-    if (blogsPagination.searchNameTerm) {
-      filter.name = {$regex: blogsPagination.searchNameTerm, $options: 'i'}
-    }
+
+
 
     const result = await this.blogModel
       .find(filter)
