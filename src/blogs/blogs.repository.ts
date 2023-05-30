@@ -95,7 +95,7 @@ export class BlogsRepository {
         totalCount: totalCount,
         pagesCount: pagesCount,
         page: page,
-        items: result,
+        items: result.map(item => this.common.mongoPostSlicing(item)),
       };
     }
 

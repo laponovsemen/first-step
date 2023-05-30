@@ -3,9 +3,21 @@ import { Mongoose } from 'mongoose';
 import { BlogViewModelType, PostDBModel } from './appTypes';
 import { APIPost, WithMongoId } from "./mongo/mongooseSchemas";
 import { Injectable } from "@nestjs/common";
+import { Types } from "mongoose";
 
 @Injectable()
 export class Common {
+
+
+
+ tryConvertToObjectId = (id: string): Types.ObjectId | null => {
+  try {
+    const convertedId = new Types.ObjectId(id);
+    return convertedId;
+  } catch (e) {
+    return null;
+  }
+}
   getPaginationCriteria(QueryParams: any) {
     const searchNameTerm = QueryParams.searchNameTerm
       ? QueryParams.searchNameTerm.toString()
