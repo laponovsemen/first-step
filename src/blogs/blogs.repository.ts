@@ -130,7 +130,11 @@ export class BlogsRepository {
     }
   }
   async getBlogById(id: string) {
-    const foundBlog = await this.blogModel.findOne({ _id: new ObjectId(id) });
+    const blogId = this.common.tryConvertToObjectId(id)
+    if (!blogId) {
+      return null
+    }
+    const foundBlog = await this.blogModel.findOne({ _id: blogId });
     return {
       id: foundBlog._id,
       name: foundBlog.name,
@@ -141,11 +145,20 @@ export class BlogsRepository {
     }
   }
   async updateBlogById(DTO: any, id: string) {
-    const updateResult = await this.blogModel.updateOne({ _id: new ObjectId(id) }, { $set: DTO });
+    const blogId = this.common.tryConvertToObjectId(id)
+    if (!blogId) {
+      return null
+    }
+    const updateResult = await this.blogModel.updateOne({ _id: blogId }, { $set: DTO });
     return updateResult.matchedCount === 1
   }
-  deleteBlogById(id: string) {
-    return this.blogModel.deleteOne({ _id: new ObjectId(id) });
+  async deleteBlogById(id: string) {
+    const blogId = this.common.tryConvertToObjectId(id)
+    if (!blogId) {
+      return null
+    }
+    const deletedBlog = await this.blogModel.deleteOne({ _id: blogId });
+    return deletedBlog.deletedCount === 1
   }
   async createPostForSpecificBlog(DTO: any, id: string) {
     const createdAt = new Date()
