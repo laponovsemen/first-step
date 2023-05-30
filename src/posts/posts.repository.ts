@@ -66,7 +66,9 @@ export class PostsRepository{
   }
   async updatePostById( DTO : any, id : string) {
     return this.postsModel.updateOne({_id: new ObjectId(id)}, {$set : {
-
+        shortDescription : DTO.shortDescription,
+        content : DTO.content,
+        title : DTO.title,
       }})
   }
   async deleteAllData(){

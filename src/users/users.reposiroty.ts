@@ -11,4 +11,15 @@ export class UsersRepository{
   async deleteAllData(){
     await this.usersModel.deleteMany({})
   }
+  getAllUsers(){
+
+  }
+
+  createUser(){
+
+  }
+
+  deleteUserById(){
+
+  }
 }
