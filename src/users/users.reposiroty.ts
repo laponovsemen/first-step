@@ -67,17 +67,21 @@ export class UsersRepository{
 
   async createUser(DTO: any) {
     const dateOfCreation = new Date()
+    const login = DTO.login
+    const password = DTO.password
+    const email = DTO.email
+    const createdAt = dateOfCreation
     const newlyCreatedUser = await this.usersModel.create({
-      login: DTO.login,
-      password: DTO.password,
-      email: DTO.email,
-      createdAt : dateOfCreation
+      login,
+      password,
+      email,
+      createdAt
     })
     return {
       id: newlyCreatedUser._id,
-      login: DTO.login,
-      email: DTO.email,
-      createdAt : dateOfCreation
+      login,
+      email,
+      createdAt
     }
   }
 
