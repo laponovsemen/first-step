@@ -25,27 +25,27 @@ export class PostsController {
   async getAllPosts(@Query() QueryParams){
     const paginationCriteria: paginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
-    await this.postsService.getAllPosts(paginationCriteria);
+    return  this.postsService.getAllPosts(paginationCriteria);
   }
 
   @Post()
   async createNewPost(@Body() DTO){
-    await this.postsService.createNewPost(DTO);
+    return await this.postsService.createNewPost(DTO);
   }
 
   @Get()
   async getPostById(@Param('id') id){
-    return this.postsService.getPostById(id);
+    return await this.postsService.getPostById(id);
   }
 
   @Put()
   async updatePostById(@Param('id') id,
                        @Body() DTO){
-    await this.postsService.updatePostById(DTO , id);
+    return await this.postsService.updatePostById(DTO , id);
   }
 
   @Delete()
-  deletePostById(@Param('id') id){
-    return this.postsService.deletePostById(id);
+  async deletePostById(@Param('id') id) {
+    return await this.postsService.deletePostById(id);
   }
 }
