@@ -7,23 +7,24 @@ import { paginationCriteriaType } from "../appTypes";
 import { Common } from "../common";
 
 @Injectable()
-export class PostsRepository{
-  constructor( @InjectModel(APIPost.name) private postsModel: Model<APIPost>,
-               @InjectModel(Blog.name) private blogsModel: Model<Blog>,
-               @InjectModel(APIComment.name) private commentsModel: Model<APIComment>,
-               protected readonly common : Common
-               ) {
+export class PostsRepository {
+  constructor(@InjectModel(APIPost.name) private postsModel: Model<APIPost>,
+              @InjectModel(Blog.name) private blogsModel: Model<Blog>,
+              @InjectModel(APIComment.name) private commentsModel: Model<APIComment>,
+              protected readonly common: Common
+  ) {
   }
-  async createNewPost(DTO: any){
+
+  async createNewPost(DTO: any) {
     const blogId = DTO.blogId
     const createdAt = new Date()
-    const blog = await this.blogsModel.findOne({_id : new ObjectId(blogId)})
+    const blog = await this.blogsModel.findOne({ _id: new ObjectId(blogId) })
     const newPost = {
       title: DTO.title, //    maxLength: 30
       shortDescription: DTO.shortDescription, //maxLength: 100
       content: DTO.content, // maxLength: 1000
       blogId: new ObjectId(blogId),
-      blogName : blog.name,
+      blogName: blog.name,
       createdAt: createdAt,
     }
     const createdPost = await this.postsModel.create(newPost)
@@ -33,33 +34,68 @@ export class PostsRepository{
       shortDescription: DTO.shortDescription, //maxLength: 100
       content: DTO.content, // maxLength: 1000
       blogId: new ObjectId(blogId),
-      blogName : blog.name,
+      blogName: blog.name,
       createdAt: createdAt,
       extendedLikesInfo: {
         dislikesCount: 0,
         likesCount: 0,
         myStatus: "None",
         newestLikes: [],
-        },
+      },
     }
 
   }
 
-  async getPostById(id : string) {
+  async getPostById(id: string) {
     const postId = this.common.tryConvertToObjectId(id)
-    if(!postId){
+    if (!postId) {
       return null
     }
-    const foundPost = await this.postsModel.findOne({_id: postId})
-    if(!foundPost){
+    const foundPost = await this.postsModel.findOne({ _id: postId })
+    if (!foundPost) {
       return null
     } else {
       return this.common.mongoPostSlicing(foundPost)
     }
   }
-  async getAllPosts(paginationCriteria : paginationCriteriaType) {
-    const posts = await  this.postsModel.find({})
-    return posts.map(item => this.common.mongoPostSlicing(item))
+
+  async getAllPosts(paginationCriteria: paginationCriteriaType) {
+
+    const pageSize = paginationCriteria.pageSize;
+    const totalCount = await this.postsModel.countDocuments({});
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    const page = paginationCriteria.pageNumber;
+    const sortBy = paginationCriteria.sortBy;
+    const sortDirection: 'asc' | 'desc' = paginationCriteria.sortDirection;
+    const ToSkip = paginationCriteria.pageSize * (paginationCriteria.pageNumber - 1);
+
+    const result = await this.postsModel
+      .find({})
+      .sort({ [sortBy]: sortDirection })
+      .skip(ToSkip)
+      .limit(pageSize)
+      .lean() //.exec()
+    const items = result.map((item) => {
+      return this.common.mongoPostSlicing(item)
+    });
+
+    console.log(
+      {
+        pageSize: pageSize,
+        totalCount: totalCount,
+        pagesCount: pagesCount,
+        page: page,
+        items: items,
+      },
+      'its fucking result',
+    );
+    return {
+      pageSize: pageSize,
+      totalCount: totalCount,
+      pagesCount: pagesCount,
+      page: page,
+      items: items,
+    };
   }
   async deletePostById(id : string) {
     return this.postsModel.deleteOne({_id: new ObjectId(id)})
