@@ -57,8 +57,14 @@ export class BlogsController {
   async createPostForSpecificBlog(
     @Body() DTO,
     @Param('id') blogId,
-  ): Promise<APIPost> {
-    return await this.blogsService.createPostForSpecificBlog(DTO, blogId);
+    @Res() res: Response
+  ): Promise<APIPost | void> {
+    const result =  await this.blogsService.createPostForSpecificBlog(DTO, blogId);
+    if(!result){
+      res.status(HttpStatus.NOT_FOUND).send()
+    } else {
+      res.status(HttpStatus.CREATED).send(result)
+    }
   }
   @Get(':id')
   async getBlogById(@Param('id') id): Promise<Blog> {

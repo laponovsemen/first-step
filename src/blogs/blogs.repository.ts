@@ -148,6 +148,9 @@ export class BlogsRepository {
   async createPostForSpecificBlog(DTO: any, id: string) {
     const createdAt = new Date()
     const blog = await this.blogModel.findOne({_id : new ObjectId(id)})
+    if(!blog){
+      return null
+    }
     const newPost: APIPost = {
       title: DTO.title, //    maxLength: 30
       shortDescription: DTO.shortDescription, //maxLength: 100
