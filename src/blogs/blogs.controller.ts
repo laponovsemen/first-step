@@ -48,7 +48,7 @@ export class BlogsController {
     const paginationCriteria: BlogsPaginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
     const result =  this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId,);
     if(!result){
-      return res.status(HttpStatus.NOT_FOUND).send();
+      throw new NotFoundException("Blog not found")
     } else {
       return result
     }
