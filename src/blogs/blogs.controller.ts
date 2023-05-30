@@ -91,6 +91,7 @@ export class BlogsController {
 
   }
   @Delete(':id')
+  @HttpCode(204)
   async deleteBlogById(@Res({passthrough : true}) res: Response,
                        @Param('id') id) {
     const deletedBlod = await this.blogsService.deleteBlogById(id);
