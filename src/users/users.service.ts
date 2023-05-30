@@ -10,8 +10,8 @@ export class UsersService{
     return this.usersRepository.getAllUsers()
   }
 
-  createUser(){
-    return this.usersRepository.createUser()
+  createUser(DTO : any){
+    return this.usersRepository.createUser(DTO)
   }
 
   deleteUserById(){
