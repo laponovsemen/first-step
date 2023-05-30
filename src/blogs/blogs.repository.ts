@@ -59,10 +59,7 @@ export class BlogsRepository {
       };
     }
   }
-  async getAllPostsForSpecificBlog(
-    paginationCriteria: paginationCriteriaType,
-    blogId: string,
-  ) {
+  async getAllPostsForSpecificBlog(paginationCriteria: paginationCriteriaType, blogId: string,) {
     const foundBlog = await this.blogModel.findOne({_id : new  ObjectId(blogId)}).lean()
     if(!foundBlog) {
       return null
@@ -82,17 +79,14 @@ export class BlogsRepository {
       .skip(ToSkip)
       .limit(pageSize);
 
-    if (result) {
-      const items = result
 
-      const array = await Promise.all(items);
       console.log(
         {
           pageSize: pageSize,
           totalCount: totalCount,
           pagesCount: pagesCount,
           page: page,
-          items: array,
+          items: result,
         },
         'its fucking result',
       );
@@ -101,10 +95,10 @@ export class BlogsRepository {
         totalCount: totalCount,
         pagesCount: pagesCount,
         page: page,
-        items: array,
+        items: result,
       };
     }
-  }
+
   async createNewBlog(DTO: any) {
     const createdAt = new Date()
     const description = DTO.description

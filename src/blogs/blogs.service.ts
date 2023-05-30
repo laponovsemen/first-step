@@ -8,10 +8,7 @@ export class BlogsService {
   getAllBlogs(paginationCriteria) {
     return this.blogsRepository.getAllBlogs(paginationCriteria);
   }
-  getAllPostsForSpecificBlog(
-    paginationCriteria: paginationCriteriaType,
-    blogId: string,
-  ) {
+  getAllPostsForSpecificBlog(paginationCriteria: paginationCriteriaType, blogId: string) {
     return this.blogsRepository.getAllPostsForSpecificBlog(
       paginationCriteria,
       blogId,
