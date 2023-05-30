@@ -25,6 +25,8 @@ import { UsersRepository } from "./users/users.reposiroty";
 import { CommentsRepository } from "./comments/comments.repository";
 import { PostsController } from "./posts/posts.controller";
 import { PostsService } from "./posts/posts.service";
+import { UsersController } from "./users/users.controller";
+import { UsersService } from "./users/users.service";
 
 @Module({
   imports: [
@@ -44,9 +46,10 @@ import { PostsService } from "./posts/posts.service";
       schema: UsersSchema
     }])],
 
-  controllers: [AppController, BlogsController, TestingController, PostsController],
-  providers: [AppService, BlogsService, PostsService,  BlogsRepository, Common,
-    TestingService, PostsRepository, UsersRepository,CommentsRepository]
+  controllers: [AppController, BlogsController, TestingController, PostsController, UsersController],
+  providers: [AppService, BlogsService, PostsService,TestingService, UsersService,
+    BlogsRepository, PostsRepository, UsersRepository,CommentsRepository,
+    Common]
 })
 export class AppModule {
 }
