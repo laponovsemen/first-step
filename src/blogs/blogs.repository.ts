@@ -20,7 +20,8 @@ export class BlogsRepository {
   ) {}
   async getAllBlogs(postsPagination: paginationCriteriaType) {
     const pageSize = postsPagination.pageSize;
-    const totalCount = await this.blogModel.countDocuments({});
+    const regex = postsPagination.searchNameTerm
+    const totalCount = await this.blogModel.countDocuments({ name: { $regex: regex, $options: 'gi' } });
     const pagesCount = Math.ceil(totalCount / pageSize);
     const page = postsPagination.pageNumber;
     const sortBy = postsPagination.sortBy;
@@ -28,7 +29,7 @@ export class BlogsRepository {
     const ToSkip = postsPagination.pageSize * (postsPagination.pageNumber - 1);
 
     const result = await this.blogModel
-      .find({})
+      .find({ name: { $regex: regex, $options: 'gi' } })
       .sort({ [sortBy]: sortDirection })
       .skip(ToSkip)
       .limit(pageSize)
