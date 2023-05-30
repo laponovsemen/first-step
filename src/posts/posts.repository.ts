@@ -98,7 +98,12 @@ export class PostsRepository {
     };
   }
   async deletePostById(id : string) {
-    return this.postsModel.deleteOne({_id: new ObjectId(id)})
+    const postId = this.common.tryConvertToObjectId(id)
+    if(!postId){
+      return null
+    }
+    const deletedPost = await this.postsModel.deleteOne({_id: new ObjectId(id)})
+    return  deletedPost.deletedCount === 1
   }
   async updatePostById( DTO : any, id : string) {
     return this.postsModel.updateOne({_id: new ObjectId(id)}, {$set : {

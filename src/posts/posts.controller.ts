@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  Res
+} from "@nestjs/common";
 import { BlogsService } from "../blogs/blogs.service";
 import { Common } from "../common";
 import { paginationCriteriaType, PaginatorViewModelType } from "../appTypes";
@@ -49,9 +61,13 @@ export class PostsController {
     return await this.postsService.updatePostById(DTO , id);
   }
 
-  @Delete()
+  @Delete(':id')
   @HttpCode(204)
-  async deletePostById(@Param('id') id) {
-    return await this.postsService.deletePostById(id);
+  async deletePostById(@Res() res : Response ,@Param('id') id) {
+    const result =  await this.postsService.deletePostById(id);
+    if(!result){
+      throw new NotFoundException("post not found")
+    }
+    return
   }
 }
