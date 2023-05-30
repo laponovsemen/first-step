@@ -47,7 +47,7 @@ export class BlogsController {
   @Get(':id/posts')
   @HttpCode(200)
   async getAllPostsForSpecificBlog(@Res({passthrough : true}) res: Response,@Query() QueryParams,@Param('id') blogId) {
-    const paginationCriteria: BlogsPaginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
+    const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
     const result =  await this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId);
     console.log(result)
     if(!result){
