@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get, HttpStatus,
+  Get, HttpCode, HttpStatus, NotFoundException,
   Param,
   Post,
   Put,
@@ -71,11 +71,16 @@ export class BlogsController {
     return this.blogsService.getBlogById(id);
   }
   @Put(':id')
-  async updateBlogById(@Res() res: Response,
+  @HttpCode(204)
+  async updateBlogById(
                        @Body() DTO,
                        @Param('id') id): Promise<void> {
-    await this.blogsService.updateBlogById(DTO, id);
-    res.status(HttpStatus.NO_CONTENT).send();
+    const updateResult = await this.blogsService.updateBlogById(DTO, id);
+    if(!updateResult){
+      throw new NotFoundException("Blog not found")
+    }
+    return
+
   }
   @Delete(':id')
   async deleteBlogById(@Res() res: Response,

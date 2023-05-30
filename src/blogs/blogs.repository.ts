@@ -140,8 +140,9 @@ export class BlogsRepository {
       createdAt: foundBlog.createdAt
     }
   }
-  updateBlogById(DTO: any, id: string) {
-    return this.blogModel.updateOne({ _id: new ObjectId(id) }, { $set: DTO });
+  async updateBlogById(DTO: any, id: string) {
+    const updateResult = await this.blogModel.updateOne({ _id: new ObjectId(id) }, { $set: DTO });
+    return updateResult.matchedCount === 1
   }
   deleteBlogById(id: string) {
     return this.blogModel.deleteOne({ _id: new ObjectId(id) });

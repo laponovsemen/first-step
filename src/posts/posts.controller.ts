@@ -33,12 +33,12 @@ export class PostsController {
     return await this.postsService.createNewPost(DTO);
   }
 
-  @Get()
+  @Get(':id')
   async getPostById(@Param('id') id){
     return await this.postsService.getPostById(id);
   }
 
-  @Put()
+  @Put(':id')
   async updatePostById(@Param('id') id,
                        @Body() DTO){
     return await this.postsService.updatePostById(DTO , id);
