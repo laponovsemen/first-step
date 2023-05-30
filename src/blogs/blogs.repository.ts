@@ -21,7 +21,7 @@ export class BlogsRepository {
   async getAllBlogs(blogsPagination: paginationCriteriaType) {
     const filter: { name?: any } = {}
     if (blogsPagination.searchNameTerm) {
-      filter.name = {$regex: blogsPagination.searchNameTerm, $options: 'gi'}
+      filter.name = {$regex: blogsPagination.searchNameTerm, $options: 'i'}
     }
     const pageSize = blogsPagination.pageSize;
     const regex = blogsPagination.searchNameTerm
