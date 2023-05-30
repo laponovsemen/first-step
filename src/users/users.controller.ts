@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { paginationCriteriaType } from "../appTypes";
 import { Common } from "../common";
@@ -24,6 +24,7 @@ export class UsersController{
 
 
   @Delete(':id')
+  @HttpCode(204)
   async deleteUserById(@Param("id") id){
     return this.usersService.deleteUserById(id)
   }
