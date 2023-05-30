@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { Mongoose } from 'mongoose';
 import { BlogViewModelType, PostDBModel } from './appTypes';
-import { APIPost, WithMongoId } from "./mongo/mongooseSchemas";
+import { APIPost, User, WithMongoId } from "./mongo/mongooseSchemas";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 
@@ -19,22 +19,17 @@ export class Common {
   }
 }
   getPaginationCriteria(QueryParams: any) {
-    const searchNameTerm = QueryParams.searchNameTerm
-      ? QueryParams.searchNameTerm.toString()
-      : null;
-    const pageNumber: number = QueryParams.pageNumber
-      ? parseInt(QueryParams.pageNumber.toString(), 10)
-      : 1;
-    const pageSize: number = QueryParams.pageSize
-      ? parseInt(QueryParams.pageSize.toString(), 10)
-      : 10;
-    const sortBy: string = QueryParams.sortBy
-      ? QueryParams.sortBy.toString()
-      : 'createdAt';
-    const sortDirection: 'asc' | 'desc' =
-      QueryParams.sortDirection === 'asc' ? 'asc' : 'desc';
+    const searchNameTerm = QueryParams.searchNameTerm ? QueryParams.searchNameTerm.toString() : null;
+    const searchLoginTerm = QueryParams.searchLoginTerm ? QueryParams.searchLoginTerm.toString() : null;
+    const searchEmailTerm = QueryParams.searchEmailTerm ? QueryParams.searchEmailTerm.toString() : null;
+    const pageNumber: number = QueryParams.pageNumber ? parseInt(QueryParams.pageNumber.toString(), 10) : 1;
+    const pageSize: number = QueryParams.pageSize ? parseInt(QueryParams.pageSize.toString(), 10) : 10;
+    const sortBy: string = QueryParams.sortBy ? QueryParams.sortBy.toString() : 'createdAt';
+    const sortDirection: 'asc' | 'desc' = QueryParams.sortDirection === 'asc' ? 'asc' : 'desc';
     return {
       searchNameTerm,
+      searchLoginTerm,
+      searchEmailTerm,
       pageNumber,
       pageSize,
       sortBy,
@@ -66,6 +61,15 @@ export class Common {
       websiteUrl: Obj2.websiteUrl,
       isMembership: Obj2.isMembership,
       createdAt: Obj2.createdAt,
+    };
+  };
+  mongoUserSlicing = (Obj2: WithMongoId<User>) => {
+    return {
+      id: Obj2._id,
+      login: Obj2.login,
+      password: Obj2.password,
+      email: Obj2.email,
+      createdAt : Obj2.createdAt
     };
   };
 }

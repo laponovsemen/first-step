@@ -2,6 +2,8 @@ import { ObjectId } from 'mongodb';
 import { WithMongoId } from './mongo/mongooseSchemas';
 
 export type paginationCriteriaType = {
+  searchLoginTerm : string | null;
+  searchEmailTerm : string | null;
   searchNameTerm: string | null;
   pageNumber: number;
   sortBy: string;

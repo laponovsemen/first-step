@@ -24,7 +24,6 @@ export class BlogsRepository {
       filter.name = {$regex: blogsPagination.searchNameTerm, $options: 'i'}
     }
     const pageSize = blogsPagination.pageSize;
-    const regex = blogsPagination.searchNameTerm
     const totalCount = await this.blogModel.countDocuments(filter);
     const pagesCount = Math.ceil(totalCount / pageSize);
     const page = blogsPagination.pageNumber;
