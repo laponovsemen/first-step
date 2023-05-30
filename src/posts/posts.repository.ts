@@ -31,7 +31,11 @@ export class PostsRepository{
   }
 
   async getPostById(id : string) {
-    const foundPost = await this.postsModel.findOne({_id: new ObjectId(id)})
+    const postId = this.common.tryConvertToObjectId(id)
+    if(!postId){
+      return null
+    }
+    const foundPost = await this.postsModel.findOne({_id: postId})
     if(!foundPost){
       return null
     } else {
