@@ -14,7 +14,7 @@ export class UsersService{
     return this.usersRepository.createUser(DTO)
   }
 
-  deleteUserById(){
-    return this.usersRepository.deleteUserById()
+  deleteUserById(id : string){
+    return this.usersRepository.deleteUserById(id)
   }
 }
