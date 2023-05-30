@@ -56,9 +56,14 @@ export class PostsController {
 
   @Put(':id')
   @HttpCode(204)
-  async updatePostById(@Param('id') id,
+  async updatePostById(@Res({passthrough : true}) res : Response,
+                       @Param('id') id,
                        @Body() DTO){
-    return await this.postsService.updatePostById(DTO , id);
+    const result =  await this.postsService.updatePostById(DTO , id);
+    if(!result){
+      throw new NotFoundException("post not found")
+    }
+    return
   }
 
   @Delete(':id')
