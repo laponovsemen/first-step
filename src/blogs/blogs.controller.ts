@@ -32,12 +32,13 @@ export class BlogsController {
   ) {}
 
   @Get()
+  @HttpCode(200)
   async getAllBlogs(
     @Query() QueryParams,
   ): Promise<PaginatorViewModelType<Blog>> {
     const paginationCriteria: paginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
-    return await this.blogsService.getAllBlogs(paginationCriteria);
+    return this.blogsService.getAllBlogs(paginationCriteria);
   }
   @Post()
   async createNewBlog(@Body() DTO): Promise<Blog> {
