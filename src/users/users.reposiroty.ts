@@ -19,10 +19,10 @@ export class UsersRepository{
     const searchLoginTerm = paginationCriteria.searchLoginTerm
     const searchEmailTerm = paginationCriteria.searchEmailTerm
     let searchParams = []
-    if (searchEmailTerm) searchParams.push({email: {$regex: searchEmailTerm, $options: "i"}})
-    if (searchLoginTerm) searchParams.push({login: {$regex: searchLoginTerm, $options: "i"}})
+    if (searchEmailTerm) searchParams.push({ email: { $regex: searchEmailTerm, $options: "i" } })
+    if (searchLoginTerm) searchParams.push({ login: { $regex: searchLoginTerm, $options: "i" } })
 
-    let filter: { $or?: any[] } = {$or: searchParams}
+    let filter: { $or?: any[] } = { $or: searchParams }
     if (searchParams.length === 0) filter = {}
 
 
@@ -41,30 +41,28 @@ export class UsersRepository{
       .skip(ToSkip)
       .limit(pageSize)
       .lean() //.exec()
+    const items = result.map((item) => {
+      return this.common.mongoUserSlicing(item)
+    })
 
-    if (result) {
-      const items = result.map((item) => {
-        return this.common.mongoUserSlicing(item);
-      });
-      const array = await Promise.all(items);
-      console.log(
-        {
-          pageSize: pageSize,
-          totalCount: totalCount,
-          pagesCount: pagesCount,
-          page: page,
-          items: array,
-        },
-        'its fucking result',
-      );
-      return {
+
+    console.log(
+      {
         pageSize: pageSize,
         totalCount: totalCount,
         pagesCount: pagesCount,
         page: page,
-        items: array,
-      };
-    }
+        items: items,
+      },
+      'its fucking result',
+    );
+    return {
+      pageSize: pageSize,
+      totalCount: totalCount,
+      pagesCount: pagesCount,
+      page: page,
+      items: items,
+    };
   }
 
   async createUser(DTO: any) {
