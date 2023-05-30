@@ -58,7 +58,8 @@ export class PostsRepository{
     }
   }
   async getAllPosts(paginationCriteria : paginationCriteriaType) {
-    const posts = this.postsModel.find({})
+    const posts = await  this.postsModel.find({})
+    return posts.map(item => this.common.mongoPostSlicing(item))
   }
   async deletePostById(id : string) {
     return this.postsModel.deleteOne({_id: new ObjectId(id)})
