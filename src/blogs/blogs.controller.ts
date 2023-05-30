@@ -70,12 +70,17 @@ export class BlogsController {
     }
   }
   @Get(':id')
-  async getBlogById(@Param('id') id): Promise<Blog> {
-    return this.blogsService.getBlogById(id);
+  async getBlogById(@Res({passthrough : true}) res: Response,
+    @Param('id') id): Promise<Blog> {
+    const result = await  this.blogsService.getBlogById(id);
+    if(!result){
+      throw new NotFoundException("Blog not found")
+    }
+    return result
   }
   @Put(':id')
   @HttpCode(204)
-  async updateBlogById(
+  async updateBlogById(@Res({passthrough : true}) res: Response,
                        @Body() DTO,
                        @Param('id') id): Promise<void> {
     const updateResult = await this.blogsService.updateBlogById(DTO, id);
@@ -86,9 +91,13 @@ export class BlogsController {
 
   }
   @Delete(':id')
-  async deleteBlogById(@Res() res: Response,
+  async deleteBlogById(@Res({passthrough : true}) res: Response,
                        @Param('id') id) {
-    await this.blogsService.deleteBlogById(id);
-    res.status(HttpStatus.NO_CONTENT).send();
+    const deletedBlod = await this.blogsService.deleteBlogById(id);
+    if(!deletedBlod){
+      throw new NotFoundException("Blog not found")
+    }
+    return
+
   }
 }
