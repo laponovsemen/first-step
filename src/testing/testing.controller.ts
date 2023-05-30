@@ -6,7 +6,7 @@ import { BlogsRepository } from "../blogs/blogs.repository";
 import { TestingService } from "./testing.service";
 
 @Controller('testing/all-data')
-export class testingController {
+export class TestingController {
   constructor(
 
     private readonly testingService: TestingService,

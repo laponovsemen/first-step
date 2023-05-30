@@ -18,11 +18,13 @@ import {
 } from "./mongo/mongooseSchemas";
 import { Common } from "./common";
 import { BlogsController } from "./blogs/blogs.controller";
-import { testingController } from "./testing/testing.controller";
+import { TestingController } from "./testing/testing.controller";
 import { TestingService } from "./testing/testing.service";
 import { PostsRepository } from "./posts/posts.repository";
 import { UsersRepository } from "./users/users.reposiroty";
 import { CommentsRepository } from "./comments/comments.repository";
+import { PostsController } from "./posts/posts.controller";
+import { PostsService } from "./posts/posts.service";
 
 @Module({
   imports: [
@@ -42,8 +44,9 @@ import { CommentsRepository } from "./comments/comments.repository";
       schema: UsersSchema
     }])],
 
-  controllers: [AppController, BlogsController, testingController],
-  providers: [AppService, BlogsService, BlogsRepository, Common, TestingService, PostsRepository, UsersRepository,CommentsRepository]
+  controllers: [AppController, BlogsController, TestingController, PostsController],
+  providers: [AppService, BlogsService, PostsService,  BlogsRepository, Common,
+    TestingService, PostsRepository, UsersRepository,CommentsRepository]
 })
 export class AppModule {
 }
