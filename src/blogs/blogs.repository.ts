@@ -18,18 +18,22 @@ export class BlogsRepository {
     @InjectModel(APIPost.name) private postModel: Model<PostDocument>,
     protected readonly common: Common,
   ) {}
-  async getAllBlogs(postsPagination: paginationCriteriaType) {
-    const pageSize = postsPagination.pageSize;
-    const regex = postsPagination.searchNameTerm
+  async getAllBlogs(blogsPagination: paginationCriteriaType) {
+    const pageSize = blogsPagination.pageSize;
+    const regex = blogsPagination.searchNameTerm
     const totalCount = await this.blogModel.countDocuments({ name: { $regex: regex, $options: 'gi' } });
     const pagesCount = Math.ceil(totalCount / pageSize);
-    const page = postsPagination.pageNumber;
-    const sortBy = postsPagination.sortBy;
-    const sortDirection: 'asc' | 'desc' = postsPagination.sortDirection;
-    const ToSkip = postsPagination.pageSize * (postsPagination.pageNumber - 1);
+    const page = blogsPagination.pageNumber;
+    const sortBy = blogsPagination.sortBy;
+    const sortDirection: 'asc' | 'desc' = blogsPagination.sortDirection;
+    const ToSkip = blogsPagination.pageSize * (blogsPagination.pageNumber - 1);
+    const filter: { name?: any } = {}
+    if (blogsPagination.searchNameTerm) {
+      filter.name = {$regex: blogsPagination.searchNameTerm, $options: 'i'}
+    }
 
     const result = await this.blogModel
-      .find({ name: { $regex: regex, $options: 'gi' } })
+      .find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(ToSkip)
       .limit(pageSize)
