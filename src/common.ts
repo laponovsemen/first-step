@@ -67,7 +67,6 @@ export class Common {
     return {
       id: Obj2._id,
       login: Obj2.login,
-      password: Obj2.password,
       email: Obj2.email,
       createdAt : Obj2.createdAt
     };
