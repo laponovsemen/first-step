@@ -44,6 +44,7 @@ export class BlogsController {
     return this.blogsService.createNewBlog(DTO);
   }
   @Get(':id/posts')
+  @HttpCode(200)
   async getAllPostsForSpecificBlog(@Res() res: Response,@Query() QueryParams,@Param('id') blogId) {
     const paginationCriteria: BlogsPaginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
     const result =  this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId,);
