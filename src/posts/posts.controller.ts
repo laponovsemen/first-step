@@ -63,7 +63,7 @@ export class PostsController {
 
   @Delete(':id')
   @HttpCode(204)
-  async deletePostById(@Res() res : Response ,@Param('id') id) {
+  async deletePostById(@Res({passthrough : true}) res : Response ,@Param('id') id) {
     const result =  await this.postsService.deletePostById(id);
     if(!result){
       throw new NotFoundException("post not found")
