@@ -26,6 +26,7 @@ export class PostsRepository{
       blogName : blog.name,
       createdAt: createdAt,
     }
+    return newPost
 
   }
 
