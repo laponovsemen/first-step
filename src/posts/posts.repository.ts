@@ -4,12 +4,14 @@ import { APIComment, APIPost, Blog, BlogDocument } from "../mongo/mongooseSchema
 import { Model } from "mongoose";
 import { ObjectId } from "mongodb";
 import { paginationCriteriaType } from "../appTypes";
+import { Common } from "../common";
 
 @Injectable()
 export class PostsRepository{
   constructor( @InjectModel(APIPost.name) private postsModel: Model<APIPost>,
                @InjectModel(Blog.name) private blogsModel: Model<Blog>,
                @InjectModel(APIComment.name) private commentsModel: Model<APIComment>,
+               protected readonly common : Common
                ) {
   }
   async createNewPost(DTO: any){
@@ -28,7 +30,12 @@ export class PostsRepository{
   }
 
   async getPostById(id : string) {
-    return this.postsModel.findOne({_id: new ObjectId(id)})
+    const foundPost = await this.postsModel.findOne({_id: new ObjectId(id)})
+    if(!foundPost){
+      return null
+    } else {
+      return this.common.mongoPostSlicing(foundPost)
+    }
   }
   async getAllPosts(paginationCriteria : paginationCriteriaType) {
     const posts = this.postsModel.find({})

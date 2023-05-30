@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from "@nestjs/common";
 import { BlogsService } from "../blogs/blogs.service";
 import { Common } from "../common";
 import { paginationCriteriaType, PaginatorViewModelType } from "../appTypes";
@@ -16,7 +16,7 @@ export class PostsController {
   @Get(':id/comments')
   async getAllCommentsForSpecificPost(
     @Query() QueryParams, @Param('id') id
-  ): Promise<PaginatorViewModelType<Comment>> {
+  ) {
     const paginationCriteria: paginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
     return this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
@@ -35,7 +35,11 @@ export class PostsController {
 
   @Get(':id')
   async getPostById(@Param('id') id){
-    return await this.postsService.getPostById(id);
+    const result =  await this.postsService.getPostById(id);
+    if(!result){
+      throw new NotFoundException("Blog not found")
+    }
+    return result
   }
 
   @Put(':id')
