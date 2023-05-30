@@ -48,7 +48,8 @@ export class BlogsController {
   @HttpCode(200)
   async getAllPostsForSpecificBlog(@Res({passthrough : true}) res: Response,@Query() QueryParams,@Param('id') blogId) {
     const paginationCriteria: BlogsPaginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
-    const result =  this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId);
+    const result =  await this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId);
+    console.log(result)
     if(!result){
       throw new NotFoundException("Blog not found")
     }
