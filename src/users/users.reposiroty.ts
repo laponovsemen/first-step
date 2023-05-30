@@ -77,6 +77,13 @@ export class UsersRepository{
       email,
       createdAt
     })
+    console.log(newlyCreatedUser);
+    console.log({
+      login,
+      password,
+      email,
+      createdAt
+    });
     return {
       id: newlyCreatedUser._id,
       login,

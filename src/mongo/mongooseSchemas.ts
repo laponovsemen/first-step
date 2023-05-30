@@ -65,12 +65,17 @@ export class APIComment {
   };
   createdAt: Date
 }
+@Schema({versionKey: false})
 export class User {
-
-  _id: string;
+  //({type: ObjectId, required: true, unique: true, default: new ObjectId()})
+  _id?: ObjectId;
+  @Prop({type:String, required: true, unique: true})
   login: string;
+  @Prop({type:String, required: true, unique: true})
   email: string;
+  @Prop({type:String, required: true})
   password : string
+  @Prop({type:Date, required: true})
   createdAt: Date
 
 }

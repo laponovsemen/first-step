@@ -19,7 +19,7 @@ export class UsersController{
 
   @Post()
   async createUser(@Body() DTO){
-    return this.usersService.createUser(DTO)
+    return await this.usersService.createUser(DTO)
   }
 
 
