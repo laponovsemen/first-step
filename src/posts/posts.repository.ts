@@ -106,11 +106,16 @@ export class PostsRepository {
     return  deletedPost.deletedCount === 1
   }
   async updatePostById( DTO : any, id : string) {
-    return this.postsModel.updateOne({_id: new ObjectId(id)}, {$set : {
+    const postId = this.common.tryConvertToObjectId(id)
+    if(!postId){
+      return null
+    }
+    const updatesPost = await this.postsModel.updateOne({_id: new ObjectId(id)}, {$set : {
         shortDescription : DTO.shortDescription,
         content : DTO.content,
         title : DTO.title,
       }})
+    return updatesPost.matchedCount === 1
   }
   async deleteAllData(){
     await this.postsModel.deleteMany({})
