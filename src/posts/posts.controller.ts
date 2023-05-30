@@ -35,7 +35,7 @@ export class PostsController {
 
   @Get()
   async getPostById(@Param('id') id){
-    await this.postsService.getPostById(id);
+    return this.postsService.getPostById(id);
   }
 
   @Put()

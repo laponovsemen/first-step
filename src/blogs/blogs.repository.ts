@@ -162,6 +162,7 @@ export class BlogsRepository {
 
     }
     const createdPostForSpecificBlog = await this.postModel.create(newPost);
+    console.log(newPost + "newPost")
     return this.common.mongoPostSlicing(createdPostForSpecificBlog)
   }
   async deleteAllData(){
