@@ -67,7 +67,7 @@ export class APIComment {
 }
 export class User {
 
-  id: string;
+  _id: string;
   login: string;
   email: string;
   password : string

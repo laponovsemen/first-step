@@ -63,7 +63,7 @@ export class Common {
       createdAt: Obj2.createdAt,
     };
   };
-  mongoUserSlicing = (Obj2: WithMongoId<User>) => {
+  mongoUserSlicing = (Obj2: User) => {
     return {
       id: Obj2._id,
       login: Obj2.login,
