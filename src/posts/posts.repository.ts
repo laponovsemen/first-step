@@ -26,7 +26,22 @@ export class PostsRepository{
       blogName : blog.name,
       createdAt: createdAt,
     }
-    return newPost
+    const createdPost = await this.postsModel.create(newPost)
+    return {
+      id: createdPost._id,
+      title: DTO.title, //    maxLength: 30
+      shortDescription: DTO.shortDescription, //maxLength: 100
+      content: DTO.content, // maxLength: 1000
+      blogId: new ObjectId(blogId),
+      blogName : blog.name,
+      createdAt: createdAt,
+      extendedLikesInfo: {
+        dislikesCount: 0,
+        likesCount: 0,
+        myStatus: "None",
+        newestLikes: [],
+        },
+    }
 
   }
 
