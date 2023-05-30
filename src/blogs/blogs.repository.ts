@@ -154,10 +154,14 @@ export class BlogsRepository {
   }
   async deleteBlogById(id: string) {
     const blogId = this.common.tryConvertToObjectId(id)
+    console.log(blogId);
     if (!blogId) {
       return null
     }
     const deletedBlog = await this.blogModel.deleteOne({ _id: blogId });
+    console.log(deletedBlog);
+    console.log(deletedBlog.deletedCount === 1);
+
     return deletedBlog.deletedCount === 1
   }
   async createPostForSpecificBlog(DTO: any, id: string) {
