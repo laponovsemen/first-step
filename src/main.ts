@@ -12,19 +12,27 @@ async function bootstrap() {
       //stopAtFirstError: true,
       exceptionFactory: (errors) => {
         const errorsForResponse = []
-        console.log(errors)
+        console.log(errors , 'ERRORS')
+
+        /*errors.forEach(e => errorsForResponse.push({
+          message : e.constraints[0],
+          field : e.property
+        }))*/
+
         errors.forEach(e => {                     //errorsForResponse.push({field: e.property}))
           const constrainedKeys = Object.keys(e.constraints)
-          console.log(constrainedKeys, "constrainedKeys");
+          //console.log(constrainedKeys, "constrainedKeys");
           constrainedKeys.forEach((ckey) => {
             errorsForResponse.push({
               message : e.constraints[ckey],
               field : e.property
             })
             console.log(errorsForResponse , "errorsForResponse");
-          throw new BadRequestException(errorsForResponse);
+
           })
+
         })
+        throw new BadRequestException(errorsForResponse);
       }
     }
     )
