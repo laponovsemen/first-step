@@ -11,7 +11,6 @@ class UserDTO {
   login : string //maxLength: 10 minLength: 3 pattern: ^[a-zA-Z0-9_-]*$
   @IsNotEmpty()
   @Length(6, 20)
-
   password: string // maxLength: 20 minLength: 6
   @IsNotEmpty()
   @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
