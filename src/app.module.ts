@@ -29,6 +29,8 @@ import { UsersController } from "./users/users.controller";
 import { UsersService } from "./users/users.service";
 import { AuthModule } from "./auth/auth.module";
 import { JwtModule, JwtService } from "@nestjs/jwt";
+import { AuthController } from "./auth/auth.controller";
+import { AuthService } from "./auth/auth.service";
 
 @Module({
   imports: [
@@ -48,8 +50,8 @@ import { JwtModule, JwtService } from "@nestjs/jwt";
       schema: UsersSchema
     }])],
 
-  controllers: [AppController, BlogsController, TestingController, PostsController, UsersController],
-  providers: [AppService, BlogsService, PostsService,TestingService, UsersService,
+  controllers: [AppController, BlogsController, TestingController, PostsController, UsersController, AuthController],
+  providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,
     BlogsRepository, PostsRepository, UsersRepository,CommentsRepository,
     Common, AuthModule, JwtModule, JwtService]
 })

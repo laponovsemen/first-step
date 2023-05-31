@@ -26,18 +26,17 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   newPassword(@Body() signInDto: Record<string, any>) {
   }
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Res() res: Response,
               @Body() signInDto: LoginDTO) {
 
-    /*const result = await this.authService.signIn(signInDto.loginOrEmail, signInDto.password);
+    const result = await this.authService.signIn(signInDto.loginOrEmail, signInDto.password);
     res.cookie('refreshToken', result.refresh_token, { httpOnly: true, secure: true })
-    return {
+    res.status(200).send({
       accessToken: result.access_token
-    }*/
-    return
+    })
   }
 
   @Post('refresh-token')
