@@ -5,12 +5,13 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Request, Res
+  Request, Res, UseGuards
 } from "@nestjs/common";
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { LoginDTO, UserDTO } from "../users/users.controller";
 import { Response } from "express";
+import { AuthGuard } from "./auth.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -25,17 +26,18 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   newPassword(@Body() signInDto: Record<string, any>) {
   }
-
+  @UseGuards(AuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Res() res: Response,
               @Body() signInDto: LoginDTO) {
 
-    const result = await this.authService.signIn(signInDto.loginOrEmail, signInDto.password);
+    /*const result = await this.authService.signIn(signInDto.loginOrEmail, signInDto.password);
     res.cookie('refreshToken', result.refresh_token, { httpOnly: true, secure: true })
     return {
       accessToken: result.access_token
-    }
+    }*/
+    return
   }
 
   @Post('refresh-token')
