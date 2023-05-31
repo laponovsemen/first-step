@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
+  HttpCode, HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -14,7 +14,7 @@ import { UsersService } from "./users.service";
 import { paginationCriteriaType } from "../appTypes";
 import { Common } from "../common";
 import { IsNotEmpty, Length, Matches } from "class-validator";
-import { AuthGuard } from "../auth/auth.guard";
+import { AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
 
 export class UserDTO {
   @IsNotEmpty()
@@ -30,12 +30,14 @@ export class UserDTO {
   email : string // pattern: ^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$
 }
 
+@UseGuards(BasicAuthGuard)
 @Controller('users')
 export class UsersController{
   constructor(protected readonly usersService : UsersService,
               protected readonly common : Common) {
   }
   @Get()
+  @HttpCode(HttpStatus.OK)
   async getAllUsers(@Query() QueryParams){
     const paginationCriteria: paginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
@@ -43,15 +45,14 @@ export class UsersController{
   }
 
 
-  @UseGuards(AuthGuard)
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() DTO : UserDTO){
     return await this.usersService.createUser(DTO)
   }
 
-  @UseGuards(AuthGuard)
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUserById(@Param("id") id){
     const result = await this.usersService.deleteUserById(id)
     if (!result){

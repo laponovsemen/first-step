@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer"
+import * as nodemailer from "nodemailer"
 
 export class EmailAdapter {
   async sendEmail(email : string, code : string) {

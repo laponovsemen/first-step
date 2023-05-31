@@ -4,20 +4,21 @@ import {
   Injectable,
   UnauthorizedException, UseGuards
 } from "@nestjs/common";
-import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
-import { jwtConstants } from './constants';
-import { IS_PUBLIC_KEY } from './decorators/public.decorator';
+import { Reflector } from "@nestjs/core";
+import { JwtService } from "@nestjs/jwt";
+import { Request } from "express";
+import { jwtConstants } from "./constants";
+import { IS_PUBLIC_KEY } from "./decorators/public.decorator";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService, private reflector: Reflector) {}
+  constructor(private jwtService: JwtService, private reflector: Reflector) {
+  }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
-      context.getClass(),
+      context.getClass()
     ]);
     if (isPublic) {
       // 💡 See this condition
@@ -31,11 +32,11 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.secret,
+        secret: jwtConstants.secret
       });
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      request['user'] = payload;
+      request["user"] = payload;
     } catch {
       throw new UnauthorizedException();
     }
@@ -43,7 +44,25 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+    const [type, token] = request.headers.authorization?.split(" ") ?? [];
+    return type === "Bearer" ? token : undefined;
   }
+}
+
+@Injectable()
+export class BasicAuthGuard implements CanActivate {
+  constructor() {
+  }
+
+  canActivate(context: ExecutionContext): boolean {
+    const req = context.switchToHttp().getRequest();
+    const auth = req.headers.authorization;
+    if (!auth) throw new UnauthorizedException();
+    const [authType, authValue] = auth.split(" ");
+    if (authType !== "Basic") throw new UnauthorizedException();
+    if (authValue !== "YWRtaW46cXdlcnR5") throw new UnauthorizedException();
+    return true;
+  }
+
+
 }
