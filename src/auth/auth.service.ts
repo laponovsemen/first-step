@@ -39,9 +39,10 @@ export class AuthService {
     const password : string = userDTO.password
     const foundUserByLogin = await this.usersRepository.findUserByLogin(login)
     const foundUserByEmail = await this.usersRepository.findUserByEmail(email)
-    const credentialsExists = foundUserByLogin || foundUserByEmail
-    if (credentialsExists) {
-      return null
+    if (foundUserByLogin) {
+      return "login"
+    } else if (foundUserByEmail) {
+      return "email"
     } else {
       const user = await this.usersRepository.createUnconfirmedUser(login, password, email)
       if (user) {
