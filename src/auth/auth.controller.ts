@@ -65,6 +65,7 @@ export class AuthController {
   }
 
   @Post('registration-email-resending')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @HttpCode(HttpStatus.OK)
   registrationEmailResending(@Body() signInDto: Record<string, any>) {
   }
