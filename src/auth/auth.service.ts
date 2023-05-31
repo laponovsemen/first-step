@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { UserDTO } from "../users/users.controller";
+import { emailDTO, UserDTO } from "../users/users.controller";
 import { jwtConstants } from "./constants";
 import { UsersRepository } from "../users/users.reposiroty";
 import { EmailAdapter } from "./email.adapter";
@@ -52,16 +52,17 @@ export class AuthService {
 
   }
 
-  async registrationEmailResending(email: string) {
+  async registrationEmailResending(emailFromFront: emailDTO) {
+    const email = emailFromFront.email
     const UserExists = await this.usersRepository.findUserByEmail(email)
     const confirmationCode = this.common.createEmailSendCode()
     if (!UserExists) {
       await this.emailAdapter.sendEmail(email, confirmationCode)
-      return
+      return true
     } else {
       await this.emailAdapter.sendEmail(email, confirmationCode)
       await this.usersRepository.changeUsersConfirmationCode(UserExists._id, confirmationCode)
-      return
+      return true
     }
   }
 }
