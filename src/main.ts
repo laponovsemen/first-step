@@ -1,12 +1,33 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from "@nestjs/common";
+import { BadRequestException, ValidationPipe } from "@nestjs/common";
+import { HttpExceptionFilter } from "./exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe(
+    {
+      stopAtFirstError: true,
+      exceptionFactory: (errors) => {
+        const errorsForResponse = []
+
+        errors.forEach(e => {//errorsForResponse.push({field: e.property}))
+          const constrainedKeys = Object.keys(e.constraints)
+          constrainedKeys.forEach((ckey) => {
+            errorsForResponse.push({
+              message : e.constraints[ckey],
+              field : e.property
+            })
+          throw new BadRequestException(errorsForResponse);
+          })
+        })
+      }
+    }
+    )
+  )
+  app.useGlobalFilters(new HttpExceptionFilter())
 
   const config = new DocumentBuilder()
     .setTitle('social-network example')
