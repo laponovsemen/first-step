@@ -5,6 +5,8 @@ import { CommentsDocument, User, UsersDocument } from "../mongo/mongooseSchemas"
 import { Common } from "../common";
 import { paginationCriteriaType } from "../appTypes";
 import add from 'date-fns/add'
+import { ObjectId } from "mongodb";
+import { addMinutes } from "date-fns";
 
 @Injectable()
 export class UsersRepository{
@@ -131,4 +133,13 @@ export class UsersRepository{
 
   }
 
+  async findUserByEmail(email: string) {
+    const filter = { email: email }
+    return this.usersModel.findOne(filter);
+  }
+
+  async changeUsersConfirmationCode(_id: ObjectId, confirmationCode: string) {
+    const newCodeDateOfExpiary = addMinutes(new Date(), 30)
+    await this.usersModel.updateOne({_id}, {$set : {code : confirmationCode, codeDateOfExpiary : newCodeDateOfExpiary}})
+  }
 }

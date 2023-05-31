@@ -5,6 +5,8 @@ import { UserDTO } from "../users/users.controller";
 import { jwtConstants } from "./constants";
 import { UsersRepository } from "../users/users.reposiroty";
 import { EmailAdapter } from "./email.adapter";
+import { Common } from "../common";
+
 
 @Injectable()
 export class AuthService {
@@ -13,6 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
     private usersRepository: UsersRepository,
     private emailAdapter: EmailAdapter,
+    private common: Common,
   ) {}
 
   async signIn(loginOrEmail : string, pass : string) {
@@ -47,5 +50,18 @@ export class AuthService {
       }
     }
 
+  }
+
+  async registrationEmailResending(email: string) {
+    const UserExists = await this.usersRepository.findUserByEmail(email)
+    const confirmationCode = this.common.createEmailSendCode()
+    if (!UserExists) {
+      await this.emailAdapter.sendEmail(email, confirmationCode)
+      return
+    } else {
+      await this.emailAdapter.sendEmail(email, confirmationCode)
+      await this.usersRepository.changeUsersConfirmationCode(UserExists._id, confirmationCode)
+      return
+    }
   }
 }

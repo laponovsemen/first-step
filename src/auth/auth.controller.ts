@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { LoginDTO, UserDTO } from "../users/users.controller";
+import { emailDTO, LoginDTO, UserDTO } from "../users/users.controller";
 import { Response } from "express";
 import { AuthGuard } from "./auth.guard";
 import { tr } from "date-fns/locale";
@@ -67,7 +67,8 @@ export class AuthController {
   @Post('registration-email-resending')
   @HttpCode(HttpStatus.NO_CONTENT)
   @HttpCode(HttpStatus.OK)
-  registrationEmailResending(@Body() signInDto: Record<string, any>) {
+  registrationEmailResending(@Body() email: emailDTO) {
+    const result = this.authService.registrationEmailResending(email)
   }
 
   @Post('logout')
