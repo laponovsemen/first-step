@@ -2,7 +2,21 @@ import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post
 import { UsersService } from "./users.service";
 import { paginationCriteriaType } from "../appTypes";
 import { Common } from "../common";
+import { IsNotEmpty, Length, Matches } from "class-validator";
 
+class UserDTO {
+  @IsNotEmpty()
+  @Length(3, 10)
+  @Matches(/^[a-zA-Z0-9_-]*$/)
+  login : string //maxLength: 10 minLength: 3 pattern: ^[a-zA-Z0-9_-]*$
+  @IsNotEmpty()
+  @Length(3, 10)
+  password: string // maxLength: 20 minLength: 6
+  @IsNotEmpty()
+  @Length(6, 20)
+  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+  email : string // pattern: ^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$
+}
 
 @Controller('users')
 export class UsersController{
@@ -18,7 +32,7 @@ export class UsersController{
 
 
   @Post()
-  async createUser(@Body() DTO){
+  async createUser(@Body() DTO : UserDTO){
     return await this.usersService.createUser(DTO)
   }
 

@@ -23,6 +23,26 @@ import {
 } from '../appTypes';
 import express, {Request, Response} from 'express';
 import { BlogsService } from './blogs.service';
+import { IsNotEmpty, IsString, IsUrl, Length } from "class-validator";
+
+
+
+class BlogDTO {
+  @IsNotEmpty()
+  @Length(1, 15)
+  name : string // maxLength: 15
+
+  @IsNotEmpty()
+  @IsString()
+  @Length(1, 500)
+  description: string // maxLength: 500
+
+  @IsNotEmpty()
+  @IsString()
+  @IsUrl()
+  @Length(1, 100)
+  websiteUrl : string // maxLength: 100 pattern: ^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$
+}
 
 @Controller('blogs')
 export class BlogsController {
@@ -30,6 +50,8 @@ export class BlogsController {
     private readonly blogsService: BlogsService,
     private readonly common: Common,
   ) {}
+
+
 
   @Get()
   @HttpCode(200)
@@ -41,7 +63,7 @@ export class BlogsController {
     return this.blogsService.getAllBlogs(paginationCriteria);
   }
   @Post()
-  async createNewBlog(@Body() DTO): Promise<Blog> {
+  async createNewBlog(@Body() DTO : BlogDTO): Promise<Blog> {
     return this.blogsService.createNewBlog(DTO);
   }
   @Get(':id/posts')
@@ -81,7 +103,7 @@ export class BlogsController {
   @Put(':id')
   @HttpCode(204)
   async updateBlogById(@Res({passthrough : true}) res: Response,
-                       @Body() DTO,
+                       @Body() DTO : BlogDTO,
                        @Param('id') id): Promise<void> {
     const updateResult = await this.blogsService.updateBlogById(DTO, id);
     if(!updateResult){

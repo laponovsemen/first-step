@@ -16,6 +16,21 @@ import { Common } from "../common";
 import { paginationCriteriaType, PaginatorViewModelType } from "../appTypes";
 import { Blog } from "../mongo/mongooseSchemas";
 import { PostsService } from "./posts.service";
+import { IsNotEmpty, Length, Matches } from "class-validator";
+
+
+class PostDTO {
+  @IsNotEmpty()
+  @Length(1, 30)
+  title: string //maxLength: 30
+  @IsNotEmpty()
+  @Length(1, 100)
+  shortDescription: string // maxLength: 100
+  @IsNotEmpty()
+  @Length(1, 1000)
+  content: string // maxLength: 1000
+  blogId: string
+}
 
 @Controller('posts')
 export class PostsController {
@@ -41,7 +56,7 @@ export class PostsController {
   }
 
   @Post()
-  async createNewPost(@Body() DTO){
+  async createNewPost(@Body() DTO : PostDTO){
     return await this.postsService.createNewPost(DTO);
   }
 
@@ -58,7 +73,7 @@ export class PostsController {
   @HttpCode(204)
   async updatePostById(@Res({passthrough : true}) res : Response,
                        @Param('id') id,
-                       @Body() DTO){
+                       @Body() DTO : PostDTO){
     const result =  await this.postsService.updatePostById(DTO , id);
     if(!result){
       throw new NotFoundException("post not found")
