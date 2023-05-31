@@ -52,7 +52,7 @@ export class AuthController {
                                  @Body() codeDTO: {code : string}) {
     const result = await this.authService.registrationConfirmation(codeDTO)
     if(!result){
-      throw new BadRequestException()
+      res.status(400).json({errorsMessages: [{ message: "Code already confirmed", field: "code" }]})
     }
     res.status(204).json({})
 
