@@ -3,12 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { UserDTO } from "../users/users.controller";
 import { jwtConstants } from "./constants";
+import { UsersRepository } from "../users/users.reposiroty";
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private usersRepository: UsersRepository,
   ) {}
 
   async signIn(loginOrEmail : string, pass : string) {
@@ -25,7 +27,11 @@ export class AuthService {
     };
   }
 
-  registration(userDTO: UserDTO) {
-    return
+  async registration(userDTO: UserDTO) {
+    const login : string = userDTO.login
+    const email : string = userDTO.email
+    const credentialsExists = await this.usersRepository.findUserByLoginOrEmail(login, email)
+
+
   }
 }
