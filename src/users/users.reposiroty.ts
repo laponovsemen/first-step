@@ -100,4 +100,8 @@ export class UsersRepository{
     const deletedUser = await this.usersModel.deleteOne({ _id: userId })
     return deletedUser.deletedCount === 1
   }
+
+  findUserByLogin(login: string) {
+    return this.usersModel.findOne({login : login})
+  }
 }

@@ -18,4 +18,8 @@ export class UsersService{
   deleteUserById(id : string){
     return this.usersRepository.deleteUserById(id)
   }
+
+  async findUserByLogin(login : string) {
+    return this.usersRepository.findUserByLogin(login)
+  }
 }

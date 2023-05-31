@@ -1,8 +1,20 @@
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Post,
+  Query,
+  UseGuards
+} from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { paginationCriteriaType } from "../appTypes";
 import { Common } from "../common";
 import { IsNotEmpty, Length, Matches } from "class-validator";
+import { AuthGuard } from "../auth/auth.guard";
 
 class UserDTO {
   @IsNotEmpty()
@@ -31,12 +43,13 @@ export class UsersController{
   }
 
 
+  @UseGuards(AuthGuard)
   @Post()
   async createUser(@Body() DTO : UserDTO){
     return await this.usersService.createUser(DTO)
   }
 
-
+  @UseGuards(AuthGuard)
   @Delete(':id')
   @HttpCode(204)
   async deleteUserById(@Param("id") id){
