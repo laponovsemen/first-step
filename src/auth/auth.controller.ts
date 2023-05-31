@@ -47,8 +47,15 @@ export class AuthController {
   }
 
   @Post('registration-confirmation')
-  @HttpCode(HttpStatus.OK)
-  registrationConfirmation(@Body() signInDto: Record<string, any>) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async registrationConfirmation(@Res() res : Response,
+                                 @Body() code: string) {
+    const result = await this.authService.registrationConfirmation(code)
+    if(!result){
+      throw new BadRequestException()
+    }
+    res.status(204).json({})
+
   }
 
   @Post('registration')

@@ -65,4 +65,17 @@ export class AuthService {
       return true
     }
   }
+
+  async registrationConfirmation(code: string) {
+    const foundUser = await this.usersRepository.findUserByRegistrationCode(code)
+    if(!foundUser){
+      return null
+    }
+    const foundUserCodeFreshness = await this.usersRepository.findUserCodeFreshness(foundUser)
+    if(!foundUserCodeFreshness){
+      return null
+    }
+    await this.usersRepository.makeUserConfirmed(foundUser)
+    return true
+  }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
+import { InjectModel, Prop } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { CommentsDocument, User, UsersDocument } from "../mongo/mongooseSchemas";
 import { Common } from "../common";
@@ -141,5 +141,23 @@ export class UsersRepository{
   async changeUsersConfirmationCode(_id: ObjectId, confirmationCode: string) {
     const newCodeDateOfExpiary = addMinutes(new Date(), 30)
     await this.usersModel.updateOne({_id}, {$set : {code : confirmationCode, codeDateOfExpiary : newCodeDateOfExpiary}})
+  }
+
+  async findUserByRegistrationCode(code: string) {
+    const foundUser = await this.usersModel.findOne({code : code})
+    return foundUser
+  }
+
+  async findUserCodeFreshness(foundUser: User) {
+    return new Date() < foundUser.codeDateOfExpiary
+  }
+
+  async makeUserConfirmed(foundUser: User) {
+    await this.usersModel.updateOne({_id : foundUser._id},
+      {$set: {
+          isConfirmed: true,
+          code: null,
+          codeDateOfExpiary: null,
+      }})
   }
 }
