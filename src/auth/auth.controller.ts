@@ -77,7 +77,7 @@ export class AuthController {
                                    @Body() email: emailDTO) {
     const result = await this.authService.registrationEmailResending(email)
     if (!result.result) {
-      res.status(HttpStatus.NO_CONTENT).json({errorsMessages: [{ message: result.message, field: result.field }]})
+      res.status(HttpStatus.BAD_REQUEST).json({errorsMessages: [{ message: result.message, field: result.field }]})
     }
     res.status(HttpStatus.NO_CONTENT).json({})
 
