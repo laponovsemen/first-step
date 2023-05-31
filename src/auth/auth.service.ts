@@ -66,7 +66,8 @@ export class AuthService {
     }
   }
 
-  async registrationConfirmation(code: string) {
+  async registrationConfirmation(codeDTO: {code : string}) {
+    const code = codeDTO.code
     const foundUser = await this.usersRepository.findUserByRegistrationCode(code)
     if(!foundUser){
       return null

@@ -49,8 +49,8 @@ export class AuthController {
   @Post('registration-confirmation')
   @HttpCode(HttpStatus.NO_CONTENT)
   async registrationConfirmation(@Res() res : Response,
-                                 @Body() code: string) {
-    const result = await this.authService.registrationConfirmation(code)
+                                 @Body() codeDTO: {code : string}) {
+    const result = await this.authService.registrationConfirmation(codeDTO)
     if(!result){
       throw new BadRequestException()
     }
