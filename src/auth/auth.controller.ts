@@ -9,7 +9,7 @@ import {
 } from "@nestjs/common";
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { UserDTO } from "../users/users.controller";
+import { LoginDTO, UserDTO } from "../users/users.controller";
 import { Response } from "express";
 
 @Controller('auth')
@@ -19,21 +19,19 @@ export class AuthController {
   @Post('password-recovery')
   @HttpCode(HttpStatus.OK)
   passwordRecovery(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
   @Post('new-password')
   @HttpCode(HttpStatus.OK)
   newPassword(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Res() res: Response,
-              @Body() signInDto: UserDTO) {
+              @Body() signInDto: LoginDTO) {
 
-    const result = await this.authService.signIn(signInDto.login, signInDto.password);
+    const result = await this.authService.signIn(signInDto.loginOrEmail, signInDto.password);
     res.cookie('refreshToken', result.refresh_token, { httpOnly: true, secure: true })
     return {
       accessToken: result.access_token
@@ -43,13 +41,11 @@ export class AuthController {
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
   refreshToken(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
   @Post('registration-confirmation')
   @HttpCode(HttpStatus.OK)
   registrationConfirmation(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
   @Post('registration')
@@ -61,13 +57,11 @@ export class AuthController {
   @Post('registration-email-resending')
   @HttpCode(HttpStatus.OK)
   registrationEmailResending(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
   @Get('me')

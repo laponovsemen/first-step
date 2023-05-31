@@ -19,7 +19,7 @@ export class UsersService{
     return this.usersRepository.deleteUserById(id)
   }
 
-  async findUserByLogin(login : string) {
-    return this.usersRepository.findUserByLogin(login)
+  async findUserByLoginOrEmail(loginOrEmail : string, pass : string) {
+    return this.usersRepository.findUserByLoginOrEmail(loginOrEmail, pass)
   }
 }

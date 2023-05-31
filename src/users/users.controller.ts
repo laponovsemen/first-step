@@ -30,6 +30,15 @@ export class UserDTO {
   email : string // pattern: ^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$
 }
 
+export class LoginDTO {
+  @IsNotEmpty()
+  loginOrEmail : string //maxLength: 10 minLength: 3 pattern: ^[a-zA-Z0-9_-]*$
+
+  @IsNotEmpty()
+  @Length(6, 20)
+  password: string // maxLength: 20 minLength: 6
+}
+
 @UseGuards(BasicAuthGuard)
 @Controller('users')
 export class UsersController{

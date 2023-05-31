@@ -101,7 +101,8 @@ export class UsersRepository{
     return deletedUser.deletedCount === 1
   }
 
-  findUserByLogin(login: string) {
-    return this.usersModel.findOne({login : login})
+  findUserByLoginOrEmail(loginOrEmail: string, pass : string) {
+    const filter = {$or :[{login : loginOrEmail}, {email : loginOrEmail}]}
+    return this.usersModel.findOne(filter)
   }
 }
