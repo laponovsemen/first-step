@@ -50,7 +50,7 @@ export class AuthController {
   }
 
   @Post('registration')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   registration(@Body() userDTO: UserDTO) {
     return this.authService.registration(userDTO)
   }
