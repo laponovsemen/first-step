@@ -62,9 +62,7 @@ export class AuthService {
       return {result : false, field : "email", message : "email already confirmed"}
     } else{
       const UserStatus = UserExists.code
-      if(UserStatus){
-        return null
-      }
+
       await this.emailAdapter.sendEmail(email, confirmationCode)
       await this.usersRepository.changeUsersConfirmationCode(UserExists._id, confirmationCode)
       return {result : true, field : null, message : null}
