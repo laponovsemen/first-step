@@ -31,6 +31,7 @@ import { AuthModule } from "./auth/auth.module";
 import { JwtModule, JwtService } from "@nestjs/jwt";
 import { AuthController } from "./auth/auth.controller";
 import { AuthService } from "./auth/auth.service";
+import { EmailAdapter } from "./auth/email.adapter";
 
 @Module({
   imports: [
@@ -51,7 +52,7 @@ import { AuthService } from "./auth/auth.service";
     }])],
 
   controllers: [AppController, BlogsController, TestingController, PostsController, UsersController, AuthController],
-  providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,
+  providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter,
     BlogsRepository, PostsRepository, UsersRepository,CommentsRepository,
     Common, AuthModule, JwtModule, JwtService]
 })
