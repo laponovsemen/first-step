@@ -73,8 +73,13 @@ export class AuthController {
 
   @Post('registration-email-resending')
   @HttpCode(HttpStatus.NO_CONTENT)
-  registrationEmailResending(@Body() email: emailDTO) {
+  registrationEmailResending(@Res() res : Response,
+                             @Body() email: emailDTO) {
     const result = this.authService.registrationEmailResending(email)
+    if(!result){
+      throw new BadRequestException()
+    }
+    res.status(HttpStatus.NO_CONTENT).json({})
 
   }
 

@@ -6,6 +6,7 @@ import { jwtConstants } from "./constants";
 import { UsersRepository } from "../users/users.reposiroty";
 import { EmailAdapter } from "./email.adapter";
 import { Common } from "../common";
+import { User } from "../mongo/mongooseSchemas";
 
 
 @Injectable()
@@ -56,11 +57,15 @@ export class AuthService {
   async registrationEmailResending(emailFromFront: emailDTO) {
     const email = emailFromFront.email
     const UserExists = await this.usersRepository.findUserByEmail(email)
+
     const confirmationCode = this.common.createEmailSendCode()
     if (!UserExists) {
-      await this.emailAdapter.sendEmail(email, confirmationCode)
-      return true
+      return null
     } else {
+      const UserStatus = UserExists.code
+      if(UserStatus){
+        return null
+      }
       await this.emailAdapter.sendEmail(email, confirmationCode)
       await this.usersRepository.changeUsersConfirmationCode(UserExists._id, confirmationCode)
       return true
