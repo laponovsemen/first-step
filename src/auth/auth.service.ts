@@ -40,20 +40,16 @@ export class AuthService {
     const foundUserByLogin = await this.usersRepository.findUserByLogin(login)
     const foundUserByEmail = await this.usersRepository.findUserByEmail(email)
     if (foundUserByLogin) {
-      return "login"
+      return {result : false, field : "login"}
     } else if (foundUserByEmail) {
-      return "email"
+      return {result : false, field : "email"}
     } else {
-      const user = await this.usersRepository.createUnconfirmedUser(login, password, email)
-      if (user) {
+        const user = await this.usersRepository.createUnconfirmedUser(login, password, email)
         const info = await this.emailAdapter.sendEmail(email, user.code)
-        return true
-      } else {
-        return null
+        return {result : true, field : null}
       }
     }
 
-  }
 
   async registrationEmailResending(emailFromFront: emailDTO) {
     const email = emailFromFront.email
