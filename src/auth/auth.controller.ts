@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -12,6 +13,7 @@ import { Public } from './decorators/public.decorator';
 import { LoginDTO, UserDTO } from "../users/users.controller";
 import { Response } from "express";
 import { AuthGuard } from "./auth.guard";
+import { tr } from "date-fns/locale";
 
 @Controller('auth')
 export class AuthController {
@@ -51,8 +53,15 @@ export class AuthController {
 
   @Post('registration')
   @HttpCode(HttpStatus.NO_CONTENT)
-  registration(@Body() userDTO: UserDTO) {
-    return this.authService.registration(userDTO)
+  async registration(
+    @Res() res : Response,
+    @Body() userDTO: UserDTO) {
+    const result = await this.authService.registration(userDTO)
+    if(!result){
+      throw new BadRequestException()
+    }
+    res.status(204).json({})
+
   }
 
   @Post('registration-email-resending')

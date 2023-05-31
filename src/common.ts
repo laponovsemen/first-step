@@ -4,6 +4,7 @@ import { BlogViewModelType, PostDBModel } from './appTypes';
 import { APIPost, User, WithMongoId } from "./mongo/mongooseSchemas";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
+import {v4 as uuidv4} from "uuid";
 
 @Injectable()
 export class Common {
@@ -63,6 +64,10 @@ export class Common {
       createdAt: Obj2.createdAt,
     };
   };
+
+  createEmailSendCode() {
+    return uuidv4()
+  }
   mongoUserSlicing = (Obj2: User) => {
     return {
       id: Obj2._id,

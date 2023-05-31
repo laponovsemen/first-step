@@ -69,15 +69,20 @@ export class APIComment {
 export class User {
   //({type: ObjectId, required: true, unique: true, default: new ObjectId()})
   _id?: ObjectId;
-  @Prop({type:String, required: true, unique: true})
+  @Prop({ type: String, required: true, unique: true })
   login: string;
-  @Prop({type:String, required: true, unique: true})
+  @Prop({ type: String, required: true, unique: true })
   email: string;
-  @Prop({type:String, required: true})
-  password : string
-  @Prop({type:Date, required: true})
+  @Prop({ type: String, required: true })
+  password: string
+  @Prop({ type: Date, required: true })
   createdAt: Date
-
+  @Prop()
+  isConfirmed: boolean;
+  @Prop()
+  code: string | null;
+  @Prop()
+  codeDateOfExpiary: Date | null;
 }
 export type BlogDocument = HydratedDocument<Blog>;
 export type PostDocument = HydratedDocument<APIPost>;

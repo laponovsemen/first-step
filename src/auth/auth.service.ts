@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { UserDTO } from "../users/users.controller";
 import { jwtConstants } from "./constants";
 import { UsersRepository } from "../users/users.reposiroty";
+import { EmailAdapter } from "./email.adapter";
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private usersRepository: UsersRepository,
+    private emailAdapter: EmailAdapter,
   ) {}
 
   async signIn(loginOrEmail : string, pass : string) {
@@ -30,8 +32,20 @@ export class AuthService {
   async registration(userDTO: UserDTO) {
     const login : string = userDTO.login
     const email : string = userDTO.email
-    const credentialsExists = await this.usersRepository.findUserByLoginOrEmail(login, email)
+    const password : string = userDTO.password
 
+    const credentialsExists = await this.usersRepository.findUserByLoginOrEmail(login, email)
+    if (credentialsExists) {
+      return null
+    } else {
+      const user = await this.usersRepository.createUnconfirmedUser(login, password, email)
+      if (user) {
+        const info = await this.emailAdapter.sendEmail(email, user.code)
+        return true
+      } else {
+        return null
+      }
+    }
 
   }
 }

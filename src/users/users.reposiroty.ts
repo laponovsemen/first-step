@@ -4,6 +4,7 @@ import { Model } from "mongoose";
 import { CommentsDocument, User, UsersDocument } from "../mongo/mongooseSchemas";
 import { Common } from "../common";
 import { paginationCriteriaType } from "../appTypes";
+import add from 'date-fns/add'
 
 @Injectable()
 export class UsersRepository{
@@ -105,4 +106,29 @@ export class UsersRepository{
     const filter = {$or :[{login : loginOrEmail}, {email : loginOrEmail}]}
     return this.usersModel.findOne(filter)
   }
+  async createUnconfirmedUser(login: string, password: string, email: string) {
+    const dateOfCreation = new Date()
+    const codeDateOfExpiary = add(dateOfCreation, {minutes: 10})
+    const codeToSend = this.common.createEmailSendCode()
+    const newUnconfirmedUser: User = {
+      createdAt: dateOfCreation,
+      email: email,
+      login: login,
+      password: password,
+      isConfirmed: false,
+      code: codeToSend,
+      codeDateOfExpiary: codeDateOfExpiary
+    }
+    const newlyCreatedUser = await this.usersModel.create(newUnconfirmedUser)
+    return {
+      id : newlyCreatedUser._id,
+      createdAt: dateOfCreation,
+      email: email,
+      login: login,
+      code: codeToSend,
+
+    }
+
+  }
+
 }
