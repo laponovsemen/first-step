@@ -160,4 +160,8 @@ export class UsersRepository{
           codeDateOfExpiary: null,
       }})
   }
+
+  async findUserByLogin(login: string) {
+    return this.usersModel.findOne({ login: login });
+  }
 }

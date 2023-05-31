@@ -36,8 +36,9 @@ export class AuthService {
     const login : string = userDTO.login
     const email : string = userDTO.email
     const password : string = userDTO.password
-
-    const credentialsExists = await this.usersRepository.findUserByLoginOrEmail(login, email)
+    const foundUserByLogin = await this.usersRepository.findUserByLogin(login)
+    const foundUserByEmail = await this.usersRepository.findUserByEmail(email)
+    const credentialsExists = foundUserByLogin || foundUserByEmail
     if (credentialsExists) {
       return null
     } else {
