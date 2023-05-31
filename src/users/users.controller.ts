@@ -16,7 +16,7 @@ import { Common } from "../common";
 import { IsNotEmpty, Length, Matches } from "class-validator";
 import { AuthGuard } from "../auth/auth.guard";
 
-class UserDTO {
+export class UserDTO {
   @IsNotEmpty()
   @Length(3, 10)
   @Matches(/^[a-zA-Z0-9_-]*$/)
