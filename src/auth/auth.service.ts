@@ -28,8 +28,8 @@ export class AuthService {
     }
     const payload = { userId : user._id, login : user.login, };
     return {
-      access_token: await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secret}),
-      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s', secret :jwtConstants.secret}),
+      access_token: await this.jwtService.signAsync(payload, {expiresIn: '100',secret :jwtConstants.secret}),
+      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '200', secret :jwtConstants.secret}),
     };
   }
 
