@@ -28,8 +28,8 @@ export class AuthService {
     }
     const payload = { userId : user._id, login : user.login, };
     return {
-      access_token: await this.jwtService.signAsync(payload, {expiresIn: '100',secret :jwtConstants.secret}),
-      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '200', secret :jwtConstants.secret}),
+      access_token: await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secret}),
+      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s', secret :jwtConstants.secret}),
     };
   }
 
@@ -81,5 +81,14 @@ export class AuthService {
     }
     await this.usersRepository.makeUserConfirmed(foundUser)
     return true
+  }
+
+  async getUserByToken(accessToken: any) {
+    const payload = this.jwtService.decode(accessToken)
+    if (typeof payload === "string") return null;
+    const userId = payload.userId
+    const user = await this.usersRepository.findUserById(userId)
+    return user
+
   }
 }

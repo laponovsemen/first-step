@@ -164,4 +164,8 @@ export class UsersRepository{
   async findUserByLogin(login: string) {
     return this.usersModel.findOne({ login: login });
   }
+
+  async findUserById(userId: string) {
+    return this.usersModel.findOne({ _id: new ObjectId(userId) });
+  }
 }

@@ -6,7 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Request, Res, UseGuards
+  Request, Res, UnauthorizedException, UseGuards
 } from "@nestjs/common";
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
@@ -14,10 +14,12 @@ import { Response } from "express";
 import { AuthGuard } from "./auth.guard";
 import { tr } from "date-fns/locale";
 import { emailDTO, LoginDTO, UserDTO } from "../input.classes";
+import { JwtService } from "@nestjs/jwt";
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+              protected readonly jwtService : JwtService) {}
 
   @Post('password-recovery')
   @HttpCode(HttpStatus.OK)
@@ -88,8 +90,17 @@ export class AuthController {
   logout(@Body() signInDto: Record<string, any>) {
   }
 
+  @UseGuards(AuthGuard)
   @Get('me')
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@Res() res: Response,
+                   @Request() req) {
+    const accessToken = req.headers.authorization
+    const refreshToken = req.cookies.refreshToken
+    const refreshTokenValidation = this.jwtService.verify(refreshToken)
+    if (!refreshTokenValidation) {
+      throw new UnauthorizedException()
+    }
+    const user = await this.authService.getUserByToken(accessToken)
+    return user;
   }
 }
