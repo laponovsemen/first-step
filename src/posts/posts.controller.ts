@@ -9,7 +9,7 @@ import {
   Post,
   Put,
   Query,
-  Res
+  Res, UseGuards
 } from "@nestjs/common";
 import { BlogsService } from "../blogs/blogs.service";
 import { Common } from "../common";
@@ -21,6 +21,7 @@ import { CommentForSpecifiedPostDTO, LikeStatusDTO, PostDTO } from "../input.cla
 import { request } from "express";
 import { LikeRepository } from "../likes/likes.repository";
 import { LikeService } from "../likes/likes.service";
+import { AuthGuard } from "../auth/auth.guard";
 
 
 
@@ -73,6 +74,7 @@ export class PostsController {
     return result
   }
 
+  @UseGuards(AuthGuard)
   @Put(':id')
   @HttpCode(204)
   async updatePostById(@Res({passthrough : true}) res : Response,
