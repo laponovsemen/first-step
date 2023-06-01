@@ -19,8 +19,12 @@ export class PostsService{
   createNewPost(DTO : any){
     return this.postsRepository.createNewPost(DTO)
   }
-  async getPostById(id : string){
-    return await this.postsRepository.getPostById(id)
+  async getPostById(id : string, token: string){
+    const userId: any = this.jwtService.decode(token.split(" ")[1])
+    if(typeof userId === "string"){
+      return null
+    }
+    return await this.postsRepository.getPostById(id, userId)
   }
   getAllPosts(paginationCriteria : paginationCriteriaType){
     return this.postsRepository.getAllPosts(paginationCriteria)

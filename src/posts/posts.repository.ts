@@ -51,7 +51,7 @@ export class PostsRepository {
 
   }
 
-  async getPostById(id: string) {
+  async getPostById(id: string, userId : string) {
     const postId = this.common.tryConvertToObjectId(id)
     if (!postId) {
       return null
@@ -64,9 +64,11 @@ export class PostsRepository {
       const likesCount = await this.likeRepository.findLikesCountForSpecificPost(postId)
       const dislikesCount = await this.likeRepository.findDisikesCountForSpecificPost(postId)
       const newestLikes = await this.likeRepository.findNewestLikesForSpecificPost(postId)
+      const myLike = await this.likeRepository.findMyStatusForSpecificPost(postId, userId)
       foundPostFrame.extendedLikesInfo.likesCount = likesCount
       foundPostFrame.extendedLikesInfo.dislikesCount = dislikesCount
       foundPostFrame.extendedLikesInfo.newestLikes = newestLikes
+      foundPostFrame.extendedLikesInfo.myStatus = myLike ? myLike.status : "None"
       return foundPostFrame
     }
   }

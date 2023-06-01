@@ -5,10 +5,12 @@ import { APILike, LikesDocument, parentTypeEnum, StatusTypeEnum } from "../mongo
 import { Model, Types } from "mongoose";
 import { Injectable } from "@nestjs/common";
 import { parentModel } from "../appTypes";
+import { Common } from "../common";
 
 @Injectable()
 export class LikeRepository{
-  constructor(@InjectModel(APILike.name) private  likesModel : Model<LikesDocument>) {
+  constructor(@InjectModel(APILike.name) private  likesModel : Model<LikesDocument>,
+              protected readonly common : Common) {
   }
   async createNewLike(Like : APILike){
 
@@ -41,15 +43,20 @@ export class LikeRepository{
   }
 
   async findLikesCountForSpecificPost(postId: Types.ObjectId) {
-    const likes = await this.likesModel.find({ parentId: postId, parentType: parentTypeEnum.post, status: StatusTypeEnum.Like }).lean().exec();
+    const likes = await this.likesModel.find({ $and: [
+        { parentId: postId},
+        {  parentType: parentTypeEnum.post},
+        { status: StatusTypeEnum.Like }
+      ]})
+      .lean().exec();
     return likes.length
   }
 
   async findDisikesCountForSpecificPost(postId: Types.ObjectId) {
-    const dislikes = await this.likesModel.find({
-      parentId: postId,
-      parentType: parentTypeEnum.post,
-      status: StatusTypeEnum.Dislike
+    const dislikes = await this.likesModel.find({ $and: [
+        {parentId: postId},
+        {parentType: parentTypeEnum.post},
+        {status: StatusTypeEnum.Dislike},]
     })
     return dislikes.length
 
@@ -61,5 +68,20 @@ export class LikeRepository{
 
     console.log(newestLikesToUpdate, " newestLikesToUpdate")
     return newestLikesToUpdate
+  }
+
+  async findMyStatusForSpecificPost(postId: Types.ObjectId, userIdAsString: string) {
+    const userId = this.common.tryConvertToObjectId(userIdAsString)
+    if(!userId){
+      return null
+    }
+    const myLike = await this.likesModel.findOne({$and:
+        [
+          { parentId: postId },
+          { parentType: parentTypeEnum.post },
+          { userId:new ObjectId(userId)}
+        ]
+    })
+    return myLike
   }
 }

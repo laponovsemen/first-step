@@ -78,8 +78,10 @@ export class PostsController {
   }
 
   @Get(':id')
-  async getPostById(@Param('id') id){
-    const result =  await this.postsService.getPostById(id);
+  async getPostById(@Req() req : any,
+                    @Param('id') id){
+    const token = req.headers.authorization
+    const result =  await this.postsService.getPostById(id, token);
     if(!result){
       throw new NotFoundException("Blog not found")
     }
