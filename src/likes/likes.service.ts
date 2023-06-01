@@ -15,7 +15,7 @@ export class LikeService{
 
   async likePost(DTO: LikeStatusDTO, token: string, postId : string) {
     console.log(postId)
-    const foundPost = await this.postsRepository.getPostById(postId)
+    const foundPost = await this.postsRepository.getPostByIdWithOutLikes(postId)
     if(!foundPost){
       return null
     }

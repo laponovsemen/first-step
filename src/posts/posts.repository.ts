@@ -157,4 +157,8 @@ export class PostsRepository {
     }
 
   }
+
+  async getPostByIdWithOutLikes(postId: string) {
+    return this.postsModel.findOne({ _id: new ObjectId(postId) });
+  }
 }
