@@ -25,7 +25,7 @@ import express, {Request, Response} from 'express';
 import { BlogsService } from './blogs.service';
 import { isNotEmpty, IsNotEmpty, IsString, IsUrl, Length } from "class-validator";
 import { BasicAuthGuard } from "../auth/auth.guard";
-import { BlogDTO } from "../input.classes";
+import { BlogDTO, PostForSpecificBlogDTO } from "../input.classes";
 
 
 
@@ -69,7 +69,7 @@ export class BlogsController {
   @Post(':id/posts')
   @HttpCode(201)
   async createPostForSpecificBlog(
-    @Body() DTO,
+    @Body() DTO : PostForSpecificBlogDTO,
     @Param('id') blogId,
     @Res({passthrough : true}) res: Response
   ): Promise<APIPost | void> {

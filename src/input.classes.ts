@@ -13,6 +13,17 @@ export class LikeStatusDTO {
   //@IsNotIn(["None", "Like", "Dislike"])
   likeStatus : StatusTypeEnum
 }
+export class PostForSpecificBlogDTO{
+  @IsNotEmpty()
+  @Length(1, 30)
+  title: string //maxLength: 30
+  @IsNotEmpty()
+  @Length(1, 100)
+  shortDescription: string // maxLength: 100
+  @IsNotEmpty()
+  @Length(1, 1000)
+  content: string // maxLength: 1000
+}
 
 
 export class BlogDTO {
