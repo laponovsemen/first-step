@@ -77,7 +77,7 @@ export class BlogsController {
     if(!result){
       throw new NotFoundException("Blog not found")
     } else {
-      return null
+      return result
     }
   }
   @Get(':id')
