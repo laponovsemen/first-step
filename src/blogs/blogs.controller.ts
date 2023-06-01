@@ -71,7 +71,7 @@ export class BlogsController {
   async createPostForSpecificBlog(
     @Body() DTO,
     @Param('id') blogId,
-    @Res() res: Response
+    @Res({passthrough : true}) res: Response
   ): Promise<APIPost | void> {
     const result =  await this.blogsService.createPostForSpecificBlog(DTO, blogId);
     if(!result){
