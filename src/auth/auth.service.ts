@@ -84,6 +84,9 @@ export class AuthService {
   }
 
   async getUserByToken(accessToken: any) {
+    if(!accessToken){
+      return null
+    }
     const payload = this.jwtService.decode(accessToken)
     if (typeof payload === "string") return null;
     const userId = payload.userId
