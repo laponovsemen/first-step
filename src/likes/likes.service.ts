@@ -24,5 +24,6 @@ export class LikeService{
     const userId = payload.userId
     const login = payload.login
     const like = await this.likeRepository.likePost(DTO, userId, login, postId)
+    return true
   }
 }
