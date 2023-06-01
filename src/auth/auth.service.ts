@@ -89,7 +89,9 @@ export class AuthService {
     }
     const payload = this.jwtService.decode(accessToken)
     if (typeof payload === "string") return null;
+    console.log(payload)
     const userId = payload.userId
+    console.log(userId)
     const user = await this.usersRepository.findUserById(userId)
     return user
 

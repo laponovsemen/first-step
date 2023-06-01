@@ -21,6 +21,7 @@ import { CommentForSpecifiedPostDTO, LikeStatusDTO, PostDTO } from "../input.cla
 import { LikeRepository } from "../likes/likes.repository";
 import { LikeService } from "../likes/likes.service";
 import { AuthGuard } from "../auth/auth.guard";
+import { Response } from "express";
 
 
 
@@ -79,9 +80,10 @@ export class PostsController {
 
   @Get(':id')
   async getPostById(@Req() req : any,
+                    @Res({passthrough : true}) res : Response,
                     @Param('id') id){
     const token = req.headers.authorization
-    const result =  await this.postsService.getPostById(id, token);
+    const result = await this.postsService.getPostById(id, token);
     if(!result){
       throw new NotFoundException("Blog not found")
     }

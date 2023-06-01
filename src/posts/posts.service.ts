@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PostsRepository } from "./posts.repository";
 import { paginationCriteriaType } from "../appTypes";
 import { CommentForSpecifiedPostDTO } from "../input.classes";
-import { APIComment } from "../mongo/mongooseSchemas";
+import { APIComment, User } from "../mongo/mongooseSchemas";
 import { Prop } from "@nestjs/mongoose";
 import { request } from "express";
 import { JwtService } from "@nestjs/jwt";
@@ -25,11 +25,11 @@ export class PostsService{
     return this.postsRepository.createNewPost(DTO)
   }
   async getPostById(id : string, token: string){
-    let user = null
+    let user : User | null = null
     let userId = null
-    user = await this.authService.getUserByToken(token)
+    user  = await this.authService.getUserByToken(token);
     if(user){
-      userId = user.userId
+      userId = user._id
     }
 
     return await this.postsRepository.getPostById(id, userId)
