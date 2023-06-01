@@ -24,7 +24,7 @@ import {
 import express, {Request, Response} from 'express';
 import { BlogsService } from './blogs.service';
 import { isNotEmpty, IsNotEmpty, IsString, IsUrl, Length } from "class-validator";
-import { BasicAuthGuard } from "../auth/auth.guard";
+import { AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
 import { BlogDTO, PostForSpecificBlogDTO } from "../input.classes";
 
 
@@ -66,6 +66,7 @@ export class BlogsController {
     return result
 
   }
+  @UseGuards(AuthGuard)
   @Post(':id/posts')
   @HttpCode(201)
   async createPostForSpecificBlog(
