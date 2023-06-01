@@ -37,6 +37,7 @@ export class LikeRepository{
       parentType : parentType,
       addedAt : addedAt,
       userId : userId,
+      login: login,
       status : status,
     })
     return true
