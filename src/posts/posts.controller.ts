@@ -67,7 +67,7 @@ export class PostsController {
     if(!result){
       throw new NotFoundException()
     }
-    return
+    return result
   }
 
   @Get(':id')
