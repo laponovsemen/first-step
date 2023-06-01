@@ -18,21 +18,22 @@ export class LikeRepository{
     const dateOfCreation = new Date()
     const parentId = new ObjectId(postId)
     const  parentType = parentTypeEnum.post
-      const  createdAt = dateOfCreation
+    const  addedAt = dateOfCreation
     const  userId = new ObjectId(Id)
     const  status = DTO.likeStatus
 
     const newLikeToCreate : APILike = {
-    parentId : parentId,
-    parentType : parentType,
-    createdAt : createdAt,
-    userId : userId,
-    status : status,
-      }
+      parentId: parentId,
+      parentType: parentType,
+      addedAt: addedAt,
+      userId: userId,
+      login: login,
+      status: status
+    }
     const createdLike =  await this.likesModel.create({
       parentId : parentId,
       parentType : parentType,
-      createdAt : createdAt,
+      addedAt : addedAt,
       userId : userId,
       status : status,
     })

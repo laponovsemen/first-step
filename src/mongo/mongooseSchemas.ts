@@ -84,9 +84,11 @@ export class APILike{
   @Prop({ type: String, required: true })
   parentType :parentTypeEnum
   @Prop({ type: Date, required: true })
-  createdAt : Date
+  addedAt : Date
   @Prop({ type: ObjectId, required: true })
   userId : ObjectId
+  @Prop({ type: String, required: true })
+  login : string
   @Prop({ type: String, required: true })
   status : StatusTypeEnum
 

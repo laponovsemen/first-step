@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { Mongoose } from 'mongoose';
 import { BlogViewModelType, PostDBModel } from './appTypes';
-import { APIPost, User, WithMongoId } from "./mongo/mongooseSchemas";
+import { APILike, APIPost, User, WithMongoId } from "./mongo/mongooseSchemas";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 import {v4 as uuidv4} from "uuid";
@@ -19,6 +19,13 @@ export class Common {
     return null;
   }
 }
+  NewestLikesTypeSlicing = (Obj2: APILike) => {
+    return {
+      addedAt : Obj2.addedAt,
+      userId : Obj2.userId,
+      login : Obj2.login
+    }
+  }
   getPaginationCriteria(QueryParams: any) {
     const searchNameTerm = QueryParams.searchNameTerm ? QueryParams.searchNameTerm.toString() : null;
     const searchLoginTerm = QueryParams.searchLoginTerm ? QueryParams.searchLoginTerm.toString() : null;
