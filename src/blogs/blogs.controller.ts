@@ -6,7 +6,7 @@ import {
   Param,
   Post,
   Put,
-  Query, Res
+  Query, Res, UseGuards
 } from "@nestjs/common";
 import {
   APIPost,
@@ -23,7 +23,8 @@ import {
 } from '../appTypes';
 import express, {Request, Response} from 'express';
 import { BlogsService } from './blogs.service';
-import { IsNotEmpty, IsString, IsUrl, Length } from "class-validator";
+import { isNotEmpty, IsNotEmpty, IsString, IsUrl, Length } from "class-validator";
+import { BasicAuthGuard } from "../auth/auth.guard";
 
 
 
@@ -62,6 +63,7 @@ export class BlogsController {
       this.common.getPaginationCriteria(QueryParams);
     return this.blogsService.getAllBlogs(paginationCriteria);
   }
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createNewBlog(@Body() DTO : BlogDTO): Promise<Blog> {
     return this.blogsService.createNewBlog(DTO);
@@ -100,6 +102,7 @@ export class BlogsController {
     }
     return result
   }
+  @UseGuards(BasicAuthGuard)
   @Put(':id')
   @HttpCode(204)
   async updateBlogById(@Res({passthrough : true}) res: Response,
@@ -112,6 +115,7 @@ export class BlogsController {
     return
 
   }
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   async deleteBlogById(@Res({passthrough : true}) res: Response,
