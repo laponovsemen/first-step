@@ -34,7 +34,7 @@ export class PostsController {
     private readonly likeService : LikeService
   ) {
   }
-
+  @UseGuards(AuthGuard)
   @Put(':id/like-status')
   async likePost( @Param('id') postId,
                   @Body() DTO : LikeStatusDTO) {
