@@ -7,23 +7,27 @@ import { Prop } from "@nestjs/mongoose";
 import { request } from "express";
 import { JwtService } from "@nestjs/jwt";
 import { CommentsRepository } from "../comments/comments.repository";
+import { Common } from "../common";
+import { AuthService } from "../auth/auth.service";
 
 
 @Injectable()
 export class PostsService{
   constructor(protected readonly postsRepository : PostsRepository,
               protected readonly jwtService : JwtService,
-              protected readonly commentsRepository : CommentsRepository) {
+              protected readonly authService : AuthService,
+              protected readonly commentsRepository : CommentsRepository,
+              protected readonly common : Common,
+              ) {
   }
 
   createNewPost(DTO : any){
     return this.postsRepository.createNewPost(DTO)
   }
   async getPostById(id : string, token: string){
-    const userId: any = this.jwtService.decode(token.split(" ")[1])
-    if(typeof userId === "string"){
-      return null
-    }
+    const user: any = await this.authService.getUserByToken(token)
+    const userId = user.userId
+
     return await this.postsRepository.getPostById(id, userId)
   }
   getAllPosts(paginationCriteria : paginationCriteriaType){
