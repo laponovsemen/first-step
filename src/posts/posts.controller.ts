@@ -3,12 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
+  HttpCode, HttpStatus,
   NotFoundException,
   Param,
   Post,
   Put,
-  Query,
+  Query, Req,
   Res, UseGuards
 } from "@nestjs/common";
 import { BlogsService } from "../blogs/blogs.service";
@@ -18,7 +18,6 @@ import { Blog } from "../mongo/mongooseSchemas";
 import { PostsService } from "./posts.service";
 import { IsNotEmpty, Length, Matches } from "class-validator";
 import { CommentForSpecifiedPostDTO, LikeStatusDTO, PostDTO } from "../input.classes";
-import { request } from "express";
 import { LikeRepository } from "../likes/likes.repository";
 import { LikeService } from "../likes/likes.service";
 import { AuthGuard } from "../auth/auth.guard";
@@ -36,10 +35,18 @@ export class PostsController {
   }
   @UseGuards(AuthGuard)
   @Put(':id/like-status')
-  async likePost( @Param('id') postId,
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async likePost( @Req() req : any,
+                  @Res({passthrough : true}) res : Response,
+                  @Param('id') postId,
                   @Body() DTO : LikeStatusDTO) {
-    const token = request.headers.authorization
-    return await this.likeService.likePost(DTO, token, postId);
+    const token = req.headers.authorization.split(" ")[1]
+    console.log(req.headers, "request.headers");
+    const result = await this.likeService.likePost(DTO, token, postId);
+    if(!result){
+      throw new NotFoundException()
+    }
+    return true
   }
 
   @Get(':id/comments')
@@ -47,12 +54,12 @@ export class PostsController {
     const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
     return this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
   }
-  @Post(':id/comments')
+  /*@Post(':id/comments')
   async createCommentForSpecificPost( @Param('id') postId,
                                       @Body() DTO : CommentForSpecifiedPostDTO) {
     const token = request.headers.authorization
     return this.postsService.createCommentForSpecificPost(DTO, postId, token);
-  }
+  }*/
   @Get()
   async getAllPosts(@Query() QueryParams){
     const paginationCriteria: paginationCriteriaType =
@@ -63,7 +70,7 @@ export class PostsController {
   @Post()
   async createNewPost(@Res({passthrough : true}) res : Response, @Body() DTO : PostDTO){
 
-    const result =  await this.postsService.createNewPost(DTO);
+    const result = await this.postsService.createNewPost(DTO);
     if(!result){
       throw new NotFoundException()
     }
