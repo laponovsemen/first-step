@@ -1,11 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { UsersService } from "../users/users.service";
 import { jwtConstants } from "./constants";
 import { UsersRepository } from "../users/users.reposiroty";
 import { EmailAdapter } from "./email.adapter";
 import { Common } from "../common";
-import { User } from "../mongo/mongooseSchemas";
 import { emailDTO, UserDTO } from "../input.classes";
 
 
@@ -90,10 +89,10 @@ export class AuthService {
     const payload = this.jwtService.decode(accessToken)
     if (typeof payload === "string") return null;
     console.log(payload)
+    if (!payload) return null;
     const userId = payload.userId
     console.log(userId)
-    const user = await this.usersRepository.findUserById(userId)
-    return user
+    return await this.usersRepository.findUserById(userId)
 
   }
 

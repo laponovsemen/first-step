@@ -4,7 +4,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { APILike, LikesDocument, parentTypeEnum, StatusTypeEnum } from "../mongo/mongooseSchemas";
 import { Model, Types } from "mongoose";
 import { Injectable } from "@nestjs/common";
-import { parentModel } from "../appTypes";
 import { Common } from "../common";
 
 @Injectable()
@@ -76,13 +75,13 @@ export class LikeRepository{
     if(!userId){
       return null
     }
-    const myLike = await this.likesModel.findOne({$and:
+    return this.likesModel.findOne({
+      $and:
         [
           { parentId: postId },
           { parentType: parentTypeEnum.post },
-          { userId:new ObjectId(userId)}
+          { userId: new ObjectId(userId) }
         ]
-    })
-    return myLike
+    });
   }
 }
