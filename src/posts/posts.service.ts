@@ -19,8 +19,8 @@ export class PostsService{
   createNewPost(DTO : any){
     return this.postsRepository.createNewPost(DTO)
   }
-  getPostById(id : string){
-    return this.postsRepository.getPostById(id)
+  async getPostById(id : string){
+    return await this.postsRepository.getPostById(id)
   }
   getAllPosts(paginationCriteria : paginationCriteriaType){
     return this.postsRepository.getAllPosts(paginationCriteria)

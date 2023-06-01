@@ -5,13 +5,15 @@ import { Model } from "mongoose";
 import { ObjectId } from "mongodb";
 import { paginationCriteriaType } from "../appTypes";
 import { Common } from "../common";
+import { LikeRepository } from "../likes/likes.repository";
 
 @Injectable()
 export class PostsRepository {
   constructor(@InjectModel(APIPost.name) private postsModel: Model<APIPost>,
               @InjectModel(Blog.name) private blogsModel: Model<Blog>,
               @InjectModel(APIComment.name) private commentsModel: Model<APIComment>,
-              protected readonly common: Common
+              protected readonly common: Common,
+              protected readonly likeRepository: LikeRepository,
   ) {
   }
 
@@ -58,7 +60,14 @@ export class PostsRepository {
     if (!foundPost) {
       return null
     } else {
-      return this.common.mongoPostSlicing(foundPost)
+      const foundPostFrame = this.common.mongoPostSlicing(foundPost)
+      const likesCount = await this.likeRepository.findLikesCountForSpecificPost(postId)
+      const dislikesCount = await this.likeRepository.findDisikesCountForSpecificPost(postId)
+      const newestLikes = await this.likeRepository.findNewestLikesForSpecificPost(postId)
+      foundPostFrame.extendedLikesInfo.likesCount = likesCount
+      foundPostFrame.extendedLikesInfo.dislikesCount = dislikesCount
+      foundPostFrame.extendedLikesInfo.newestLikes = newestLikes
+      return foundPostFrame
     }
   }
 
