@@ -1,12 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { emailDTO, UserDTO } from "../users/users.controller";
 import { jwtConstants } from "./constants";
 import { UsersRepository } from "../users/users.reposiroty";
 import { EmailAdapter } from "./email.adapter";
 import { Common } from "../common";
 import { User } from "../mongo/mongooseSchemas";
+import { emailDTO, UserDTO } from "../input.classes";
 
 
 @Injectable()

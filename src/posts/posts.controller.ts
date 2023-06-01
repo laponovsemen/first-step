@@ -17,36 +17,40 @@ import { paginationCriteriaType, PaginatorViewModelType } from "../appTypes";
 import { Blog } from "../mongo/mongooseSchemas";
 import { PostsService } from "./posts.service";
 import { IsNotEmpty, Length, Matches } from "class-validator";
+import { CommentForSpecifiedPostDTO, LikeStatusDTO, PostDTO } from "../input.classes";
+import { request } from "express";
+import { LikeRepository } from "../likes/likes.repository";
+import { LikeService } from "../likes/likes.service";
 
 
-class PostDTO {
-  @IsNotEmpty()
-  @Length(1, 30)
-  title: string //maxLength: 30
-  @IsNotEmpty()
-  @Length(1, 100)
-  shortDescription: string // maxLength: 100
-  @IsNotEmpty()
-  @Length(1, 1000)
-  content: string // maxLength: 1000
-  blogId: string
-}
+
 
 @Controller('posts')
 export class PostsController {
   constructor(
     private readonly postsService: PostsService,
     private readonly common: Common,
+    private readonly likeService : LikeService
   ) {
   }
 
+  @Put(':id/like-status')
+  async likePost( @Param('id') postId,
+                  @Body() DTO : LikeStatusDTO) {
+    const token = request.headers.authorization
+    return await this.likeService.likePost(DTO, token, postId);
+  }
+
   @Get(':id/comments')
-  async getAllCommentsForSpecificPost(
-    @Query() QueryParams, @Param('id') id
-  ) {
-    const paginationCriteria: paginationCriteriaType =
-      this.common.getPaginationCriteria(QueryParams);
+  async getAllCommentsForSpecificPost(@Query() QueryParams, @Param('id') id) {
+    const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
     return this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
+  }
+  @Post(':id/comments')
+  async createCommentForSpecificPost( @Param('id') postId,
+                                      @Body() DTO : CommentForSpecifiedPostDTO) {
+    const token = request.headers.authorization
+    return this.postsService.createCommentForSpecificPost(DTO, postId, token);
   }
   @Get()
   async getAllPosts(@Query() QueryParams){

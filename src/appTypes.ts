@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { WithMongoId } from './mongo/mongooseSchemas';
+import { StatusTypeEnum, WithMongoId } from "./mongo/mongooseSchemas";
 
 export type paginationCriteriaType = {
   searchLoginTerm : string | null;
@@ -61,7 +61,7 @@ export type PostDBModel = WithMongoId<{
 export type ExtendedLikesInfoType = {
   likesCount: number;
   dislikesCount: number;
-  myStatus: statusType;
+  myStatus: StatusTypeEnum;
   newestLikes: NewestLikesType[];
 };
 export type NewestLikesType = {
@@ -176,7 +176,7 @@ export type commentDBModel = WithMongoId<{
   likesInfo: {
     likesCount: number; //  Total likes for parent item
     dislikesCount: number; //    Total dislikes for parent item
-    myStatus: statusType;
+    myStatus: StatusTypeEnum;
     likersInfo: commentLikersInfoType[];
   };
 }>;
@@ -187,7 +187,7 @@ export type LikeDBModel = WithMongoId<{
   addedAt: Date;
   userId: ObjectId;
   login: string;
-  status: statusType;
+  status: StatusTypeEnum;
 }>;
 export enum parentModel {
   comment = 'comment',
@@ -195,13 +195,9 @@ export enum parentModel {
 }
 export type commentLikersInfoType = {
   userId: ObjectId;
-  status: statusType;
+  status: StatusTypeEnum;
 };
-export enum statusType {
-  None = 'None',
-  Like = 'Like',
-  Dislike = 'Dislike',
-}
+
 export type commentViewModel = {
   id: string;
   content: string;

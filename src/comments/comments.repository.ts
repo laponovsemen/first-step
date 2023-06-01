@@ -10,4 +10,7 @@ export class CommentsRepository{
   async deleteAllData(){
     await this.commentsModel.deleteMany({})
   }
+  async createNewComment(newComment : APIComment){
+    return await this.commentsModel.create({newComment})
+  }
 }

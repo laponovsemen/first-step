@@ -25,25 +25,11 @@ import express, {Request, Response} from 'express';
 import { BlogsService } from './blogs.service';
 import { isNotEmpty, IsNotEmpty, IsString, IsUrl, Length } from "class-validator";
 import { BasicAuthGuard } from "../auth/auth.guard";
+import { BlogDTO } from "../input.classes";
 
 
 
-class BlogDTO {
-  @IsNotEmpty()
-  @Length(1, 15)
-  name : string // maxLength: 15
 
-  @IsNotEmpty()
-  @IsString()
-  @Length(1, 500)
-  description: string // maxLength: 500
-
-  @IsNotEmpty()
-  @IsString()
-  @IsUrl()
-  @Length(1, 100)
-  websiteUrl : string // maxLength: 100 pattern: ^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$
-}
 
 @Controller('blogs')
 export class BlogsController {
@@ -81,6 +67,7 @@ export class BlogsController {
 
   }
   @Post(':id/posts')
+  @HttpCode(201)
   async createPostForSpecificBlog(
     @Body() DTO,
     @Param('id') blogId,
@@ -88,9 +75,9 @@ export class BlogsController {
   ): Promise<APIPost | void> {
     const result =  await this.blogsService.createPostForSpecificBlog(DTO, blogId);
     if(!result){
-      res.status(HttpStatus.NOT_FOUND).send()
+      throw new NotFoundException("Blog not found")
     } else {
-      res.status(HttpStatus.CREATED).send(result)
+      return null
     }
   }
   @Get(':id')

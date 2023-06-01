@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { paginationCriteriaType } from '../appTypes';
+import { paginationCriteriaType } from "../appTypes";
 import { ObjectId } from "mongodb";
 
 
@@ -56,14 +56,52 @@ export class Blog {
   @Prop()
   createdAt: Date;
 }
+@Schema({versionKey: false})
+export class commentatorInfoModel {
+  @Prop({ type: String, required: true })
+  "userId": string;
+  @Prop({ type: String, required: true })
+  "userLogin": string;
+}
+
+@Schema({versionKey: false})
 export class APIComment {
-  id: ObjectId;
+  id?: ObjectId;
+  @Prop({ type: String, required: true })
   content: string;
-  commentatorInfo: {
-    "userId": string,
-    "userLogin": string
-  };
+  @Prop({type: commentatorInfoModel, required : true})
+  commentatorInfo: commentatorInfoModel;
+
+  @Prop({ type: Date, required: true })
   createdAt: Date
+}
+
+@Schema({versionKey: false})
+export class APILike{
+  _id?: ObjectId;
+  @Prop({ type: ObjectId, required: true })
+  parentId : ObjectId
+  @Prop({ type: String, required: true })
+  parentType :parentTypeEnum
+  @Prop({ type: Date, required: true })
+  createdAt : Date
+  @Prop({ type: ObjectId, required: true })
+  userId : ObjectId
+  @Prop({ type: String, required: true })
+  status : StatusTypeEnum
+
+}
+
+export enum StatusTypeEnum {
+  None = 'None',
+  Like = 'Like',
+  Dislike = 'Dislike',
+}
+
+
+export enum parentTypeEnum {
+  comment = "comment",
+  post = "post"
 }
 @Schema({versionKey: false})
 export class User {
@@ -84,12 +122,15 @@ export class User {
   @Prop()
   codeDateOfExpiary: Date | null;
 }
+
 export type BlogDocument = HydratedDocument<Blog>;
 export type PostDocument = HydratedDocument<APIPost>;
 export type CommentsDocument = HydratedDocument<APIComment>;
 export type UsersDocument = HydratedDocument<User>;
 export type NewestLikeDocument = HydratedDocument<NewestLike>;
+export type LikesDocument = HydratedDocument<APILike>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);
 export const PostsSchema = SchemaFactory.createForClass(APIPost);
 export const CommentsSchema = SchemaFactory.createForClass(APIComment);
 export const UsersSchema = SchemaFactory.createForClass(User);
+export const LikesSchema = SchemaFactory.createForClass(APILike);

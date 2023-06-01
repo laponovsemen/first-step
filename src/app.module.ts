@@ -7,11 +7,11 @@ import { BlogsService } from "./blogs/blogs.service";
 import { BlogsRepository } from "./blogs/blogs.repository";
 import * as process from "process";
 import {
-  APIComment,
+  APIComment, APILike,
   APIPost,
   Blog,
   BlogsSchema,
-  CommentsSchema,
+  CommentsSchema, LikesSchema,
   PostsSchema,
   User,
   UsersSchema
@@ -32,6 +32,8 @@ import { JwtModule, JwtService } from "@nestjs/jwt";
 import { AuthController } from "./auth/auth.controller";
 import { AuthService } from "./auth/auth.service";
 import { EmailAdapter } from "./auth/email.adapter";
+import { LikeService } from "./likes/likes.service";
+import { LikeRepository } from "./likes/likes.repository";
 
 @Module({
   imports: [
@@ -49,11 +51,14 @@ import { EmailAdapter } from "./auth/email.adapter";
     }, {
       name: User.name,
       schema: UsersSchema
+    }, {
+      name: APILike.name,
+      schema: LikesSchema
     }])],
 
   controllers: [AppController, BlogsController, TestingController, PostsController, UsersController, AuthController],
-  providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter,
-    BlogsRepository, PostsRepository, UsersRepository,CommentsRepository,
+  providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
+    BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository,
     Common, AuthModule, JwtModule, JwtService]
 })
 export class AppModule {

@@ -10,10 +10,10 @@ import {
 } from "@nestjs/common";
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { emailDTO, LoginDTO, UserDTO } from "../users/users.controller";
 import { Response } from "express";
 import { AuthGuard } from "./auth.guard";
 import { tr } from "date-fns/locale";
+import { emailDTO, LoginDTO, UserDTO } from "../input.classes";
 
 @Controller('auth')
 export class AuthController {
