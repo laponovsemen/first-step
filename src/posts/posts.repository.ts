@@ -16,8 +16,11 @@ export class PostsRepository {
   }
 
   async createNewPost(DTO: any) {
-    const blogId = DTO.blogId
+    const blogId = this.common.tryConvertToObjectId(DTO.blogId)
     const createdAt = new Date()
+    if(!blogId){
+      return null
+    }
     const blog = await this.blogsModel.findOne({ _id: new ObjectId(blogId) })
     const newPost = {
       title: DTO.title, //    maxLength: 30

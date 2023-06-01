@@ -61,8 +61,13 @@ export class PostsController {
   }
 
   @Post()
-  async createNewPost(@Body() DTO : PostDTO){
-    return await this.postsService.createNewPost(DTO);
+  async createNewPost(@Res({passthrough : true}) res : Response, @Body() DTO : PostDTO){
+
+    const result =  await this.postsService.createNewPost(DTO);
+    if(!result){
+      throw new NotFoundException()
+    }
+    return
   }
 
   @Get(':id')
