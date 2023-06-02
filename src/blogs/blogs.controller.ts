@@ -66,7 +66,7 @@ export class BlogsController {
     return result
 
   }
-  @UseGuards(AuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Post(':id/posts')
   @HttpCode(201)
   async createPostForSpecificBlog(

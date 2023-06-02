@@ -86,13 +86,15 @@ export class AuthService {
     if(!accessToken){
       return null
     }
-    console.log(accessToken, "accessToken in getUserByToken");
     const payload = this.jwtService.decode(accessToken.split(" ")[1])
     if (typeof payload === "string") return null;
-    console.log(payload, " payload")
     if (!payload) return null;
     const userId = payload.userId
+
     console.log(userId)
+    console.log(payload, " payload")
+    console.log(accessToken, "accessToken in getUserByToken");
+
     return await this.usersRepository.findUserById(userId)
 
   }

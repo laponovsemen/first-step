@@ -62,10 +62,22 @@ export class PostsController {
     return this.postsService.createCommentForSpecificPost(DTO, postId, token);
   }*/
   @Get()
-  async getAllPosts(@Query() QueryParams){
+  async getAllPosts(@Req() req : any,
+                    @Res({passthrough : true}) res : Response,
+                    @Query() QueryParams){
+    const token = req.headers.authorization
+    console.log(token, "accessTtoken")
     const paginationCriteria: paginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
-    return  this.postsService.getAllPosts(paginationCriteria);
+
+    //const result = await this.postsService.getPostById(id, token);
+
+
+    const result = this.postsService.getAllPosts(paginationCriteria);
+    if(!result){
+      throw new NotFoundException("Blog not found")
+    }
+    return result
   }
 
   @Post()
