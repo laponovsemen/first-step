@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { APIComment, CommentsDocument } from "../mongo/mongooseSchemas";
+import { ObjectId } from "mongodb";
+import { CommentForSpecifiedPostDTO } from "../input.classes";
 
 @Injectable()
 export class CommentsRepository{
@@ -12,5 +14,18 @@ export class CommentsRepository{
   }
   async createNewComment(newComment : APIComment){
     return await this.commentsModel.create({newComment})
+  }
+
+  getCommentById(commentId: string) {
+    return this.commentsModel.findOne({_id : new ObjectId(commentId)})
+  }
+
+  deleteCommentById(commentId: string) {
+    return this.commentsModel.deleteOne({_id : new ObjectId(commentId)})
+  }
+
+  async updateCommentById(commentId: string, DTO: CommentForSpecifiedPostDTO) {
+    const content = DTO.content
+    return this.commentsModel.updateOne({_id : new ObjectId(commentId)}, {$set: {content : content}})
   }
 }
