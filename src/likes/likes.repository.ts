@@ -116,4 +116,8 @@ export class LikeRepository{
   async deleteAllData(){
     await this.likesModel.deleteMany({})
   }
+
+  async likeComment(DTO: LikeStatusDTO, userId: string, login: string, postId: string) {
+    return Promise.resolve(undefined);
+  }
 }

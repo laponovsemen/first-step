@@ -16,12 +16,14 @@ import { CommentForSpecifiedPostDTO, LikeStatusDTO } from "../input.classes";
 import { AuthGuard } from "../auth/auth.guard";
 import { CommentsService } from "./comments.service";
 import { AuthService } from "../auth/auth.service";
+import { LikeService } from "../likes/likes.service";
 
 
 @Controller('comments')
 export class CommentsController {
   constructor(protected readonly commentsService : CommentsService,
-              protected readonly authService : AuthService
+              protected readonly authService : AuthService,
+              protected readonly likeService : LikeService,
               ) {
   }
   @UseGuards(AuthGuard)
@@ -30,7 +32,13 @@ export class CommentsController {
                     @Res({passthrough : true}) res : Response,
                     @Param('commentId') commentId,
                     @Body() DTO : LikeStatusDTO){
-
+    const token = req.headers.authorization.split(" ")[1]
+    console.log(req.headers, "request.headers");
+    const result = await this.likeService.likeComment(DTO, token, commentId);
+    if(!result){
+      throw new NotFoundException()
+    }
+    return true
   }
   @UseGuards(AuthGuard)
   @Put(':commentId')
