@@ -6,6 +6,7 @@ import { Model, Types } from "mongoose";
 import { Injectable } from "@nestjs/common";
 import { Common } from "../common";
 
+
 @Injectable()
 export class LikeRepository{
   constructor(@InjectModel(APILike.name) private  likesModel : Model<LikesDocument>,
@@ -16,30 +17,54 @@ export class LikeRepository{
   }
 
   async likePost(DTO: LikeStatusDTO, Id: string, login : string, postId: string) {
-    const dateOfCreation = new Date()
-    const parentId = new ObjectId(postId)
-    const  parentType = parentTypeEnum.post
-    const  addedAt = dateOfCreation
-    const  userId = new ObjectId(Id)
-    const  status = DTO.likeStatus
+    const myLike = await this.findMyStatusForSpecificPost(new ObjectId(postId), Id)
+    const status = DTO.likeStatus
+    if (!myLike) {
+      const dateOfCreation = new Date()
+      const parentId = new ObjectId(postId)
+      const parentType = parentTypeEnum.post
+      const addedAt = dateOfCreation
+      const userId = new ObjectId(Id)
 
-    const newLikeToCreate : APILike = {
-      parentId: parentId,
-      parentType: parentType,
-      addedAt: addedAt,
-      userId: userId,
-      login: login,
-      status: status
+
+      const newLikeToCreate: APILike = {
+        parentId: parentId,
+        parentType: parentType,
+        addedAt: addedAt,
+        userId: userId,
+        login: login,
+        status: status
+      }
+      await this.likesModel.create({
+        parentId: parentId,
+        parentType: parentType,
+        addedAt: addedAt,
+        userId: userId,
+        login: login,
+        status: status,
+      })
+      return true
+    } else {
+
+      await this.changeMyLikeStatus(status, Id,  postId, parentTypeEnum.post)
+
+      return true
     }
-    const createdLike =  await this.likesModel.create({
-      parentId : parentId,
-      parentType : parentType,
-      addedAt : addedAt,
-      userId : userId,
-      login: login,
-      status : status,
+  }
+
+  async changeMyLikeStatus(status : StatusTypeEnum, userId : string, parentId: string, parentType: parentTypeEnum){
+    await this.likesModel.updateOne({$and:
+        [
+          {parentId : new ObjectId(parentId)},
+          {parentType : parentType},
+          {userId : new ObjectId(userId)}
+        ]
+    }, {
+      $set: {
+        status : status
+      }
     })
-    return true
+
   }
 
   async findLikesCountForSpecificPost(postId: Types.ObjectId) {
@@ -70,7 +95,7 @@ export class LikeRepository{
     return newestLikesToUpdate
   }
 
-  async findMyStatusForSpecificPost(postId: Types.ObjectId, userIdAsString: string) {
+  async findMyStatusForSpecificPost(postId: ObjectId, userIdAsString: string) {
     const userId = this.common.tryConvertToObjectId(userIdAsString)
     if(!userId){
       return null
