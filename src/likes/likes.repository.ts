@@ -98,7 +98,7 @@ export class LikeRepository{
   async findMyStatusForSpecificPost(postId: ObjectId, userIdAsString: string) {
     const userId = this.common.tryConvertToObjectId(userIdAsString)
     if(!userId){
-      return "228"
+      return null
     }
     const filter = {
       $and:
@@ -112,12 +112,61 @@ export class LikeRepository{
     console.log(result);
     return result
   }
+  async findMyStatusForComment(commentId: ObjectId, userIdAsString: string) {
+    const userId = this.common.tryConvertToObjectId(userIdAsString)
+    if(!userId){
+      return null
+    }
+    const filter = {
+      $and:
+        [
+          { parentId: commentId },
+          { parentType: parentTypeEnum.comment },
+          { userId: new ObjectId(userId) }
+        ]
+    }
+    const result = await this.likesModel.findOne(filter);
+    console.log(result);
+    return result
+  }
 
   async deleteAllData(){
     await this.likesModel.deleteMany({})
   }
 
-  async likeComment(DTO: LikeStatusDTO, userId: string, login: string, postId: string) {
-    return Promise.resolve(undefined);
+  async likeComment(DTO: LikeStatusDTO, userIdFromToken: string, login: string, commentId: string) {
+    const myLike = await this.findMyStatusForComment(new ObjectId(commentId), userIdFromToken)
+    const status = DTO.likeStatus
+    if (!myLike) {
+      const dateOfCreation = new Date()
+      const parentId = new ObjectId(commentId)
+      const parentType = parentTypeEnum.post
+      const addedAt = dateOfCreation
+      const userId = new ObjectId(userIdFromToken)
+
+
+      const newLikeToCreate: APILike = {
+        parentId: parentId,
+        parentType: parentType,
+        addedAt: addedAt,
+        userId: userId,
+        login: login,
+        status: status
+      }
+      await this.likesModel.create({
+        parentId: parentId,
+        parentType: parentType,
+        addedAt: addedAt,
+        userId: userId,
+        login: login,
+        status: status,
+      })
+      return true
+    } else {
+
+      await this.changeMyLikeStatus(status, userIdFromToken,  commentId, parentTypeEnum.post)
+
+      return true
+    }
   }
 }
