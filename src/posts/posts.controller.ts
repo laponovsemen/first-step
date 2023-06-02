@@ -67,13 +67,8 @@ export class PostsController {
                     @Query() QueryParams){
     const token = req.headers.authorization
     console.log(token, "accessTtoken")
-    const paginationCriteria: paginationCriteriaType =
-      this.common.getPaginationCriteria(QueryParams);
-
-    //const result = await this.postsService.getPostById(id, token);
-
-
-    const result = this.postsService.getAllPosts(paginationCriteria);
+    const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
+    const result = this.postsService.getAllPosts(paginationCriteria, token);
     if(!result){
       throw new NotFoundException("Blog not found")
     }

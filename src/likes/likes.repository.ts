@@ -67,7 +67,7 @@ export class LikeRepository{
 
   }
 
-  async findLikesCountForSpecificPost(postId: Types.ObjectId) {
+  async findLikesCountForSpecificPost(postId: ObjectId) {
     const likes = await this.likesModel.find({ $and: [
         { parentId: postId},
         {  parentType: parentTypeEnum.post},
@@ -77,7 +77,7 @@ export class LikeRepository{
     return likes.length
   }
 
-  async findDisikesCountForSpecificPost(postId: Types.ObjectId) {
+  async findDisikesCountForSpecificPost(postId: ObjectId) {
     const dislikes = await this.likesModel.find({ $and: [
         {parentId: postId},
         {parentType: parentTypeEnum.post},
@@ -87,7 +87,7 @@ export class LikeRepository{
 
   }
 
-  async findNewestLikesForSpecificPost(postId: Types.ObjectId) {
+  async findNewestLikesForSpecificPost(postId:ObjectId) {
     const likesFilter = { $and: [{ parentId: postId }, { parentType: parentTypeEnum.post }, { status: StatusTypeEnum.Like }] }
     const newestLikesToUpdate = await this.likesModel.find(likesFilter, { _id: 0, status: 0, parentId: 0, parentType:0 }).sort({ addedAt: "desc" }).limit(3)
 

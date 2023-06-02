@@ -3,12 +3,12 @@ import { PostsRepository } from "./posts.repository";
 import { paginationCriteriaType } from "../appTypes";
 import { CommentForSpecifiedPostDTO } from "../input.classes";
 import { APIComment, User } from "../mongo/mongooseSchemas";
-import { Prop } from "@nestjs/mongoose";
-import { request } from "express";
 import { JwtService } from "@nestjs/jwt";
 import { CommentsRepository } from "../comments/comments.repository";
 import { Common } from "../common";
 import { AuthService } from "../auth/auth.service";
+import { LikeRepository } from "../likes/likes.repository";
+import { ObjectId } from "mongodb";
 
 
 @Injectable()
@@ -17,6 +17,7 @@ export class PostsService{
               protected readonly jwtService : JwtService,
               protected readonly authService : AuthService,
               protected readonly commentsRepository : CommentsRepository,
+              protected readonly likeRepository : LikeRepository,
               protected readonly common : Common,
               ) {
   }
@@ -34,8 +35,30 @@ export class PostsService{
 
     return await this.postsRepository.getPostById(id, userId)
   }
-  getAllPosts(paginationCriteria : paginationCriteriaType){
-    return this.postsRepository.getAllPosts(paginationCriteria)
+  async getAllPosts(paginationCriteria: paginationCriteriaType, token: string) {
+    const user = await this.authService.getUserByToken(token)
+    const allPostsFrames = await this.postsRepository.getAllPosts(paginationCriteria)
+
+    for(let i = 0; i < allPostsFrames.items.length; i++){
+      const post = allPostsFrames.items[i]
+      const postId = new ObjectId(post.id)
+      allPostsFrames.items[i].extendedLikesInfo.likesCount = await this.likeRepository.findLikesCountForSpecificPost(postId)
+      allPostsFrames.items[i].extendedLikesInfo.dislikesCount = await this.likeRepository.findDisikesCountForSpecificPost(postId)
+
+    }
+    if(!user){
+      return allPostsFrames
+    } else {
+      for(let i = 0; i < allPostsFrames.items.length; i++){
+        const post = allPostsFrames.items[i]
+        const postId = new ObjectId(post.id)
+        const userId = user._id.toString()
+        const myLike = await this.likeRepository.findMyStatusForSpecificPost(postId, userId)
+        allPostsFrames.items[i].extendedLikesInfo.myStatus = myLike.status
+      }
+
+      return allPostsFrames
+    }
   }
   updatePostById(DTO : any,id : string){
     return this.postsRepository.updatePostById(DTO , id)
