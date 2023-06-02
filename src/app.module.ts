@@ -34,6 +34,8 @@ import { AuthService } from "./auth/auth.service";
 import { EmailAdapter } from "./auth/email.adapter";
 import { LikeService } from "./likes/likes.service";
 import { LikeRepository } from "./likes/likes.repository";
+import { CommentsController } from "./comments/comments.controller";
+import { CommentsService } from "./comments/comments.service";
 
 @Module({
   imports: [
@@ -56,9 +58,11 @@ import { LikeRepository } from "./likes/likes.repository";
       schema: LikesSchema
     }])],
 
-  controllers: [AppController, BlogsController, TestingController, PostsController, UsersController, AuthController],
+  controllers: [AppController, BlogsController, TestingController,
+    PostsController, UsersController, AuthController, CommentsController],
+
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
-    BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository,
+    BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,
     Common, AuthModule, JwtModule, JwtService]
 })
 export class AppModule {
