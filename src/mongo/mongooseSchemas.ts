@@ -129,7 +129,6 @@ export type BlogDocument = HydratedDocument<Blog>;
 export type PostDocument = HydratedDocument<APIPost>;
 export type CommentsDocument = HydratedDocument<APIComment>;
 export type UsersDocument = HydratedDocument<User>;
-export type NewestLikeDocument = HydratedDocument<NewestLike>;
 export type LikesDocument = HydratedDocument<APILike>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);
 export const PostsSchema = SchemaFactory.createForClass(APIPost);

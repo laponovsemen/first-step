@@ -98,16 +98,19 @@ export class LikeRepository{
   async findMyStatusForSpecificPost(postId: ObjectId, userIdAsString: string) {
     const userId = this.common.tryConvertToObjectId(userIdAsString)
     if(!userId){
-      return null
+      return "228"
     }
-    return this.likesModel.findOne({
+    const filter = {
       $and:
         [
           { parentId: postId },
           { parentType: parentTypeEnum.post },
           { userId: new ObjectId(userId) }
         ]
-    });
+    }
+    const result = await this.likesModel.findOne(filter);
+    console.log(result);
+    return result
   }
 
   async deleteAllData(){

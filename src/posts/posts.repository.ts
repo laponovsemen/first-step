@@ -68,7 +68,7 @@ export class PostsRepository {
       foundPostFrame.extendedLikesInfo.likesCount = likesCount
       foundPostFrame.extendedLikesInfo.dislikesCount = dislikesCount
       foundPostFrame.extendedLikesInfo.newestLikes = newestLikes
-      foundPostFrame.extendedLikesInfo.myStatus = myLike ? myLike.status : "None"
+      foundPostFrame.extendedLikesInfo.myStatus = "None"//myLike ? myLike.status : "None"
       console.log(foundPostFrame);
       console.log(foundPostFrame, "foundPostFrame");
       console.log(myLike , "myLike");
@@ -97,8 +97,7 @@ export class PostsRepository {
       return this.common.mongoPostSlicing(item)
     });
 
-    console.log(
-      {
+    /*console.log({
         pageSize: pageSize,
         totalCount: totalCount,
         pagesCount: pagesCount,
@@ -106,7 +105,7 @@ export class PostsRepository {
         items: items,
       },
       'its fucking result',
-    );
+    );*/
     return {
       pageSize: pageSize,
       totalCount: totalCount,

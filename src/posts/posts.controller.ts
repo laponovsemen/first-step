@@ -76,7 +76,8 @@ export class PostsController {
   }
   @UseGuards(BasicAuthGuard)
   @Post()
-  async createNewPost(@Res({passthrough : true}) res : Response, @Body() DTO : PostDTO){
+  async createNewPost(@Res({passthrough : true}) res : Response,
+                      @Body() DTO : PostDTO){
 
     const result = await this.postsService.createNewPost(DTO);
     if(!result){

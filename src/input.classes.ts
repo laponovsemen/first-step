@@ -14,12 +14,17 @@ export class LikeStatusDTO {
   likeStatus : StatusTypeEnum
 }
 export class PostForSpecificBlogDTO{
+  @Transform(item => item.value.trim() )
   @IsNotEmpty()
   @Length(1, 30)
   title: string //maxLength: 30
+
+  @Transform(item => item.value.trim() )
   @IsNotEmpty()
   @Length(1, 100)
   shortDescription: string // maxLength: 100
+
+  @Transform(item => item.value.trim() )
   @IsNotEmpty()
   @Length(1, 1000)
   content: string // maxLength: 1000
