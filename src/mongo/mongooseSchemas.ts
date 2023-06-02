@@ -16,6 +16,29 @@ export class NewestLike {
   login: string;
 }
 
+@Schema()
+export class APIDeviceModel {
+  @Prop({ type: String, required: true })
+  ip:	string // IP address of device during signing in
+  @Prop({ type: String, required: true })
+
+  title:	string // Device name: for example Chrome 105 (received by parsing http header "user-agent")
+  @Prop({ type: String, required: true })
+  lastActiveDate:	string // Date of the last generating of refresh/access tokens
+  @Prop({ type: String, required: true })
+  deviceId:	string //  Id of connected device session
+}
+
+@Schema()
+export class APISession {
+  _id?: ObjectId;
+  @Prop({ type: ObjectId, required: true })
+  userId: ObjectId;
+  @Prop({ type: APIDeviceModel, required: true })
+  device: APIDeviceModel;
+  @Prop({ type: String, required: true })
+  refreshToken: string;
+}
 
 @Schema()
 export class APIPost {

@@ -36,9 +36,14 @@ import { LikeService } from "./likes/likes.service";
 import { LikeRepository } from "./likes/likes.repository";
 import { CommentsController } from "./comments/comments.controller";
 import { CommentsService } from "./comments/comments.service";
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { APP_GUARD } from "@nestjs/core";
 
 @Module({
-  imports: [
+  imports: [ThrottlerModule.forRoot({
+    ttl: 10,
+    limit: 5,
+    }),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL),
     MongooseModule.forFeature([{
@@ -63,7 +68,12 @@ import { CommentsService } from "./comments/comments.service";
 
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
     BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,
-    Common, AuthModule, JwtModule, JwtService]
+    Common, AuthModule, JwtModule, JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }]
 })
 export class AppModule {
 }
+

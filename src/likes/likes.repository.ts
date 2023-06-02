@@ -2,7 +2,7 @@ import { LikeStatusDTO } from "../input.classes";
 import { ObjectId } from "mongodb";
 import { InjectModel } from "@nestjs/mongoose";
 import { APILike, LikesDocument, parentTypeEnum, StatusTypeEnum } from "../mongo/mongooseSchemas";
-import { Model, Types } from "mongoose";
+import { Model } from "mongoose";
 import { Injectable } from "@nestjs/common";
 import { Common } from "../common";
 
