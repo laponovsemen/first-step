@@ -20,7 +20,7 @@ import { IsNotEmpty, Length, Matches } from "class-validator";
 import { CommentForSpecifiedPostDTO, LikeStatusDTO, PostDTO } from "../input.classes";
 import { LikeRepository } from "../likes/likes.repository";
 import { LikeService } from "../likes/likes.service";
-import { AuthGuard } from "../auth/auth.guard";
+import { AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
 import { Response } from "express";
 
 
@@ -103,7 +103,7 @@ export class PostsController {
     return result
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Put(':id')
   @HttpCode(204)
   async updatePostById(@Res({passthrough : true}) res : Response,
