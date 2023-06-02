@@ -109,4 +109,8 @@ export class LikeRepository{
         ]
     });
   }
+
+  async deleteAllData(){
+    await this.likesModel.deleteMany({})
+  }
 }
