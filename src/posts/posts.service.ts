@@ -54,7 +54,7 @@ export class PostsService{
         const postId = new ObjectId(post.id)
         const userId = user._id.toString()
         const myLike = await this.likeRepository.findMyStatusForSpecificPost(postId, userId)
-        allPostsFrames.items[i].extendedLikesInfo.myStatus = myLike.status
+        allPostsFrames.items[i].extendedLikesInfo.myStatus = myLike ? myLike.status : "None"
       }
 
       return allPostsFrames
