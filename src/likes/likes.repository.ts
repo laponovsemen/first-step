@@ -96,20 +96,28 @@ export class LikeRepository{
   }
 
   async findMyStatusForSpecificPost(postId: ObjectId, userIdAsString: string) {
+    console.log(userIdAsString, "userIdAsString")
     const userId = this.common.tryConvertToObjectId(userIdAsString)
+    console.log(userId, "after user id");
     if(!userId){
+      console.log(userId, "нету юзер ай ди");
       return null
+
     }
+    console.log("before filter");
+    console.log({
+      parentId: postId,
+      parentType: parentTypeEnum.post,
+      userId: userIdAsString
+    }, "filter");
     const filter = {
-      $and:
-        [
-          { parentId: postId },
-          { parentType: parentTypeEnum.post },
-          { userId: new ObjectId(userId) }
-        ]
+      parentId: postId,
+      parentType: parentTypeEnum.post,
+      userId: userIdAsString
     }
+
     const result = await this.likesModel.findOne(filter);
-    console.log(result);
+    console.log(result, "result");
     return result
   }
   async findMyStatusForComment(commentId: ObjectId, userIdAsString: string) {

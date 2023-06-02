@@ -21,7 +21,7 @@ import { CommentForSpecifiedPostDTO, LikeStatusDTO, PostDTO } from "../input.cla
 import { LikeRepository } from "../likes/likes.repository";
 import { LikeService } from "../likes/likes.service";
 import { AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
-import { Response } from "express";
+import { Request, Response } from "express";
 
 
 
@@ -87,9 +87,9 @@ export class PostsController {
     }
     return result
   }
-
+  @UseGuards()
   @Get(':id')
-  async getPostById(@Req() req : any,
+  async getPostById(@Req() req : Request,
                     @Res({passthrough : true}) res : Response,
                     @Param('id') id){
     const token = req.headers.authorization
@@ -110,7 +110,7 @@ export class PostsController {
     if(!id){
       throw new NotFoundException("id param is undefined or not found")
     }
-    const result =  await this.postsService.updatePostById(DTO , id);
+    const result = await this.postsService.updatePostById(DTO , id);
     if(!result){
       throw new NotFoundException("post not found")
     }

@@ -14,6 +14,7 @@ export class Common {
  tryConvertToObjectId = (id: string): Types.ObjectId | null => {
   try {
     const convertedId = new Types.ObjectId(id);
+
     return convertedId;
   } catch (e) {
     return null;

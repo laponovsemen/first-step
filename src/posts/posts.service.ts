@@ -26,20 +26,20 @@ export class PostsService{
     return this.postsRepository.createNewPost(DTO)
   }
   async getPostById(id : string, token: string){
-    let user : User | null
+
     let userId = null
-    user  = await this.authService.getUserByToken(token);
-    if(user){
-      userId = user._id
+    const userFromDb  = await this.authService.getUserByToken(token);
+    if(userFromDb){
+      userId = userFromDb._id
     }
 
     return await this.postsRepository.getPostById(id, userId)
   }
   async getAllPosts(paginationCriteria: paginationCriteriaType, token: string) {
     const user = await this.authService.getUserByToken(token)
-    //console.log(user , 'user');
+    console.log(user , 'user');
     const allPostsFrames = await this.postsRepository.getAllPosts(paginationCriteria)
-
+    // TODO for of and for in
     for(let i = 0; i < allPostsFrames.items.length; i++){
       const post = allPostsFrames.items[i]
       const postId = new ObjectId(post.id)
@@ -49,8 +49,11 @@ export class PostsService{
 
     }
     if(!user){
+      //console.log("i am out");
+      //console.log(user, "user");
       return allPostsFrames
     } else {
+      console.log("i am in ");
       const userId = user._id.toString()
       //console.log(userId, " id of user ");
       for(let i = 0; i < allPostsFrames.items.length; i++){
@@ -58,12 +61,11 @@ export class PostsService{
         const postId = new ObjectId(post.id)
 
         const myLike = await this.likeRepository.findMyStatusForSpecificPost(postId, userId)
-        //console.log(myLike , "myLike");
+        console.log(myLike , "myLike");
         //console.log(postId , "postId");
         allPostsFrames.items[i].extendedLikesInfo.myStatus = "None"
       }
-      //64794b755aa0b9bdbe4b6a4f
-      //64794b755aa0b9bdbe4b6a4f
+
       return allPostsFrames
     }
   }
