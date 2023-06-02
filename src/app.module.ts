@@ -42,7 +42,7 @@ import { APP_GUARD } from "@nestjs/core";
 @Module({
   imports: [ThrottlerModule.forRoot({
     ttl: 10,
-    limit: 5,
+    limit: 50,
     }),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL),
