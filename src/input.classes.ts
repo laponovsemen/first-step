@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNotIn, IsString, IsUrl, Length, Matches } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNotIn, IsObject, IsString, IsUrl, Length, Matches } from "class-validator";
 import { Transform } from "class-transformer";
 import { StatusTypeEnum } from "./mongo/mongooseSchemas";
 
@@ -45,15 +45,21 @@ export class BlogDTO {
 }
 
 export class PostDTO {
+  @Transform(item => item.value.trim() )
   @IsNotEmpty()
   @Length(1, 30)
   title: string //maxLength: 30
+  @Transform(item => item.value.trim() )
   @IsNotEmpty()
   @Length(1, 100)
   shortDescription: string // maxLength: 100
+  @Transform(item => item.value.trim() )
   @IsNotEmpty()
   @Length(1, 1000)
   content: string // maxLength: 1000
+  @Transform(item => item.value.trim() )
+  @IsNotEmpty()
+  @Length(24, 24)
   blogId: string
 }
 
