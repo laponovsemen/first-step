@@ -79,7 +79,7 @@ export class PostsController {
     }
     return result
   }
-
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createNewPost(@Res({passthrough : true}) res : Response, @Body() DTO : PostDTO){
 
@@ -119,6 +119,7 @@ export class PostsController {
     return
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   async deletePostById(@Res({passthrough : true}) res : Response ,@Param('id') id) {
