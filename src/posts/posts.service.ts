@@ -25,7 +25,7 @@ export class PostsService{
     return this.postsRepository.createNewPost(DTO)
   }
   async getPostById(id : string, token: string){
-    let user : User | null = null
+    let user : User | null
     let userId = null
     user  = await this.authService.getUserByToken(token);
     if(user){

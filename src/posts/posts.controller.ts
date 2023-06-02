@@ -83,6 +83,7 @@ export class PostsController {
                     @Res({passthrough : true}) res : Response,
                     @Param('id') id){
     const token = req.headers.authorization
+    console.log(token, "accessTtoken")
     const result = await this.postsService.getPostById(id, token);
     if(!result){
       throw new NotFoundException("Blog not found")

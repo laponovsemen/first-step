@@ -27,8 +27,8 @@ export class AuthService {
     }
     const payload = { userId : user._id, login : user.login, };
     return {
-      access_token: await this.jwtService.signAsync(payload, {expiresIn: '10m',secret :jwtConstants.secret}),
-      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20m', secret :jwtConstants.secret}),
+      access_token: await this.jwtService.signAsync(payload, {expiresIn: '10h',secret :jwtConstants.secret}),
+      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20h', secret :jwtConstants.secret}),
     };
   }
 
@@ -86,9 +86,10 @@ export class AuthService {
     if(!accessToken){
       return null
     }
-    const payload = this.jwtService.decode(accessToken)
+    console.log(accessToken, "accessToken in getUserByToken");
+    const payload = this.jwtService.decode(accessToken.split(" ")[1])
     if (typeof payload === "string") return null;
-    console.log(payload)
+    console.log(payload, " payload")
     if (!payload) return null;
     const userId = payload.userId
     console.log(userId)
