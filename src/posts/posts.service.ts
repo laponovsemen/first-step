@@ -80,12 +80,9 @@ export class PostsService{
 
   async createCommentForSpecificPost(DTO: CommentForSpecifiedPostDTO, postId: string, token: string) {
     const content = DTO.content
-    const payload = await this.jwtService.decode(token)
-    if(typeof payload === "string"){
-      return false
-    }
-    const userId = payload.userId
-    const login = payload.login
+    const user = await this.authService.getUserByToken(token)
+    const userId = user._id
+    const login = user.login
     const dateOfCreation = new Date()
     const commentToCreate: APIComment = {
       content: content,
@@ -95,7 +92,20 @@ export class PostsService{
       },
       createdAt: dateOfCreation
     }
-    return await this.commentsRepository.createNewComment(commentToCreate)
+    const commentFrame =  await this.commentsRepository.createNewComment(commentToCreate)
+    return {
+      content: commentFrame.content,
+      commentatorInfo: {
+        userId: commentFrame.commentatorInfo.userId,
+        userLogin: commentFrame.commentatorInfo.userLogin,
+      },
+      createdAt: commentFrame.createdAt,
+      likesInfo: {
+        likesCount : 0,
+        dislikesCount : 0,
+        myStatus : "None"
+      }
+    }
 
   }
 }

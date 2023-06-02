@@ -55,12 +55,14 @@ export class PostsController {
     const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
     return this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
   }
-  /*@Post(':id/comments')
-  async createCommentForSpecificPost( @Param('id') postId,
-                                      @Body() DTO : CommentForSpecifiedPostDTO) {
-    const token = request.headers.authorization
+  @Post(':id/comments')
+  @HttpCode(HttpStatus.CREATED)
+  async createCommentForSpecificPost(@Req() req : any,
+                                     @Param('id') postId,
+                                     @Body() DTO : CommentForSpecifiedPostDTO) {
+    const token = req.headers.authorization
     return this.postsService.createCommentForSpecificPost(DTO, postId, token);
-  }*/
+  }
   @Get()
   async getAllPosts(@Req() req : any,
                     @Res({passthrough : true}) res : Response,

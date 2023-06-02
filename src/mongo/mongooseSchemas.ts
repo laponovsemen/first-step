@@ -58,8 +58,8 @@ export class Blog {
 }
 @Schema({versionKey: false})
 export class commentatorInfoModel {
-  @Prop({ type: String, required: true })
-  "userId": string;
+  @Prop({ type: ObjectId, required: true })
+  "userId": ObjectId;
   @Prop({ type: String, required: true })
   "userLogin": string;
 }
