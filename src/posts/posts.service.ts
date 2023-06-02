@@ -92,7 +92,14 @@ export class PostsService{
       },
       createdAt: dateOfCreation
     }
-    const commentFrame =  await this.commentsRepository.createNewComment(commentToCreate)
+    const commentFrame =  await this.commentsRepository.createNewComment({
+      content: content,
+      commentatorInfo: {
+        userId: userId,
+        userLogin: login,
+      },
+      createdAt: dateOfCreation
+    })
     return {
       content: commentFrame.content,
       commentatorInfo: {
