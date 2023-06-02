@@ -24,6 +24,7 @@ export class PostsRepository {
       return null
     }
     const blog = await this.blogsModel.findOne({ _id: new ObjectId(blogId) })
+    if(!blog) return null;
     const newPost = {
       title: DTO.title, //    maxLength: 30
       shortDescription: DTO.shortDescription, //maxLength: 100
