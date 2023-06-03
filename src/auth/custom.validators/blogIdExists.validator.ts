@@ -9,7 +9,7 @@ export class UserExistsRule implements ValidatorConstraintInterface {
 
   async validate(value: string) {
     try {
-      await this.blogsRepository.getBlogById(value);
+      return !!await this.blogsRepository.getBlogById(value);
     } catch (e) {
       return false;
     }

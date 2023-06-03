@@ -65,7 +65,7 @@ export class PostDTO {
   content: string // maxLength: 1000
   @Transform(item => item.value.trim() )
   @IsNotEmpty()
-  @Validate(UserExistsRule)
+  //@Validate(UserExistsRule)
   blogId: string
 }
 
