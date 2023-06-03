@@ -14,12 +14,7 @@ async function bootstrap() {
         const errorsForResponse = []
         console.log(errors , 'ERRORS')
 
-        /*errors.forEach(e => errorsForResponse.push({
-          message : e.constraints[0],
-          field : e.property
-        }))*/
-
-        errors.forEach(e => {                     //errorsForResponse.push({field: e.property}))
+        errors.forEach(e => {
           const constrainedKeys = Object.keys(e.constraints)
           //console.log(constrainedKeys, "constrainedKeys");
           constrainedKeys.forEach((ckey) => {
