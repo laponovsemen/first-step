@@ -37,7 +37,7 @@ export class AuthService {
     console.log(user._id.toHexString(), "user._id user._id");
     return {
       access_token: await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secret}),
-      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s ', secret :jwtConstants.secret}),
+      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s', secret :jwtConstants.secret}),
     };
   }
 
