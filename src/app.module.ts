@@ -43,7 +43,7 @@ import { BlogIdExistsRule } from "./auth/custom.validators/blogIdExists.validato
 @Module({
   imports: [ThrottlerModule.forRoot({
     ttl: 10,
-    limit: 5,
+    limit: 500,
     }),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL),
