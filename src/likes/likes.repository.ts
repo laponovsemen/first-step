@@ -91,7 +91,7 @@ export class LikeRepository{
     const likesFilter = { $and: [{ parentId: postId }, { parentType: parentTypeEnum.post }, { status: StatusTypeEnum.Like }] }
     const newestLikesToUpdate = await this.likesModel.find(likesFilter, { _id: 0, status: 0, parentId: 0, parentType:0 }).sort({ addedAt: "desc" }).limit(3)
 
-    console.log(newestLikesToUpdate, " newestLikesToUpdate")
+    //console.log(newestLikesToUpdate, " newestLikesToUpdate")
     return newestLikesToUpdate
   }
 
@@ -108,12 +108,12 @@ export class LikeRepository{
     console.log({
       parentId: postId,
       parentType: parentTypeEnum.post,
-      userId: userIdAsString
+      userId: userId
     }, "filter");
     const filter = {
       parentId: postId,
       parentType: parentTypeEnum.post,
-      userId: userIdAsString
+      userId: userId
     }
 
     const result = await this.likesModel.findOne(filter);

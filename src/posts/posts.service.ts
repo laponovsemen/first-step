@@ -29,17 +29,19 @@ export class PostsService{
 
     let userId = null
     const userFromDb  = await this.authService.getUserByToken(token);
+    console.log(userFromDb, "userFromDb");
+    console.log(token, "token");
     if(userFromDb){
       userId = userFromDb._id
     }
-
+    console.log(userId, "userId");
     return await this.postsRepository.getPostById(id, userId)
   }
   async getAllPosts(paginationCriteria: paginationCriteriaType, token: string) {
     const user = await this.authService.getUserByToken(token)
     console.log(user , 'user');
     const allPostsFrames = await this.postsRepository.getAllPosts(paginationCriteria)
-    // TODO for of and for in
+
     for(let i = 0; i < allPostsFrames.items.length; i++){
       const post = allPostsFrames.items[i]
       const postId = new ObjectId(post.id)

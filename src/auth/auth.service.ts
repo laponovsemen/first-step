@@ -8,6 +8,14 @@ import { Common } from "../common";
 import { emailDTO, UserDTO } from "../input.classes";
 
 
+type payloadType = {
+  userId: string,
+  login: string,
+  iat: number,
+  exp: number
+
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -25,7 +33,8 @@ export class AuthService {
     if (user?.password !== pass) {
       throw new UnauthorizedException();
     }
-    const payload = { userId : user._id, login : user.login, };
+    const payload = { userId : user._id.toHexString(), login : user.login, };
+    console.log(user._id.toHexString(), "user._id user._id");
     return {
       access_token: await this.jwtService.signAsync(payload, {expiresIn: '10h',secret :jwtConstants.secret}),
       refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20h', secret :jwtConstants.secret}),
@@ -83,17 +92,19 @@ export class AuthService {
   }
 
   async getUserByToken(accessToken: any) {
-    if(!accessToken){
+    /*if(!accessToken){
       return null
-    }
-    const payload = this.jwtService.decode(accessToken.split(" ")[1])
-    if (typeof payload === "string") return null;
+    }*/const veriable = accessToken.split(" ")[1]
+    console.log(veriable, "veriable");
+    const payload = this.jwtService.decode(accessToken.split(" ")[1] )
+    //if (typeof payload === "string") return undefined;
     if (!payload) return null;
-    const userId = payload.userId
+    const userId = (payload as payloadType).userId
 
-    console.log(userId)
+    //console.log(userId)
+    console.log(userId, " userId")
     console.log(payload, " payload")
-    console.log(accessToken, "accessToken in getUserByToken");
+    //console.log(accessToken, "accessToken in getUserByToken");
 
     return await this.usersRepository.findUserById(userId)
 

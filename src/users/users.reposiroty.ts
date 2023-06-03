@@ -166,6 +166,9 @@ export class UsersRepository{
   }
 
   async findUserById(userId: string) {
-    return this.usersModel.findOne({ _id: new ObjectId(userId)});
+    console.log(userId, "userId in findUserById");
+    const result = await this.usersModel.findOne({_id: userId});
+    console.log(result, "result findUserById findUserById");
+    return result
   }
 }

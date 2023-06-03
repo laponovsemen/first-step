@@ -61,6 +61,7 @@ export class PostsRepository {
     if (!foundPost) {
       return null
     } else {
+      console.log(userId , "userId in getPostById");
       const foundPostFrame = this.common.mongoPostSlicing(foundPost)
       const likesCount = await this.likeRepository.findLikesCountForSpecificPost(postId)
       const dislikesCount = await this.likeRepository.findDisikesCountForSpecificPost(postId)
@@ -69,11 +70,11 @@ export class PostsRepository {
       foundPostFrame.extendedLikesInfo.likesCount = likesCount
       foundPostFrame.extendedLikesInfo.dislikesCount = dislikesCount
       foundPostFrame.extendedLikesInfo.newestLikes = newestLikes
-      foundPostFrame.extendedLikesInfo.myStatus = "None"//myLike ? myLike.status : "None"
-      console.log(foundPostFrame);
-      console.log(foundPostFrame, "foundPostFrame");
+      foundPostFrame.extendedLikesInfo.myStatus = myLike ? myLike.status : "None"
+      //console.log(foundPostFrame);
+      //console.log(foundPostFrame, "foundPostFrame");
       console.log(myLike , "myLike");
-      console.log(userId , "userId");
+      //console.log(userId , "userId");
       return foundPostFrame
     }
   }
