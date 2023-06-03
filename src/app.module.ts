@@ -38,6 +38,7 @@ import { CommentsController } from "./comments/comments.controller";
 import { CommentsService } from "./comments/comments.service";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { APP_GUARD } from "@nestjs/core";
+import { BlogIdExistsRule } from "./auth/custom.validators/blogIdExists.validator";
 
 @Module({
   imports: [ThrottlerModule.forRoot({
@@ -68,7 +69,7 @@ import { APP_GUARD } from "@nestjs/core";
 
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
     BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,
-    Common, AuthModule, JwtModule, JwtService,
+    Common, AuthModule, JwtModule, JwtService,BlogIdExistsRule,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard

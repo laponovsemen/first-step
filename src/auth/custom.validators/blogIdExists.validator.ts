@@ -4,7 +4,7 @@ import { BlogsRepository } from "../../blogs/blogs.repository";
 
 @ValidatorConstraint({  async: true })
 @Injectable()
-export class UserExistsRule implements ValidatorConstraintInterface {
+export class BlogIdExistsRule implements ValidatorConstraintInterface {
   constructor(private blogsRepository: BlogsRepository) {}
 
   async validate(value: string) {
@@ -13,8 +13,6 @@ export class UserExistsRule implements ValidatorConstraintInterface {
     } catch (e) {
       return false;
     }
-
-    return true;
   }
 
   defaultMessage(args: ValidationArguments) {

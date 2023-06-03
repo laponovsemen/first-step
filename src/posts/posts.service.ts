@@ -85,18 +85,14 @@ export class PostsService{
   async createCommentForSpecificPost(DTO: CommentForSpecifiedPostDTO, postId: string, token: string) {
     const content = DTO.content
     const user = await this.authService.getUserByToken(token)
+    if(!user){
+      return null
+    }
     const userId = user._id
     const login = user.login
     const dateOfCreation = new Date()
-    const commentToCreate: APIComment = {
-      content: content,
-      commentatorInfo: {
-        userId: userId,
-        userLogin: login,
-      },
-      createdAt: dateOfCreation
-    }
-    const commentFrame =  await this.commentsRepository.createNewComment({
+
+    const commentFrame : APIComment =  await this.commentsRepository.createNewComment({
       content: content,
       commentatorInfo: {
         userId: userId,

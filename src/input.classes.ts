@@ -1,7 +1,6 @@
 import { IsEnum, IsNotEmpty, IsNotIn, IsObject, IsString, IsUrl, Length, Matches, Validate } from "class-validator";
 import { Transform } from "class-transformer";
 import { StatusTypeEnum } from "./mongo/mongooseSchemas";
-import { UserExistsRule } from "./auth/custom.validators/blogIdExists.validator";
 
 export class CommentForSpecifiedPostDTO{
   @IsNotEmpty()
