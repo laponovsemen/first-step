@@ -73,14 +73,19 @@ export class RefreshTokenAuthGuard implements CanActivate {
   }
 
   canActivate(context: ExecutionContext): boolean {
-    const req = context.switchToHttp().getRequest();
-    const refreshTokenInCookie = req.cookies.refreshToken
-    if (!refreshTokenInCookie) throw new UnauthorizedException();
+    try {
+      const req = context.switchToHttp().getRequest();
+      const refreshTokenInCookie = req.cookies.refreshToken
+      if (!refreshTokenInCookie) throw new UnauthorizedException();
 
-    const result = this.jwtService.verify(refreshTokenInCookie)
-    if (!result) throw new UnauthorizedException();
-    request.refreshToken = result
-    return true
+      const result = this.jwtService.verify(refreshTokenInCookie)
+      if (!result) throw new UnauthorizedException();
+      req.refreshToken = result
+      return true
+    } catch (e) {
+      throw new UnauthorizedException()
+    }
+
   }
 
 

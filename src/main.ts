@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { HttpExceptionFilter } from "./exception.filter";
+import { useContainer } from "class-validator";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,7 +34,7 @@ async function bootstrap() {
     )
   )
   app.useGlobalFilters(new HttpExceptionFilter())
-
+  useContainer(app.select(AppModule), {fallbackOnErrors: true})
   const config = new DocumentBuilder()
     .setTitle('social-network example')
     .setDescription('The cats API description')

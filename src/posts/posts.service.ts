@@ -88,25 +88,20 @@ export class PostsService{
     if(!user){
       return null
     }
-    const userId = user._id
-    const login = user.login
-    const dateOfCreation = new Date()
 
-    const commentFrame : APIComment =  await this.commentsRepository.createNewComment({
+    const newComment: APIComment ={
       content: content,
       commentatorInfo: {
-        userId: userId,
-        userLogin: login,
+        userId: user._id,
+        userLogin: user.login,
       },
-      createdAt: dateOfCreation
-    })
+      createdAt: new Date()
+    }
+    console.log(newComment);
+    const createdComment = await this.commentsRepository.createNewComment({...newComment})
     return {
-      content: commentFrame.content,
-      commentatorInfo: {
-        userId: commentFrame.commentatorInfo.userId,
-        userLogin: commentFrame.commentatorInfo.userLogin,
-      },
-      createdAt: commentFrame.createdAt,
+      id: createdComment._id.toString(),
+     ...newComment,
       likesInfo: {
         likesCount : 0,
         dislikesCount : 0,

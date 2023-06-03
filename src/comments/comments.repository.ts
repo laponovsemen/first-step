@@ -13,7 +13,8 @@ export class CommentsRepository{
     await this.commentsModel.deleteMany({})
   }
   async createNewComment(newComment : APIComment){
-    return await this.commentsModel.create({newComment})
+    console.log(newComment, 'in repo');
+    return await this.commentsModel.create(newComment)
   }
 
   getCommentById(commentId: string) {

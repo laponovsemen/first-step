@@ -47,7 +47,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   refreshToken(@RefreshToken() refreshToken ,
                @Body() signInDto: Record<string, any>) {
-  const result = this.authService.refreshToken(refreshToken)
+  //const result = this.authService.refreshToken(refreshToken)
   }
 
   @Post('registration-confirmation')

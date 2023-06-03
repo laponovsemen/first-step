@@ -79,20 +79,22 @@ export class Blog {
   @Prop()
   createdAt: Date;
 }
-@Schema({versionKey: false})
+@Schema({_id: false, id: false, versionKey: false})
 export class commentatorInfoModel {
   @Prop({ type: ObjectId, required: true })
-  "userId": ObjectId;
+  userId: ObjectId;
   @Prop({ type: String, required: true })
-  "userLogin": string;
+  userLogin: string;
 }
+
+const coIS= SchemaFactory.createForClass(commentatorInfoModel)
 
 @Schema({versionKey: false})
 export class APIComment {
   id?: ObjectId;
   @Prop({ type: String, required: true })
   content: string;
-  @Prop({type: commentatorInfoModel, required : true})
+  @Prop({type: coIS, required : true})
   commentatorInfo: commentatorInfoModel;
 
   @Prop({ type: Date, required: true })

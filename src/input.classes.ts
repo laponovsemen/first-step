@@ -1,10 +1,12 @@
 import { IsEnum, IsNotEmpty, IsNotIn, IsObject, IsString, IsUrl, Length, Matches, Validate } from "class-validator";
 import { Transform } from "class-transformer";
 import { StatusTypeEnum } from "./mongo/mongooseSchemas";
+import { BlogIdExistsRule } from "./auth/custom.validators/blogIdExists.validator";
 
 export class CommentForSpecifiedPostDTO{
-  @IsNotEmpty()
   @Length(20, 300)
+  @IsNotEmpty()
+  @IsString()
   content : string // string minLength: 20 maxLength: 300
 }
 
@@ -64,7 +66,7 @@ export class PostDTO {
   content: string // maxLength: 1000
   @Transform(item => item.value.trim() )
   @IsNotEmpty()
-  //@Validate(UserExistsRule)
+  @Validate(BlogIdExistsRule)
   blogId: string
 }
 

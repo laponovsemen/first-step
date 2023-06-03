@@ -30,7 +30,8 @@ export class AuthService {
 
     const user = await this.usersService.findUserByLoginOrEmail(loginOrEmail, pass);
     console.log(user)
-    if (user?.password !== pass) {
+    if(!user)  throw new UnauthorizedException()
+    if (user.password !== pass) {
       throw new UnauthorizedException();
     }
     const payload = { userId : user._id.toHexString(), login : user.login, };
@@ -111,7 +112,7 @@ export class AuthService {
 
   }
 
-  async refreshToken(refreshToken : string) {
+  /*async refreshToken(refreshToken : string) {
 
     const payload = { userId : payloadOfOldRefreshToken.userId.toHexString(), login : user.login, };
     console.log(user._id.toHexString(), "user._id user._id");
@@ -119,5 +120,5 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secret}),
       refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s ', secret :jwtConstants.secret}),
     };
-  }
+  }*/
 }
