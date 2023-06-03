@@ -56,7 +56,7 @@ export class BlogsController {
   }
   @Get(':id/posts')
   @HttpCode(200)
-  async getAllPostsForSpecificBlog(@Req() req : Request,,
+  async getAllPostsForSpecificBlog(@Req() req : Request,
                                    @Res({passthrough : true}) res: Response,
                                    @Query() QueryParams,
                                    @Param('id') blogId) {
