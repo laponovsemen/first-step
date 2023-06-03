@@ -9,9 +9,9 @@ import {
   Request, Res, UnauthorizedException, UseGuards
 } from "@nestjs/common";
 import { AuthService } from './auth.service';
-import { Public } from './decorators/public.decorator';
+import { Public } from "./decorators/public.decorator";
 import { Response } from "express";
-import { AuthGuard } from "./auth.guard";
+import { AuthGuard, RefreshTokenAuthGuard } from "./auth.guard";
 import { tr } from "date-fns/locale";
 import { emailDTO, LoginDTO, UserDTO } from "../input.classes";
 import { JwtService } from "@nestjs/jwt";
@@ -42,10 +42,11 @@ export class AuthController {
       accessToken: result.access_token
     })
   }
-
+  @UseGuards(RefreshTokenAuthGuard)
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
-  refreshToken(@Body() signInDto: Record<string, any>) {
+  refreshToken( @Body() signInDto: Record<string, any>) {
+
   }
 
   @Post('registration-confirmation')

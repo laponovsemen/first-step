@@ -68,3 +68,19 @@ export class BasicAuthGuard implements CanActivate {
 
 
 }
+export class RefreshTokenAuthGuard implements CanActivate {
+  constructor(protected readonly jwtService : JwtService) {
+  }
+
+  canActivate(context: ExecutionContext): boolean {
+    const req = context.switchToHttp().getRequest();
+    const refreshTokenInCookie = req.cookies.refreshToken
+    if (!refreshTokenInCookie) throw new UnauthorizedException();
+
+    const result = this.jwtService.verify(refreshTokenInCookie)
+    if (!result) throw new UnauthorizedException();
+    return true
+  }
+
+
+}
