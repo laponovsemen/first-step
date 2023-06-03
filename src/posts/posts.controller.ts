@@ -64,7 +64,7 @@ export class PostsController {
     return this.postsService.createCommentForSpecificPost(DTO, postId, token);
   }
   @Get()
-  async getAllPosts(@Req() req : any,
+  async getAllPosts(@Req() req : Request,
                     @Res({passthrough : true}) res : Response,
                     @Query() QueryParams){
     const token = req.headers.authorization
