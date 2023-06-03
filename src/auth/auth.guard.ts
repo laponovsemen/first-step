@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
-import { Request } from "express";
+import { request, Request } from "express";
 import { jwtConstants } from "./constants";
 import { IS_PUBLIC_KEY } from "./decorators/public.decorator";
 
@@ -79,6 +79,7 @@ export class RefreshTokenAuthGuard implements CanActivate {
 
     const result = this.jwtService.verify(refreshTokenInCookie)
     if (!result) throw new UnauthorizedException();
+    request.refreshToken = result
     return true
   }
 
