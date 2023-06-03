@@ -92,9 +92,10 @@ export class AuthService {
   }
 
   async getUserByToken(accessToken: any) {
-    /*if(!accessToken){
+    if(!accessToken){
       return null
-    }*/const veriable = accessToken.split(" ")[1]
+    }
+    const veriable = accessToken.split(" ")[1]
     console.log(veriable, "veriable");
     const payload = this.jwtService.decode(accessToken.split(" ")[1] )
     //if (typeof payload === "string") return undefined;
