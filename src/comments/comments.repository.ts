@@ -54,7 +54,8 @@ export class CommentsRepository{
 
   async updateCommentById(commentId: string, DTO: CommentForSpecifiedPostDTO) {
     const content = DTO.content
-    return this.commentsModel.updateOne({_id : new ObjectId(commentId)}, {$set: {content : content}})
+    const result = await this.commentsModel.updateOne({_id : new ObjectId(commentId)}, {$set: {content : content}})
+    return result.matchedCount === 1
   }
 
   async getCommentByIdWithOutLikes(commentId: string) {
