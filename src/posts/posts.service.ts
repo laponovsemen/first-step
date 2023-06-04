@@ -118,7 +118,8 @@ export class PostsService{
     const content = DTO.content
     const user = await this.authService.getUserByToken(token)
     const postId = this.common.tryConvertToObjectId(postIdAsString)
-    if(!user || !postId){
+    const foundPost = await this.postsRepository.getPostByIdWithOutLikes(postIdAsString)
+    if(!user || !postId || !foundPost){
       console.log("no user or no post found");
       return null
 

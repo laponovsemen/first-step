@@ -63,6 +63,7 @@ export class PostsController {
     }
     return result
   }
+  @UseGuards(AuthGuard)
   @Post(':id/comments')
   @HttpCode(HttpStatus.CREATED)
   async createCommentForSpecificPost(@Req() req : any,
