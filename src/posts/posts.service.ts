@@ -105,7 +105,12 @@ export class PostsService{
     const createdComment = await this.commentsRepository.createNewComment({...newComment})
     return {
       id: createdComment._id.toString(),
-     ...newComment,
+      content: createdComment.content,
+      commentatorInfo: {
+        userId: createdComment.commentatorInfo.userId,
+        userLogin: createdComment.commentatorInfo.userLogin,
+      },
+      createdAt: createdComment.createdAt,
       likesInfo: {
         likesCount : 0,
         dislikesCount : 0,
