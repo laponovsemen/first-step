@@ -137,4 +137,13 @@ export class AuthService {
       return null
     }
   }
+
+  async logout(refreshToken: string) {
+    const refreshTokenVerification = await this.verifyRefreshToken(refreshToken)
+    if (!refreshTokenVerification) {
+      return null
+    }
+    const deviceId : string = refreshTokenVerification.deviceId
+    return await this.securityDevicesRepository.deleteDeviceById(deviceId)
+  }
 }

@@ -39,4 +39,9 @@ export class SecurityDevicesRepository {
           refreshToken : newRefreshToken
         }})
   }
+
+  async deleteDeviceById(deviceId: string) {
+      const deletedSession = await this.sessionModel.deleteOne({ "device.deviceId": new ObjectId(deviceId) });
+      return deletedSession.deletedCount === 1
+  }
 }

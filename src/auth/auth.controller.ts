@@ -121,13 +121,20 @@ export class AuthController {
 
   }
 
+  @UseGuards(AuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
-  logout(@Req() req : Request ,
-         @Res({passthrough : true}) res : Response ,
-         @Body() signInDto: Record<string, any>){
+  async logout(@Req() req: Request,
+               @Res({ passthrough: true }) res: Response,
+               @Body() signInDto: Record<string, any>) {
+    const refreshToken = req.cookies.refreshToken
 
-}
+    const result = await this.authService.logout(refreshToken)
+    if (!result) {
+      throw new UnauthorizedException()
+    }
+    return result
+  }
 
 
   @UseGuards(AuthGuard)
