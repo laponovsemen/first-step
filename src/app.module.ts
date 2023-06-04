@@ -46,7 +46,7 @@ import { SecurityDevicesController } from "./security.devices/security.devices.c
 @Module({
   imports: [ThrottlerModule.forRoot({
     ttl: 10,
-    limit: 500,
+    limit: 5,
     }),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL),
