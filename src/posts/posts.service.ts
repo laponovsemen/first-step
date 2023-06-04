@@ -80,6 +80,10 @@ export class PostsService{
 
   async getAllCommentsForSpecificPosts(paginationCriteria: paginationCriteriaType, id: string, token: string) {
     const user = await this.authService.getUserByToken(token)
+    const postId = await this.postsRepository.getPostByIdWithOutLikes(id)
+    if(!postId){
+      return null
+    }
     console.log(user, 'user');
     const allCommentsFrames = await this.postsRepository.getAllCommentsForSpecificPosts(paginationCriteria, id)
 

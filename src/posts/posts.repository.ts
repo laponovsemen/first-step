@@ -174,7 +174,11 @@ export class PostsRepository {
 
   }
 
-  async getPostByIdWithOutLikes(postId: string) {
+  async getPostByIdWithOutLikes(postIdAsString: string) {
+    const postId = this.common.tryConvertToObjectId(postIdAsString)
+    if(!postId){
+      return null
+    }
     return this.postsModel.findOne({ _id: new ObjectId(postId) });
   }
 }
