@@ -37,7 +37,7 @@ export class PostsController {
   @UseGuards(AuthGuard)
   @Put(':id/like-status')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async likePost( @Req() req : any,
+  async likePost( @Req() req : Request,
                   @Res({passthrough : true}) res : Response,
                   @Param('id') postId,
                   @Body() DTO : LikeStatusDTO) {
@@ -51,7 +51,8 @@ export class PostsController {
   }
 
   @Get(':id/comments')
-  async getAllCommentsForSpecificPost(@Query() QueryParams, @Param('id') id) {
+  async getAllCommentsForSpecificPost(@Query() QueryParams,
+                                      @Param('id') id) {
     const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
     return this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
   }
