@@ -9,6 +9,7 @@ import { JwtService } from "@nestjs/jwt";
 import { request, Request } from "express";
 import { jwtConstants } from "./constants";
 import { IS_PUBLIC_KEY } from "./decorators/public.decorator";
+import { BlogsRepository } from "../blogs/blogs.repository";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -65,6 +66,27 @@ export class BasicAuthGuard implements CanActivate {
     const [authType, authValue] = auth.split(" ");
     if (authType !== "Basic") throw new UnauthorizedException();
     if (authValue !== "YWRtaW46cXdlcnR5") throw new UnauthorizedException();
+    return true;
+  }
+
+
+}
+export class AllPostsForSpecificBlogGuard implements CanActivate {
+  constructor(protected readonly blogsRepository : BlogsRepository,protected reflector: Reflector) {
+  }
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const req = context.switchToHttp().getRequest();
+    const auth = req.headers.authorization;
+    if (!auth) throw new UnauthorizedException();
+    const [authType, authValue] = auth.split(" ");
+    if (authType !== "Basic") throw new UnauthorizedException();
+    if (authValue !== "YWRtaW46cXdlcnR5") throw new UnauthorizedException();
+    const blogId = req.params.id
+    console.log(blogId, " blogId");
+    const foundBlog = await this.blogsRepository.getBlogById(blogId)
+    console.log(foundBlog, "foundBlog");
+
     return true;
   }
 

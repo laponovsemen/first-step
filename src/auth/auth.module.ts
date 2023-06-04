@@ -5,7 +5,7 @@ import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
-import { AuthGuard } from "./auth.guard";
+import { AllPostsForSpecificBlogGuard, AuthGuard } from "./auth.guard";
 
 @Module({
   imports: [
@@ -21,6 +21,10 @@ import { AuthGuard } from "./auth.guard";
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AllPostsForSpecificBlogGuard,
     },
   ],
   controllers: [AuthController],

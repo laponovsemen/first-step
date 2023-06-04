@@ -24,7 +24,7 @@ import {
 import express, {Request, Response} from 'express';
 import { BlogsService } from './blogs.service';
 import { isNotEmpty, IsNotEmpty, IsString, IsUrl, Length } from "class-validator";
-import { AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
+import { AllPostsForSpecificBlogGuard, AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
 import { BlogDTO, PostForSpecificBlogDTO } from "../input.classes";
 
 
@@ -54,6 +54,8 @@ export class BlogsController {
   async createNewBlog(@Body() DTO : BlogDTO): Promise<Blog> {
     return this.blogsService.createNewBlog(DTO);
   }
+
+  @UseGuards(BasicAuthGuard)
   @Get(':id/posts')
   @HttpCode(200)
   async getAllPostsForSpecificBlog(@Req() req : Request,

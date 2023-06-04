@@ -20,6 +20,9 @@ export class BlogsService {
 
 
     const allPostsFrames = await this.blogsRepository.getAllPostsForSpecificBlog(paginationCriteria, blogId );
+    if(!allPostsFrames){
+      return null
+    }
     for(let i = 0; i < allPostsFrames.items.length; i++){
       const post = allPostsFrames.items[i]
       const postId = new ObjectId(post.id)
