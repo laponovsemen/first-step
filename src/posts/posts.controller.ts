@@ -73,7 +73,7 @@ export class PostsController {
     if(!result){
       throw new NotFoundException()
     }
-    return
+    return result
   }
   @Get()
   async getAllPosts(@Req() req : Request,
