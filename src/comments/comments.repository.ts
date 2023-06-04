@@ -27,7 +27,7 @@ export class CommentsRepository{
     if (!commentId) {
       return null
     }
-    const foundComment = await this.commentsModel.findOne({ _id: commentId })
+    const foundComment = await this.commentsModel.findOne({ _id: commentId }, {postId : 0})
     if (!foundComment) {
       return null
     } else {
