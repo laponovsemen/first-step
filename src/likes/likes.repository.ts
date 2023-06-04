@@ -197,7 +197,7 @@ export class LikeRepository{
     return dislikes.length
   }
 
-  async findMyStatusForSpecificComment(commentId: Types.ObjectId, userIdAsString: string) {
+  async findMyStatusForSpecificComment(commentId: ObjectId, userIdAsString: string) {
     console.log(userIdAsString, "userIdAsString")
     const userId = this.common.tryConvertToObjectId(userIdAsString)
     console.log(userId, "after user id");
