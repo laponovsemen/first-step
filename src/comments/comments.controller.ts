@@ -48,7 +48,7 @@ export class CommentsController {
                       @Body() DTO : CommentForSpecifiedPostDTO){
     const token = req.headers.authorization
     const userFromToken = await this.authService.getUserByToken(token)
-    const commentToUpdate = await this.commentsService.getCommentById(commentId)
+    const commentToUpdate = await this.commentsService.getCommentById(commentId, token)
     if(!commentToUpdate){
       throw new NotFoundException()
     }
@@ -68,7 +68,7 @@ export class CommentsController {
                       @Param('commentId') commentId){
     const token = req.headers.authorization
     const userFromToken = await this.authService.getUserByToken(token)
-    const commentToDelete = await this.commentsService.getCommentById(commentId)
+    const commentToDelete = await this.commentsService.getCommentById(commentId, token)
     if(!commentToDelete){
       throw new NotFoundException()
     }
@@ -84,7 +84,8 @@ export class CommentsController {
   async getCommentById(@Req() req : any,
                        @Res({passthrough : true}) res : Response,
                        @Param('commentId') commentId){
-    return await this.commentsService.getCommentById(commentId)
+    const token = req.headers.authorization
+    return await this.commentsService.getCommentById(commentId, token)
   }
 
 }

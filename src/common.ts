@@ -1,10 +1,11 @@
 import { ObjectId } from 'mongodb';
 import { Mongoose } from 'mongoose';
 import { BlogViewModelType, PostDBModel } from './appTypes';
-import { APILike, APIPost, User, WithMongoId } from "./mongo/mongooseSchemas";
+import { APIComment, APILike, APIPost, commentatorInfoModel, User, WithMongoId } from "./mongo/mongooseSchemas";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 import {v4 as uuidv4} from "uuid";
+import { Prop } from "@nestjs/mongoose";
 
 @Injectable()
 export class Common {
@@ -59,6 +60,19 @@ export class Common {
         dislikesCount: 0,
         myStatus: "None",
         newestLikes: [],
+      },
+    };
+  };
+  mongoCommentSlicing = (Obj2: WithMongoId<APIComment>) => {
+    return {
+      id: Obj2._id,
+      content: Obj2.content,
+      commentatorInfo: Obj2.commentatorInfo,
+      createdAt: Obj2.createdAt,
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: "None",
       },
     };
   };

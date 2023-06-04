@@ -2,7 +2,7 @@ import { LikeStatusDTO } from "../input.classes";
 import { ObjectId } from "mongodb";
 import { InjectModel } from "@nestjs/mongoose";
 import { APILike, LikesDocument, parentTypeEnum, StatusTypeEnum } from "../mongo/mongooseSchemas";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { Injectable } from "@nestjs/common";
 import { Common } from "../common";
 
@@ -176,5 +176,51 @@ export class LikeRepository{
 
       return true
     }
+  }
+
+  async findLikesCountForSpecificComment(commentId: Types.ObjectId) {
+    const likes = await this.likesModel.find({ $and: [
+        { parentId: commentId},
+        {  parentType: parentTypeEnum.comment},
+        { status: StatusTypeEnum.Like }
+      ]})
+      .lean().exec();
+    return likes.length
+  }
+
+  async findDisikesCountForSpecificComment(commentId: Types.ObjectId) {
+    const dislikes = await this.likesModel.find({ $and: [
+        {parentId: commentId},
+        {parentType: parentTypeEnum.comment},
+        {status: StatusTypeEnum.Dislike},]
+    })
+    return dislikes.length
+  }
+
+  async findMyStatusForSpecificComment(commentId: Types.ObjectId, userIdAsString: string) {
+    console.log(userIdAsString, "userIdAsString")
+    const userId = this.common.tryConvertToObjectId(userIdAsString)
+    console.log(userId, "after user id");
+    if(!userId){
+      console.log(userId, "нету юзер ай ди");
+      return null
+
+    }
+    console.log("before filter");
+    console.log({
+      parentId: commentId,
+      parentType: parentTypeEnum.comment,
+      userId: userId
+    }, "filter");
+    const filter = {
+      parentId: commentId,
+      parentType: parentTypeEnum.comment,
+      userId: userId
+    }
+
+    const result = await this.likesModel.findOne(filter);
+    console.log(result, "result");
+    return result
+
   }
 }

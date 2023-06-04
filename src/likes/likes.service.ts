@@ -34,7 +34,7 @@ export class LikeService{
 
   async likeComment(DTO: LikeStatusDTO, token: string, commentId : string) {
     console.log(commentId)
-    const foundComment = await this.commentsRepository.getCommentById(commentId)
+    const foundComment = await this.commentsRepository.getCommentByIdWithOutLikes(commentId)
     if(!foundComment){
       return null
     }
