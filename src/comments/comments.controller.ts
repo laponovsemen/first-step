@@ -11,7 +11,7 @@ import {
   Res,
   UseGuards
 } from "@nestjs/common";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { CommentForSpecifiedPostDTO, LikeStatusDTO } from "../input.classes";
 import { AuthGuard } from "../auth/auth.guard";
 import { CommentsService } from "./comments.service";
@@ -29,7 +29,7 @@ export class CommentsController {
   @UseGuards(AuthGuard)
   @Put(':commentId/like-status')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async likeComment(@Req() req : any,
+  async likeComment(@Req() req : Request,
                     @Res({passthrough : true}) res : Response,
                     @Param('commentId') commentId,
                     @Body() DTO : LikeStatusDTO){
@@ -44,7 +44,7 @@ export class CommentsController {
   @UseGuards(AuthGuard)
   @Put(':commentId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async updateComment(@Req() req : any,
+  async updateComment(@Req() req : Request,
                       @Res({passthrough : true}) res : Response,
                       @Param('commentId') commentId,
                       @Body() DTO : CommentForSpecifiedPostDTO){
@@ -69,7 +69,7 @@ export class CommentsController {
   @UseGuards(AuthGuard)
   @Delete(':commentId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteComment(@Req() req : any,
+  async deleteComment(@Req() req : Request,
                       @Res({passthrough : true}) res : Response,
                       @Param('commentId') commentId){
     const token = req.headers.authorization
