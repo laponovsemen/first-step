@@ -148,7 +148,7 @@ export class LikeRepository{
     if (!myLike) {
       const dateOfCreation = new Date()
       const parentId = new ObjectId(commentId)
-      const parentType = parentTypeEnum.post
+      const parentType = parentTypeEnum.comment
       const addedAt = dateOfCreation
       const userId = new ObjectId(userIdFromToken)
 
@@ -172,7 +172,7 @@ export class LikeRepository{
       return true
     } else {
 
-      await this.changeMyLikeStatus(status, userIdFromToken,  commentId, parentTypeEnum.post)
+      await this.changeMyLikeStatus(status, userIdFromToken,  commentId, parentTypeEnum.comment)
 
       return true
     }
