@@ -128,7 +128,7 @@ export class AuthService {
     };
   }
 
-  private async verifyRefreshToken(refreshToken: string) {
+  public async verifyRefreshToken(refreshToken: string) {
     try {
       return await this.jwtService.verifyAsync(refreshToken, {
         secret: jwtConstants.secret

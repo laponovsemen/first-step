@@ -8,11 +8,11 @@ import { BlogsRepository } from "./blogs/blogs.repository";
 import * as process from "process";
 import {
   APIComment, APILike,
-  APIPost,
+  APIPost, APISession,
   Blog,
   BlogsSchema,
   CommentsSchema, LikesSchema,
-  PostsSchema,
+  PostsSchema, SessionSchema,
   User,
   UsersSchema
 } from "./mongo/mongooseSchemas";
@@ -39,6 +39,9 @@ import { CommentsService } from "./comments/comments.service";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { APP_GUARD } from "@nestjs/core";
 import { BlogIdExistsRule } from "./auth/custom.validators/blogIdExists.validator";
+import { SecurityDevicesRepository } from "./security.devices/security.devices.repository";
+import { SecurityDevicesService } from "./security.devices/security.devices.service";
+import { SecurityDevicesController } from "./security.devices/security.devices.controller";
 
 @Module({
   imports: [ThrottlerModule.forRoot({
@@ -62,14 +65,17 @@ import { BlogIdExistsRule } from "./auth/custom.validators/blogIdExists.validato
     }, {
       name: APILike.name,
       schema: LikesSchema
+    }, {
+      name: APISession.name,
+      schema: SessionSchema
     }])],
 
   controllers: [AppController, BlogsController, TestingController,
-    PostsController, UsersController, AuthController, CommentsController],
+    PostsController, UsersController, AuthController, CommentsController, SecurityDevicesController],
 
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
     BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,
-    Common, AuthModule, JwtModule, JwtService,BlogIdExistsRule,
+    Common, AuthModule, JwtModule, JwtService,BlogIdExistsRule,SecurityDevicesRepository, SecurityDevicesService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard

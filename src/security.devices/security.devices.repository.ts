@@ -44,4 +44,8 @@ export class SecurityDevicesRepository {
       const deletedSession = await this.sessionModel.deleteOne({ "device.deviceId": new ObjectId(deviceId) });
       return deletedSession.deletedCount === 1
   }
+
+  async getAllDevicesForCurrentUser(userId: string) {
+      return this.sessionModel.find({userId : new ObjectId(userId)})
+  }
 }
