@@ -59,7 +59,11 @@ export class CommentsController {
       throw new ForbiddenException()
     }
 
-    await this.commentsService.updateCommentById(commentId, DTO)
+
+    const result = await this.commentsService.updateCommentById(commentId, DTO)
+    if(!result){
+      throw new NotFoundException()
+    }
     return true
   }
   @UseGuards(AuthGuard)
