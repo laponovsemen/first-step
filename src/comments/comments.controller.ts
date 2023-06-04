@@ -79,7 +79,10 @@ export class CommentsController {
       throw new ForbiddenException()
     }
 
-    await this.commentsService.deleteCommentById(commentId)
+    const result = await this.commentsService.deleteCommentById(commentId)
+    if(!result){
+      throw new NotFoundException()
+    }
     return true
   }
   @Get(':commentId')
