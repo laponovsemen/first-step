@@ -16,7 +16,7 @@ export class NewestLike {
   login: string;
 }
 
-@Schema()
+@Schema({_id: false, id: false, versionKey: false})
 export class APIDeviceModel {
   @Prop({ type: String, required: true })
   ip:	string // IP address of device during signing in
@@ -28,13 +28,14 @@ export class APIDeviceModel {
   @Prop({ type: String, required: true })
   deviceId:	string //  Id of connected device session
 }
+export const DeviceModelSchema = SchemaFactory.createForClass(APIDeviceModel);
 
 @Schema()
 export class APISession {
   _id?: ObjectId;
   @Prop({ type: ObjectId, required: true })
   userId: ObjectId;
-  @Prop({ type: APIDeviceModel, required: true })
+  @Prop({ type: DeviceModelSchema, required: true })
   device: APIDeviceModel;
   @Prop({ type: String, required: true })
   refreshToken: string;
@@ -156,9 +157,12 @@ export type BlogDocument = HydratedDocument<Blog>;
 export type PostDocument = HydratedDocument<APIPost>;
 export type CommentsDocument = HydratedDocument<APIComment>;
 export type UsersDocument = HydratedDocument<User>;
+export type SessionDocument = HydratedDocument<APISession>;
+export type DeviceDocument = HydratedDocument<APIDeviceModel>;
 export type LikesDocument = HydratedDocument<APILike>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);
 export const PostsSchema = SchemaFactory.createForClass(APIPost);
 export const CommentsSchema = SchemaFactory.createForClass(APIComment);
 export const UsersSchema = SchemaFactory.createForClass(User);
 export const LikesSchema = SchemaFactory.createForClass(APILike);
+export const SessionSchema = SchemaFactory.createForClass(APISession);

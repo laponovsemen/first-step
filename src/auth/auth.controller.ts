@@ -5,21 +5,29 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Post,
-  Request, Res, UnauthorizedException, UseGuards
+  Post, Req, Res, UnauthorizedException, UseGuards
 } from "@nestjs/common";
 import { AuthService } from './auth.service';
 import { Public, RefreshToken } from "./decorators/public.decorator";
-import { Response } from "express";
+import { Response, Request } from "express";
 import { AuthGuard, RefreshTokenAuthGuard } from "./auth.guard";
 import { tr } from "date-fns/locale";
 import { emailDTO, LoginDTO, UserDTO } from "../input.classes";
 import { JwtService } from "@nestjs/jwt";
+import {randomUUID} from "crypto";
+import { SecurityDevicesRepository } from "../security.devices/security.devices.repository";
+import { UsersService } from "../users/users.service";
+import { Common } from "../common";
+import { ObjectId } from "mongodb";
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService,
-              protected readonly jwtService : JwtService) {}
+              protected readonly jwtService : JwtService,
+              protected readonly common : Common,
+              protected readonly usersService : UsersService,
+              protected readonly securityDevicesRepository : SecurityDevicesRepository,
+              ) {}
 
   @Post('password-recovery')
   @HttpCode(HttpStatus.OK)
@@ -33,21 +41,47 @@ export class AuthController {
   //@UseGuards(AuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Res() res: Response,
+  async login(@Req() req : Request,
+              @Res() res: Response,
               @Body() signInDto: LoginDTO) {
 
-    const result = await this.authService.signIn(signInDto.loginOrEmail, signInDto.password);
+    const ip = req.ip
+    const title = req.headers["user-agent"] || 'Default UA'
+    const lastActiveDate = new Date()
+    const deviceId = new ObjectId(this.common.mongoObjectId())
+    const user = await this.usersService.findUserByLoginOrEmail(signInDto.loginOrEmail, signInDto.password);
+    console.log(user)
+    if (user?.password !== signInDto.password) {
+      throw new UnauthorizedException();
+    }
+
+
+    const result = await this.authService.signIn(user, ip, title, deviceId);
+    const newSession = await this.securityDevicesRepository.createNewSession(user._id.toString(),
+      ip,
+      title,
+      lastActiveDate,
+      deviceId,
+      result.refresh_token)
+
     res.cookie('refreshToken', result.refresh_token, { httpOnly: true, secure: true })
     res.status(200).send({
       accessToken: result.access_token
     })
   }
-  @UseGuards(RefreshTokenAuthGuard)
+  @UseGuards(AuthGuard)
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
-  refreshToken(@RefreshToken() refreshToken ,
-               @Body() signInDto: Record<string, any>) {
-  //const result = this.authService.refreshToken(refreshToken)
+  async refreshToken(@Req() req: Request,
+                     @Res({ passthrough: true }) res: Response,
+                     @Body() signInDto: Record<string, any>) {
+    const refreshToken = req.cookies.refreshToken
+
+    const result = await this.authService.refreshToken(refreshToken)
+    if (!result) {
+      throw new UnauthorizedException()
+    }
+    return result
   }
 
   @Post('registration-confirmation')
@@ -88,14 +122,18 @@ export class AuthController {
   }
 
   @Post('logout')
-  @HttpCode(HttpStatus.OK)
-  logout(@Body() signInDto: Record<string, any>) {
-  }
+  @HttpCode(HttpStatus.NO_CONTENT)
+  logout(@Req() req : Request ,
+         @Res({passthrough : true}) res : Response ,
+         @Body() signInDto: Record<string, any>){
+
+}
+
 
   @UseGuards(AuthGuard)
   @Get('me')
   async getProfile(@Res() res: Response,
-                   @Request() req) {
+                   @Req() req : Request) {
     const accessToken = req.headers.authorization
     const refreshToken = req.cookies.refreshToken
     const refreshTokenValidation = this.jwtService.verify(refreshToken)

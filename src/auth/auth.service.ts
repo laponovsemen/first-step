@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../users/users.service";
 import { jwtConstants } from "./constants";
@@ -6,6 +6,9 @@ import { UsersRepository } from "../users/users.reposiroty";
 import { EmailAdapter } from "./email.adapter";
 import { Common } from "../common";
 import { emailDTO, UserDTO } from "../input.classes";
+import { User } from "../mongo/mongooseSchemas";
+import { ObjectId } from "mongodb";
+import { SecurityDevicesRepository } from "../security.devices/security.devices.repository";
 
 
 type payloadType = {
@@ -22,18 +25,14 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private usersRepository: UsersRepository,
+    private securityDevicesRepository: SecurityDevicesRepository,
     private emailAdapter: EmailAdapter,
     private common: Common,
   ) {}
 
-  async signIn(loginOrEmail : string, pass : string) {
+  async signIn(user : User, ip : string, title : string, deviceId : ObjectId) {
 
-    const user = await this.usersService.findUserByLoginOrEmail(loginOrEmail, pass);
-    console.log(user)
-    if (user?.password !== pass) {
-      throw new UnauthorizedException();
-    }
-    const payload = { userId : user._id.toHexString(), login : user.login, };
+    const payload = { userId : user._id.toHexString(), login : user.login,ip, title,deviceId };
     console.log(user._id.toHexString(), "user._id user._id");
     return {
       access_token: await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secret}),
@@ -111,13 +110,31 @@ export class AuthService {
 
   }
 
-  /*async refreshToken(refreshToken : string) {
+  async refreshToken(refreshToken: string) {
+    const refreshTokenVerification = await this.verifyRefreshToken(refreshToken)
+    if (!refreshTokenVerification) {
+      return null
+    }
+    const lastActiveDate = new Date()
+    const deviceId =  refreshTokenVerification.deviceId
+    refreshTokenVerification.lastActiveDate = lastActiveDate
 
-    const payload = { userId : payloadOfOldRefreshToken.userId.toHexString(), login : user.login, };
-    console.log(user._id.toHexString(), "user._id user._id");
+    const newAccessToken = await this.jwtService.signAsync(refreshTokenVerification, {expiresIn: '10s',secret :jwtConstants.secret})
+    const newRefreshToken = await this.jwtService.signAsync(refreshTokenVerification, {expiresIn: '20s',secret :jwtConstants.secret})
+    const updatedSession = await this.securityDevicesRepository.updateSessionByDeviceId(deviceId, lastActiveDate, newRefreshToken)
     return {
-      access_token: await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secret}),
-      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s ', secret :jwtConstants.secret}),
+      access_token: newAccessToken,
+      refresh_token: newRefreshToken,
     };
-  }*/
+  }
+
+  private async verifyRefreshToken(refreshToken: string) {
+    try {
+      return await this.jwtService.verifyAsync(refreshToken, {
+        secret: jwtConstants.secret
+      })
+    } catch (e) {
+      return null
+    }
+  }
 }
