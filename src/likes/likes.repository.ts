@@ -178,7 +178,7 @@ export class LikeRepository{
     }
   }
 
-  async findLikesCountForSpecificComment(commentId: Types.ObjectId) {
+  async findLikesCountForSpecificComment(commentId: ObjectId) {
     const likes = await this.likesModel.find({ $and: [
         { parentId: commentId},
         {  parentType: parentTypeEnum.comment},
@@ -188,7 +188,7 @@ export class LikeRepository{
     return likes.length
   }
 
-  async findDisikesCountForSpecificComment(commentId: Types.ObjectId) {
+  async findDisikesCountForSpecificComment(commentId: ObjectId) {
     const dislikes = await this.likesModel.find({ $and: [
         {parentId: commentId},
         {parentType: parentTypeEnum.comment},

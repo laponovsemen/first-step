@@ -55,8 +55,9 @@ export class PostsController {
                                       @Res({passthrough : true}) res : Response,
                                       @Query() QueryParams,
                                       @Param('id') id) {
+    const token = req.headers.authorization
     const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
-    const result =await  this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
+    const result =await  this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id, token);
     if(!result){
       throw new NotFoundException()
     }

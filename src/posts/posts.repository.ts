@@ -155,11 +155,14 @@ export class PostsRepository {
       const ToSkip =
         paginationCriteria.pageSize * (paginationCriteria.pageNumber - 1);
 
-      const items = await this.commentsModel
+      const result = await this.commentsModel
         .find({ postId: new ObjectId(id) }) //
         .sort({ [sortBy]: sortDirection })
         .skip(ToSkip)
         .limit(pageSize);
+      const items = result.map((item) => {
+        return this.common.mongoCommentSlicing(item)
+      });
       return {
         pagesCount,
         page,

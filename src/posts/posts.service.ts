@@ -78,8 +78,40 @@ export class PostsService{
     return this.postsRepository.deletePostById(id)
   }
 
-  getAllCommentsForSpecificPosts(paginationCriteria :paginationCriteriaType, id : string){
-    return this.postsRepository.getAllCommentsForSpecificPosts(paginationCriteria, id)
+  async getAllCommentsForSpecificPosts(paginationCriteria: paginationCriteriaType, id: string, token: string) {
+    const user = await this.authService.getUserByToken(token)
+    console.log(user, 'user');
+    const allCommentsFrames = await this.postsRepository.getAllCommentsForSpecificPosts(paginationCriteria, id)
+
+
+    for (let i = 0; i < allCommentsFrames.items.length; i++) {
+      const comment = allCommentsFrames.items[i]
+      const commentId = new ObjectId(comment.id)
+      allCommentsFrames.items[i].likesInfo.likesCount = await this.likeRepository.findLikesCountForSpecificComment(commentId)
+      allCommentsFrames.items[i].likesInfo.dislikesCount = await this.likeRepository.findDisikesCountForSpecificComment(commentId)
+    }
+    if (!user) {
+      //console.log("i am out");
+      //console.log(user, "user");
+      return allCommentsFrames
+    } else {
+      console.log("i am in ");
+      const userId = user._id.toString()
+      //console.log(userId, " id of user ");
+      for (let i = 0; i < allCommentsFrames.items.length; i++) {
+        const post = allCommentsFrames.items[i]
+        const postId = new ObjectId(post.id)
+
+        const myLike = await this.likeRepository.findMyStatusForSpecificPost(postId, userId)
+        console.log(myLike, "myLike");
+        //console.log(postId , "postId");
+        allCommentsFrames.items[i].likesInfo.myStatus = myLike ? myLike.status : "None"
+      }
+
+      return allCommentsFrames
+    }
+
+
   }
 
   async createCommentForSpecificPost(DTO: CommentForSpecifiedPostDTO, postIdAsString: string, token: string) {
