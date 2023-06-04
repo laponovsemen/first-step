@@ -28,6 +28,7 @@ export class CommentsController {
   }
   @UseGuards(AuthGuard)
   @Put(':commentId/like-status')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async likeComment(@Req() req : any,
                     @Res({passthrough : true}) res : Response,
                     @Param('commentId') commentId,
@@ -42,6 +43,7 @@ export class CommentsController {
   }
   @UseGuards(AuthGuard)
   @Put(':commentId')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async updateComment(@Req() req : any,
                       @Res({passthrough : true}) res : Response,
                       @Param('commentId') commentId,
@@ -81,6 +83,7 @@ export class CommentsController {
     return true
   }
   @Get(':commentId')
+  @HttpCode(HttpStatus.OK)
   async getCommentById(@Req() req : any,
                        @Res({passthrough : true}) res : Response,
                        @Param('commentId') commentId){
