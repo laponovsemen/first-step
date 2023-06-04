@@ -43,6 +43,7 @@ export class CommentsRepository{
       //console.log(foundPostFrame, "foundPostFrame");
       console.log(myLike, "myLike");
       //console.log(userId , "userId");
+      console.log(foundCommentFrame, "результат")
       return foundCommentFrame
     }
   }

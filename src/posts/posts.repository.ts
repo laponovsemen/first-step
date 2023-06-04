@@ -143,6 +143,7 @@ export class PostsRepository {
   async getAllCommentsForSpecificPosts(paginationCriteria: paginationCriteriaType, id: string) {
     const foundPost = await this.postsModel.findOne({ _id: new ObjectId(id) })
     if (!foundPost) {
+      console.log("post not found")
       return null
     } else {
       const pageSize = paginationCriteria.pageSize;
@@ -154,11 +155,18 @@ export class PostsRepository {
       const ToSkip =
         paginationCriteria.pageSize * (paginationCriteria.pageNumber - 1);
 
-      const result = await this.commentsModel
+      const items = await this.commentsModel
         .find({ postId: new ObjectId(id) }) //
         .sort({ [sortBy]: sortDirection })
         .skip(ToSkip)
         .limit(pageSize);
+      return {
+        pagesCount,
+        page,
+        totalCount,
+        pageSize,
+        items
+      }
     }
 
   }

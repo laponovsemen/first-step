@@ -20,7 +20,7 @@ export class CommentsService{
       userId = userFromDb._id
     }
     console.log(userId, "userId");
-    return this.commentsRepository.getCommentById(commentId, userId);
+    return await this.commentsRepository.getCommentById(commentId, userId);
   }
 
   async deleteCommentById( commentId : string) {

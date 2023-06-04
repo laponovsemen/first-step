@@ -82,11 +82,14 @@ export class PostsService{
     return this.postsRepository.getAllCommentsForSpecificPosts(paginationCriteria, id)
   }
 
-  async createCommentForSpecificPost(DTO: CommentForSpecifiedPostDTO, postId: string, token: string) {
+  async createCommentForSpecificPost(DTO: CommentForSpecifiedPostDTO, postIdAsString: string, token: string) {
     const content = DTO.content
     const user = await this.authService.getUserByToken(token)
-    if(!user){
+    const postId = this.common.tryConvertToObjectId(postIdAsString)
+    if(!user || !postId){
+      console.log("no user or no post found");
       return null
+
     }
 
     const newComment: APIComment ={
@@ -95,6 +98,7 @@ export class PostsService{
         userId: user._id,
         userLogin: user.login,
       },
+      postId : postId,
       createdAt: new Date()
     }
     console.log(newComment);

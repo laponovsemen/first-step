@@ -91,11 +91,16 @@ export class CommentsController {
   }
   @Get(':commentId')
   @HttpCode(HttpStatus.OK)
-  async getCommentById(@Req() req : any,
+  async getCommentById(@Req() req : Request,
                        @Res({passthrough : true}) res : Response,
                        @Param('commentId') commentId){
     const token = req.headers.authorization
-    return await this.commentsService.getCommentById(commentId, token)
+    const result =  await this.commentsService.getCommentById(commentId, token)
+    console.log(result, "result 228")
+    if(!result){
+      throw new NotFoundException("post not found")
+    }
+    return result
   }
 
 }

@@ -98,7 +98,9 @@ export class APIComment {
   commentatorInfo: commentatorInfoModel;
 
   @Prop({ type: Date, required: true })
-  createdAt: Date
+  createdAt: Date;
+  @Prop({ type: ObjectId, required: true })
+  postId : ObjectId
 }
 
 @Schema({versionKey: false})

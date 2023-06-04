@@ -51,18 +51,29 @@ export class PostsController {
   }
 
   @Get(':id/comments')
-  async getAllCommentsForSpecificPost(@Query() QueryParams,
+  async getAllCommentsForSpecificPost(@Req() req : Request,
+                                      @Res({passthrough : true}) res : Response,
+                                      @Query() QueryParams,
                                       @Param('id') id) {
     const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
-    return this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
+    const result =await  this.postsService.getAllCommentsForSpecificPosts(paginationCriteria, id);
+    if(!result){
+      throw new NotFoundException()
+    }
+    return result
   }
   @Post(':id/comments')
   @HttpCode(HttpStatus.CREATED)
   async createCommentForSpecificPost(@Req() req : any,
+                                     @Res({passthrough : true}) res : Response,
                                      @Param('id') postId,
                                      @Body() DTO : CommentForSpecifiedPostDTO) {
     const token = req.headers.authorization
-    return this.postsService.createCommentForSpecificPost(DTO, postId, token);
+    const result = await this.postsService.createCommentForSpecificPost(DTO, postId, token);
+    if(!result){
+      throw new NotFoundException()
+    }
+    return
   }
   @Get()
   async getAllPosts(@Req() req : Request,
@@ -121,7 +132,8 @@ export class PostsController {
   @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(204)
-  async deletePostById(@Res({passthrough : true}) res : Response ,@Param('id') id) {
+  async deletePostById(@Res({passthrough : true}) res : Response ,
+                       @Param('id') id) {
     const result =  await this.postsService.deletePostById(id);
     if(!result){
       throw new NotFoundException("post not found")
