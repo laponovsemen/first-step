@@ -47,8 +47,9 @@ export class CommentsRepository{
     }
   }
 
-  deleteCommentById(commentId: string) {
-    return this.commentsModel.deleteOne({_id : new ObjectId(commentId)})
+  async deleteCommentById(commentId: string) {
+    const result = await this.commentsModel.deleteOne({ _id: new ObjectId(commentId) })
+    return result.deletedCount === 1
   }
 
   async updateCommentById(commentId: string, DTO: CommentForSpecifiedPostDTO) {
