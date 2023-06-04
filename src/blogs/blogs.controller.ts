@@ -55,7 +55,6 @@ export class BlogsController {
     return this.blogsService.createNewBlog(DTO);
   }
 
-  @UseGuards(BasicAuthGuard)
   @Get(':id/posts')
   @HttpCode(200)
   async getAllPostsForSpecificBlog(@Req() req : Request,
