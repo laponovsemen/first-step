@@ -81,7 +81,7 @@ export class AuthController {
     if (!result) {
       throw new UnauthorizedException()
     }
-    return result
+    return result.access_token
   }
 
   @Post('registration-confirmation')
