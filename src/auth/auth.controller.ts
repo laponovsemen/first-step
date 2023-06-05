@@ -19,6 +19,7 @@ import { SecurityDevicesRepository } from "../security.devices/security.devices.
 import { UsersService } from "../users/users.service";
 import { Common } from "../common";
 import { ObjectId } from "mongodb";
+import { jwtConstants } from "./constants";
 
 
 @Controller('auth')
@@ -147,7 +148,7 @@ export class AuthController {
                    @Req() req : Request) {
     const accessToken = req.headers.authorization.split(" ")[1]
     const refreshToken = req.cookies.refreshToken
-    const refreshTokenValidation = this.jwtService.verify(accessToken)
+    const refreshTokenValidation = this.jwtService.verify(accessToken, {secret : jwtConstants.secret})
     if (!refreshTokenValidation) {
       throw new UnauthorizedException()
     }
