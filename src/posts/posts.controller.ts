@@ -66,7 +66,7 @@ export class PostsController {
   @UseGuards(AuthGuard)
   @Post(':id/comments')
   @HttpCode(HttpStatus.CREATED)
-  async createCommentForSpecificPost(@Req() req : any,
+  async createCommentForSpecificPost(@Req() req : Request,
                                      @Res({passthrough : true}) res : Response,
                                      @Param('id') postId,
                                      @Body() DTO : CommentForSpecifiedPostDTO) {

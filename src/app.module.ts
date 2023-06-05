@@ -44,7 +44,9 @@ import { SecurityDevicesService } from "./security.devices/security.devices.serv
 import { SecurityDevicesController } from "./security.devices/security.devices.controller";
 
 @Module({
-  imports: [ThrottlerModule.forRoot({
+  imports: [
+    JwtModule.register({secret: "123"}),
+    ThrottlerModule.forRoot({
     ttl: 10,
     limit: 5,
     }),
@@ -75,7 +77,7 @@ import { SecurityDevicesController } from "./security.devices/security.devices.c
 
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
     BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,
-    Common, AuthModule, JwtModule, JwtService,BlogIdExistsRule,SecurityDevicesRepository, SecurityDevicesService,
+    Common, AuthModule, JwtService,BlogIdExistsRule,SecurityDevicesRepository, SecurityDevicesService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard

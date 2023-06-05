@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../users/users.service";
 import { jwtConstants } from "./constants";
@@ -9,6 +9,7 @@ import { emailDTO, UserDTO } from "../input.classes";
 import { User } from "../mongo/mongooseSchemas";
 import { ObjectId } from "mongodb";
 import { SecurityDevicesRepository } from "../security.devices/security.devices.repository";
+import { randomUUID } from "crypto";
 
 
 type payloadType = {
@@ -20,7 +21,7 @@ type payloadType = {
 }
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleInit{
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -29,7 +30,14 @@ export class AuthService {
     private emailAdapter: EmailAdapter,
     private common: Common,
   ) {}
-
+  async onModuleInit(){
+    const token = await this.jwtService.signAsync({userId : randomUUID(), deviceId: randomUUID()},
+      {secret : jwtConstants.secret})
+    console.log(token);
+    const payload = await this.jwtService.verifyAsync(token,
+      {secret : jwtConstants.secret})
+    console.log(payload);
+  }
   async signIn(user : User, ip : string, title : string, deviceId : ObjectId) {
 
     const payload = { userId : user._id.toHexString(), login : user.login,ip, title,deviceId };
@@ -120,11 +128,11 @@ export class AuthService {
     const deviceId =  refreshTokenVerification.deviceId
     refreshTokenVerification.lastActiveDate = lastActiveDate
     console.log(refreshTokenVerification)
-    const payload = { userId : refreshTokenVerification.userId.toHexString(),
+    const payload = { userId : refreshTokenVerification.userId,
       login : refreshTokenVerification.login,
       ip : refreshTokenVerification.ip,
       title: refreshTokenVerification.title,
-      deviceId: refreshTokenVerification.deviceId.toString() }
+      deviceId: refreshTokenVerification.deviceId }
 
     const newAccessToken = await this.jwtService.signAsync(payload, {expiresIn: '10h',secret :jwtConstants.secret})
     const newRefreshToken = await this.jwtService.signAsync(payload, {expiresIn: '20h',secret :jwtConstants.secret})
