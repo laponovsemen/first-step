@@ -1,20 +1,20 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
-  Post, Req, Res, UnauthorizedException, UseGuards
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards
 } from "@nestjs/common";
-import { AuthService } from './auth.service';
-import { Public, RefreshToken } from "./decorators/public.decorator";
-import { Response, Request } from "express";
-import { AuthGuard, RefreshTokenAuthGuard } from "./auth.guard";
-import { tr } from "date-fns/locale";
+import { AuthService } from "./auth.service";
+import { Request, Response } from "express";
+import { AuthGuard } from "./auth.guard";
 import { emailDTO, LoginDTO, UserDTO } from "../input.classes";
 import { JwtService } from "@nestjs/jwt";
-import {randomUUID} from "crypto";
 import { SecurityDevicesRepository } from "../security.devices/security.devices.repository";
 import { UsersService } from "../users/users.service";
 import { Common } from "../common";
@@ -148,11 +148,10 @@ export class AuthController {
                    @Req() req : Request) {
     const accessToken = req.headers.authorization
     const refreshToken = req.cookies.refreshToken
-    const refreshTokenValidation = this.jwtService.verify(refreshToken)
+    const refreshTokenValidation = this.jwtService.verify(accessToken)
     if (!refreshTokenValidation) {
       throw new UnauthorizedException()
     }
-    const user = await this.authService.getUserByToken(accessToken)
-    return user;
+    return await this.authService.getUserByToken(accessToken);
   }
 }
