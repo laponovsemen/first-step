@@ -81,7 +81,11 @@ export class AuthController {
     if (!result) {
       throw new UnauthorizedException()
     }
-    return result.access_token
+
+    res.cookie('refreshToken', result.refresh_token, { httpOnly: true, secure: true })
+    res.status(200).send({
+      accessToken: result.access_token
+    })
   }
 
   @Post('registration-confirmation')
