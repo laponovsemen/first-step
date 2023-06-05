@@ -1,29 +1,36 @@
 // @ts-ignore
 import request from "supertest";
 import mongoose from "mongoose";
+import { INestApplication } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
+import { AppModule } from "../src/app.module";
+import process from "process";
 
-import {appSettings} from "../../src/app-settings";
-import {app} from "../../src";
 
-const auth = 'Authorization'
+const authE2eSpec = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
-const mongoURI = appSettings.MONGO_URL
+const mongoURI = process.env.MONGO_URL
 
 describe("TESTING OF CREATING USER AND AUTH", () => {
+  let app: INestApplication;
+  let server : any
   beforeAll(async () => {
-    /* Connecting to the database. */
-    await mongoose.connect(mongoURI)
-  })
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
 
+    app = moduleFixture.createNestApplication();
+    await app.init();
+    server = app.getHttpServer()
+  });
   afterAll(async () => {
-    /* Closing database connection after each test. */
-    await mongoose.disconnect()
-  })
+    app.close()
+  });
   it("should authorize user //auth is correct", async () => {
     //await request(app).delete("/testing/all-data")
-    const user = await request(app)
+    const user = await request(server)
       .post("/users")
-      .set(auth, basic)
+      .set(authE2eSpec, basic)
       .send({
         login: "login",
         password: "password",

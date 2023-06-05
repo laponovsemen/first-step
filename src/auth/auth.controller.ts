@@ -74,17 +74,17 @@ export class AuthController {
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
   async refreshToken(@Req() req: Request,
-                     @Res({ passthrough: true }) res: Response) {
+                     @Res() res: Response) {
     const refreshToken = req.cookies.refreshToken
     console.log(refreshToken);
 
     const result = await this.authService.refreshToken(refreshToken)
     if (!result) {
-      throw new UnauthorizedException()
+      res.status(401).json({})
     }
 
     res.cookie('refreshToken', result.refresh_token, { httpOnly: true, secure: true })
-    res.status(200).send({
+    res.status(201).send({
       accessToken: result.access_token
     })
   }
