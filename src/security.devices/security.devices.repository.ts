@@ -48,4 +48,9 @@ export class SecurityDevicesRepository {
   async getAllDevicesForCurrentUser(userId: string) {
       return this.sessionModel.find({userId : new ObjectId(userId)})
   }
+
+  async gedDeviceByDeviceId(deviceId: string) {
+      return this.sessionModel.findOne({ "device.deviceId": new ObjectId(deviceId) });
+
+  }
 }
