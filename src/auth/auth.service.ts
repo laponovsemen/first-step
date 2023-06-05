@@ -37,6 +37,8 @@ export class AuthService implements OnModuleInit{
     const payload = await this.jwtService.verifyAsync(token,
       {secret : jwtConstants.secret})
     console.log(payload);
+
+
   }
   async signIn(user : User, ip : string, title : string, deviceId : ObjectId) {
 
