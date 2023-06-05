@@ -113,14 +113,21 @@ export class AuthService {
   async refreshToken(refreshToken: string) {
     const refreshTokenVerification = await this.verifyRefreshToken(refreshToken)
     if (!refreshTokenVerification) {
+      console.log("refreshTokenVerification is failed" );
       return null
     }
     const lastActiveDate = new Date()
     const deviceId =  refreshTokenVerification.deviceId
     refreshTokenVerification.lastActiveDate = lastActiveDate
+    console.log(refreshTokenVerification)
+    const payload = { userId : refreshTokenVerification._id.toHexString(),
+      login : refreshTokenVerification.login,
+      ip : refreshTokenVerification.ip,
+      title: refreshTokenVerification.title,
+      deviceId: refreshTokenVerification.deviceId.toString() }
 
-    const newAccessToken = await this.jwtService.signAsync(refreshTokenVerification, {expiresIn: '10s',secret :jwtConstants.secret})
-    const newRefreshToken = await this.jwtService.signAsync(refreshTokenVerification, {expiresIn: '20s',secret :jwtConstants.secret})
+    const newAccessToken = await this.jwtService.signAsync(payload, {expiresIn: '10h',secret :jwtConstants.secret})
+    const newRefreshToken = await this.jwtService.signAsync(payload, {expiresIn: '20h',secret :jwtConstants.secret})
     const updatedSession = await this.securityDevicesRepository.updateSessionByDeviceId(deviceId, lastActiveDate, newRefreshToken)
     return {
       access_token: newAccessToken,
