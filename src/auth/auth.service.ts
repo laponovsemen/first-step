@@ -120,7 +120,7 @@ export class AuthService {
     const deviceId =  refreshTokenVerification.deviceId
     refreshTokenVerification.lastActiveDate = lastActiveDate
     console.log(refreshTokenVerification)
-    const payload = { userId : refreshTokenVerification._id.toHexString(),
+    const payload = { userId : refreshTokenVerification.userId.toHexString(),
       login : refreshTokenVerification.login,
       ip : refreshTokenVerification.ip,
       title: refreshTokenVerification.title,
