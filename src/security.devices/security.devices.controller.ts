@@ -22,8 +22,15 @@ export class SecurityDevicesController{
   }
 
 
-  /*@Delete()
+  @Delete()
+  async deleteAllOtherDevices (@Req() req: Request,
+                          @Res({ passthrough: true }) res: Response){
 
+  }
 
-  @Delete()*/
+  @Delete()
+  async deleteDeviceById (@Req() req: Request,
+                          @Res({ passthrough: true }) res: Response){
+
+  }
 }

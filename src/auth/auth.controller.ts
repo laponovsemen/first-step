@@ -130,8 +130,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Req() req: Request,
-               @Res({ passthrough: true }) res: Response,
-               @Body() signInDto: Record<string, any>) {
+               @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies.refreshToken
 
     const result = await this.authService.logout(refreshToken)
@@ -146,7 +145,7 @@ export class AuthController {
   @Get('me')
   async getProfile(@Res() res: Response,
                    @Req() req : Request) {
-    const accessToken = req.headers.authorization
+    const accessToken = req.headers.authorization.split(" ")[1]
     const refreshToken = req.cookies.refreshToken
     const refreshTokenValidation = this.jwtService.verify(accessToken)
     if (!refreshTokenValidation) {
