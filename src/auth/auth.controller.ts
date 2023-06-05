@@ -91,8 +91,9 @@ export class AuthController {
     const result = await this.authService.registrationConfirmation(codeDTO)
     if(!result){
       res.status(400).json({errorsMessages: [{ message: "Code already confirmed", field: "code" }]})
+      return
     }
-    res.status(204).json({})
+      res.status(204).json({})
 
   }
 
