@@ -20,6 +20,7 @@ import { UsersService } from "../users/users.service";
 import { Common } from "../common";
 import { ObjectId } from "mongodb";
 
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService,
@@ -72,9 +73,9 @@ export class AuthController {
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
   async refreshToken(@Req() req: Request,
-                     @Res({ passthrough: true }) res: Response,
-                     @Body() signInDto: Record<string, any>) {
-    const refreshToken = req.cookies.refreshToken
+                     @Res({ passthrough: true }) res: Response) {
+    const refreshToken = req.cookies
+    console.log(refreshToken);
 
     const result = await this.authService.refreshToken(refreshToken)
     if (!result) {
