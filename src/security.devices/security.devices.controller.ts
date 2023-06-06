@@ -1,4 +1,15 @@
-import { Controller, Delete, Get, Query, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus, Param,
+  Query,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards
+} from "@nestjs/common";
 import { Request, Response } from "express";
 import { SecurityDevicesRepository } from "./security.devices.repository";
 import { SecurityDevicesService } from "./security.devices.service";
@@ -6,7 +17,7 @@ import { JwtService } from "@nestjs/jwt";
 import { AuthGuard } from "../auth/auth.guard";
 import { ObjectId } from "mongodb";
 
-@Controller()
+@Controller("security/devices")
 export class SecurityDevicesController{
   constructor(protected readonly securityDevicesService : SecurityDevicesService,
               protected readonly securityDevicesRepository : SecurityDevicesRepository,
@@ -29,6 +40,7 @@ export class SecurityDevicesController{
 
   @UseGuards(AuthGuard)
   @Delete()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteAllOtherDevices (@Req() req: Request,
                           @Res({ passthrough: true }) res: Response){
     const accessToken : string = req.headers.authorization.split(" ")[1]
@@ -40,10 +52,12 @@ export class SecurityDevicesController{
     await this.securityDevicesRepository.deleteAllDevicesExcludeCurrentDB(userIdFromRefreshToken, deviceIdFromRefreshToken)
     return
   }
-
-  @Delete()
+  @UseGuards(AuthGuard)
+  @Delete(":deviceId")
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteDeviceById (@Req() req: Request,
-                          @Res({ passthrough: true }) res: Response){
-
+                          @Res({ passthrough: true }) res: Response,
+                          @Param("deviceId") deviceId : string){
+  return
   }
 }
