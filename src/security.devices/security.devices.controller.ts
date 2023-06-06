@@ -31,6 +31,7 @@ export class SecurityDevicesController{
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   async getAllDevicesForCurrentUser(@Req() req: Request,
                                     @Res({ passthrough: true }) res: Response,
                                     @Query() QueryParams,) {
