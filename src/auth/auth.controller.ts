@@ -148,7 +148,7 @@ export class AuthController {
                    @Req() req : Request) {
     const accessToken = req.headers.authorization.split(" ")[1]
     const refreshToken = req.cookies.refreshToken
-    const refreshTokenValidation = this.jwtService.verify(accessToken, {secret : jwtConstants.secret})
+    const refreshTokenValidation = this.authService.verifyRefreshToken(accessToken)
     if (!refreshTokenValidation) {
       throw new UnauthorizedException()
     }
