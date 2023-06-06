@@ -144,7 +144,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('me')
-  async getProfile(@Res() res: Response,
+  async getProfile(@Res({passthrough : true}) res: Response,
                    @Req() req : Request) {
     const accessToken = req.headers.authorization.split(" ")[1]
     const refreshToken = req.cookies.refreshToken
