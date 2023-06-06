@@ -1,9 +1,12 @@
 import {
   Controller,
-  Delete, ForbiddenException,
+  Delete,
+  ForbiddenException,
   Get,
   HttpCode,
-  HttpStatus, NotFoundException, Param,
+  HttpStatus,
+  NotFoundException,
+  Param,
   Query,
   Req,
   Res,
@@ -17,6 +20,7 @@ import { JwtService } from "@nestjs/jwt";
 import { AuthGuard } from "../auth/auth.guard";
 import { ObjectId } from "mongodb";
 import { AuthService } from "../auth/auth.service";
+import { APISession, User } from "../mongo/mongooseSchemas";
 
 @Controller("security/devices")
 export class SecurityDevicesController{
@@ -62,14 +66,13 @@ export class SecurityDevicesController{
     if (!deviceId){
       throw new NotFoundException()
     }
-    const userFromToken  = await this.authService.getUserByToken(req.cookies.refreshToken)
+    const userFromToken : User  = await this.authService.getUserByToken(req.cookies.refreshToken)
 
-    const foundDevice = await this.securityDevicesRepository.findDeviceById(deviceId)
+    const foundDevice : APISession = await this.securityDevicesRepository.findDeviceById(deviceId)
     if(!foundDevice) throw new NotFoundException();
     if(foundDevice.userId.toString() !== userFromToken!._id.toString()) throw new ForbiddenException();
 
     //const userIdFromDb =
-    const deviceIsDeleted = await this.securityDevicesRepository.deleteDeviceById(deviceId)
-    return deviceIsDeleted
+    return await this.securityDevicesRepository.deleteDeviceById(deviceId)
   }
 }
