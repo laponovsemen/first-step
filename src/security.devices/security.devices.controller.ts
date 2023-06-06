@@ -58,6 +58,6 @@ export class SecurityDevicesController{
   async deleteDeviceById (@Req() req: Request,
                           @Res({ passthrough: true }) res: Response,
                           @Param("deviceId") deviceId : string){
-  return
+  return await this.securityDevicesRepository.deleteDeviceById(deviceId)
   }
 }
