@@ -53,4 +53,14 @@ export class SecurityDevicesRepository {
       return this.sessionModel.findOne({ "device.deviceId": new ObjectId(deviceId) });
 
   }
+
+  async deleteAllDevicesExcludeCurrentDB(userIdFromRefreshToken: ObjectId, deviceIdFromRefreshToken: string) {
+      return this.sessionModel.deleteMany({
+        $and: [
+          { userId: userIdFromRefreshToken },
+          {"device.deviceId" : deviceIdFromRefreshToken}
+        ]
+      });
+
+  }
 }

@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 
 import { AppModule } from './../src/app.module';
 import request from "supertest";
+import cookieParser from "cookie-parser";
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -13,6 +14,7 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.use(cookieParser())
     await app.init();
     server = app.getHttpServer()
   });
