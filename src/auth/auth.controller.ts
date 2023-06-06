@@ -84,7 +84,7 @@ export class AuthController {
     }
 
     res.cookie('refreshToken', result.refresh_token, { httpOnly: true, secure: true })
-    res.status(201).send({
+    res.status(200).send({
       accessToken: result.access_token
     })
   }
