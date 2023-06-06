@@ -63,4 +63,8 @@ export class SecurityDevicesRepository {
       });
 
   }
+
+  async findDeviceById(deviceId: string) {
+    return this.sessionModel.findOne({"device.deviceId" : deviceId})
+  }
 }

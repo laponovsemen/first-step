@@ -1,9 +1,9 @@
 import {
   Controller,
-  Delete,
+  Delete, ForbiddenException,
   Get,
   HttpCode,
-  HttpStatus, Param,
+  HttpStatus, NotFoundException, Param,
   Query,
   Req,
   Res,
@@ -16,11 +16,13 @@ import { SecurityDevicesService } from "./security.devices.service";
 import { JwtService } from "@nestjs/jwt";
 import { AuthGuard } from "../auth/auth.guard";
 import { ObjectId } from "mongodb";
+import { AuthService } from "../auth/auth.service";
 
 @Controller("security/devices")
 export class SecurityDevicesController{
   constructor(protected readonly securityDevicesService : SecurityDevicesService,
               protected readonly securityDevicesRepository : SecurityDevicesRepository,
+              protected readonly authService : AuthService,
               protected readonly jwtService : JwtService) {
   }
 
@@ -52,12 +54,22 @@ export class SecurityDevicesController{
     await this.securityDevicesRepository.deleteAllDevicesExcludeCurrentDB(userIdFromRefreshToken, deviceIdFromRefreshToken)
     return
   }
-  @UseGuards(AuthGuard)
   @Delete(":deviceId")
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteDeviceById (@Req() req: Request,
                           @Res({ passthrough: true }) res: Response,
                           @Param("deviceId") deviceId : string){
-  return await this.securityDevicesRepository.deleteDeviceById(deviceId)
+    if (!deviceId){
+      throw new NotFoundException()
+    }
+    const userFromToken  = await this.authService.getUserByToken(req.cookies.refreshToken)
+
+    const foundDevice = await this.securityDevicesRepository.findDeviceById(deviceId)
+    if(!foundDevice) throw new NotFoundException();
+    if(foundDevice.userId.toString() !== userFromToken!._id.toString()) throw new ForbiddenException();
+
+    //const userIdFromDb =
+    const deviceIsDeleted = await this.securityDevicesRepository.deleteDeviceById(deviceId)
+    return deviceIsDeleted
   }
 }
