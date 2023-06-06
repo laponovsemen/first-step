@@ -16,6 +16,7 @@ export class SecurityDevicesService{
       return null
     }
     const userId : string = refreshTokenVerification.userId
-    return await this.securityDevicesRepository.getAllDevicesForCurrentUser(userId)
+    const result = await this.securityDevicesRepository.getAllDevicesForCurrentUser(userId)
+    return result.map(item => item.device)
   }
 }
