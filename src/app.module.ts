@@ -17,7 +17,7 @@ import {
   UsersSchema
 } from "./mongo/mongooseSchemas";
 import { Common } from "./common";
-import { BlogsController } from "./blogs/blogs.controller";
+import { BloggerBlogsController } from "./blogs/blogger.blogs.controller";
 import { TestingController } from "./testing/testing.controller";
 import { TestingService } from "./testing/testing.service";
 import { PostsRepository } from "./posts/posts.repository";
@@ -42,6 +42,7 @@ import { BlogIdExistsRule } from "./auth/custom.validators/blogIdExists.validato
 import { SecurityDevicesRepository } from "./security.devices/security.devices.repository";
 import { SecurityDevicesService } from "./security.devices/security.devices.service";
 import { SecurityDevicesController } from "./security.devices/security.devices.controller";
+import { BlogsController } from "./blogs/blogs.controller";
 
 @Module({
   imports: [
@@ -72,7 +73,7 @@ import { SecurityDevicesController } from "./security.devices/security.devices.c
       schema: SessionSchema
     }])],
 
-  controllers: [AppController, BlogsController, TestingController,
+  controllers: [AppController, BloggerBlogsController, TestingController,BlogsController,
     PostsController, UsersController, AuthController, CommentsController, SecurityDevicesController],
 
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
