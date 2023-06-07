@@ -119,7 +119,8 @@ export class UsersRepository{
       password: password,
       isConfirmed: false,
       code: codeToSend,
-      codeDateOfExpiary: codeDateOfExpiary
+      codeDateOfExpiary: codeDateOfExpiary,
+      isBanned: false
     }
     const newlyCreatedUser = await this.usersModel.create(newUnconfirmedUser)
     return {

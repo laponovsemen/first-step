@@ -22,8 +22,8 @@ import { UserDTO } from "../input.classes";
 
 
 @UseGuards(BasicAuthGuard)
-@Controller('users')
-export class UsersController{
+@Controller('sa/users')
+export class SAUsersController{
   constructor(protected readonly usersService : UsersService,
               protected readonly common : Common) {
   }

@@ -43,6 +43,8 @@ import { SecurityDevicesRepository } from "./security.devices/security.devices.r
 import { SecurityDevicesService } from "./security.devices/security.devices.service";
 import { SecurityDevicesController } from "./security.devices/security.devices.controller";
 import { BlogsController } from "./blogs/blogs.controller";
+import { SABlogsController } from "./blogs/sa.blogs.controller";
+import { SAUsersController } from "./users/sa.users.controller";
 
 @Module({
   imports: [
@@ -73,7 +75,7 @@ import { BlogsController } from "./blogs/blogs.controller";
       schema: SessionSchema
     }])],
 
-  controllers: [AppController, BloggerBlogsController, TestingController,BlogsController,
+  controllers: [AppController, BloggerBlogsController, TestingController,BlogsController,SABlogsController,SAUsersController,
     PostsController, UsersController, AuthController, CommentsController, SecurityDevicesController],
 
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,

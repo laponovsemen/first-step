@@ -32,7 +32,7 @@ import { BlogDTO, PostForSpecificBlogDTO } from "../input.classes";
 
 
 @Controller('sa/blogs')
-export class BloggerBlogsController {
+export class SABlogsController {
   constructor(
     private readonly blogsService: BlogsService,
     private readonly common: Common,
