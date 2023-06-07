@@ -151,6 +151,8 @@ export class User {
   code: string | null;
   @Prop()
   codeDateOfExpiary: Date | null;
+  @Prop({ type: Boolean, required: true })
+  isBanned : boolean
 }
 
 export type BlogDocument = HydratedDocument<Blog>;
