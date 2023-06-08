@@ -35,7 +35,7 @@ export class SecurityDevicesRepository {
   async updateSessionByDeviceId(deviceId: string, lastActiveDate: Date, newRefreshToken: string) {
     const updatedSession = await this.sessionModel.updateOne({"device.deviceId": new ObjectId(deviceId)},
       {$set: {
-          lastActiveDate,
+          lastActiveDate : lastActiveDate.toISOString(),
           refreshToken : newRefreshToken
         }})
   }
