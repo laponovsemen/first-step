@@ -102,7 +102,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
           "ip": "::ffff:127.0.0.1",
           "lastActiveDate": expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
           "title": "SAFARI"},
-      
+
         {"deviceId": expect.any(String),
           "ip": "::ffff:127.0.0.1",
           "lastActiveDate": expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
@@ -110,26 +110,18 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
 )
 
   })
-  it("creating user and check for deleting", async () => {
+  it("creating user and login and try to delete sessions by id", async () => {
+    // deleting all data
     await request(server).delete("/testing/all-data")
-    const registration = await request(server)
-      .post("/auth/registration")
+    // creating user
+    const createdUser = await request(server)
+      .post("/users")
+      .set(auth, basic)
       .send({
-        login: "login",
-        email : "igorlaponov01011972@gmail.com",
+        login : "login",
+        email: "simsbury65@gmail.com",
         password : "password"
-      }).expect(204)
-    /*expect(registration.body.code).toEqual(expect.any(String))
-    const registrationCode = registration.body.code
-
-
-    const registrationConfirmation = await request(app)
-        .post("/auth/registration-confirmation")
-        .send({
-            code : registrationCode
-        }).expect(204)
-
-
+      }).expect(201)
     const login = await request(app)
         .post("/auth/login")
         .send({
@@ -138,7 +130,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
         }).expect(200)
 
     const accessToken = login.body.accessToken
-    const refreshToken = login.headers['set-cookie'][0].split(";")[0].slice(13)
+    const refreshToken = login.headers['set-cookie'][0]
     const payload : any = jwt.decode(refreshToken)
     const deviceId = payload.deviceId
     //console.log(accessToken)
@@ -161,7 +153,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
         .set("Cookie", [`refreshToken=${refreshToken}`])
         .expect(404)
     //expect(gettingAllDevicesForSpecificUser.body).toEqual({})
-*/
+
   })
   it("creating user and check for deleting all devices excluding current device", async () => {
     await request(app).delete("/testing/all-data")
