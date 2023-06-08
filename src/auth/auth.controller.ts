@@ -132,12 +132,14 @@ export class AuthController {
 
   }
 
-  @UseGuards(AuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Req() req: Request,
                @Res({ passthrough: true }) res: Response) {
+    console.log(req.cookies, " Cookies in the Post Logout Procedure")
+    //console.log(req, "All request Params in the Post Logout Procedure")
     const refreshToken = req.cookies.refreshToken
+
 
     const result = await this.authService.logout(refreshToken)
     if (!result) {

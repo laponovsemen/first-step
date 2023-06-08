@@ -5,6 +5,7 @@ import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "../src/app.module";
 import process from "process";
+import cookieParser from "cookie-parser";
 
 
 const authE2eSpec = 'Authorization'
@@ -20,6 +21,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.use(cookieParser())
     await app.init();
     server = app.getHttpServer()
   });
@@ -124,6 +126,49 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       login: expect.any(String),
       userId: expect.any(String)
     })
+
+  }, 10000)
+  it("creating user, login and try logout", async () => {
+    //delete all information
+    await request(server).delete("/testing/all-data")
+    // create new user
+    const creationOfUser = await request(server)
+      .post("/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login",
+        password: "password",
+        email: "simsbury65@gmail.com"
+      }).expect(201)
+    expect(creationOfUser.body).toEqual({
+      id: expect.any(String),
+      createdAt: expect.any(String),
+      login: "login",
+      email: "simsbury65@gmail.com"})
+
+    // try to login
+
+    const login = await request(server)
+      .post("/auth/login")
+      .set(authE2eSpec, basic)
+      .send({
+        loginOrEmail: "login",
+        password: "password",
+      }).expect(200)
+    //expect(login).toEqual({}) // in case to see all incoming information
+    const accessToken = login.body.accessToken
+    const refreshToken = login.headers["set-cookie"][0]
+
+    console.log(accessToken, "accessToken")
+    console.log(refreshToken, "refreshToken")
+
+    // try to logout
+    const logoutProcedure = await request(server)
+      .post("/auth/logout")
+      .set("Authorization", accessToken)
+      //.set([{"Cookie", [`refreshToken=${refreshToken}`]},{ authE2eSpec, `Bearer ${accessToken}`}])
+      .set("Cookie", [refreshToken])
+      .expect(204)
 
   }, 10000)
 
