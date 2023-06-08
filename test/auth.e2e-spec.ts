@@ -173,6 +173,56 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
     console.log(new Date().toString(), "new date in string format");
     console.log(new Date().toISOString(), "new date in ISOstring format");
   }, 10000)
+  it("creating user, login and try refresh token", async () => {
+    //delete all information
+    await request(server).delete("/testing/all-data")
+    // create new user
+    const creationOfUser = await request(server)
+      .post("/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login",
+        password: "password",
+        email: "simsbury65@gmail.com"
+      }).expect(201)
+    // checking of created user, if it is correct
+    expect(creationOfUser.body).toEqual({
+      id: expect.any(String),
+      createdAt: expect.any(String),
+      login: "login",
+      email: "simsbury65@gmail.com"})
+
+    // try to login
+
+    const login = await request(server)
+      .post("/auth/login")
+      .set(authE2eSpec, basic)
+      .send({
+        loginOrEmail: "login",
+        password: "password",
+      }).expect(200)
+
+    //expect(login).toEqual({}) // in case to see all incoming information
+    const accessToken = login.body.accessToken
+    const refreshToken = login.headers["set-cookie"][0]
+
+    console.log(accessToken, "accessToken")
+    console.log(refreshToken, "refreshToken")
+
+    // try to refresh token
+    const refreshTokenProcedure = await request(server)
+      .post("/auth/refresh-token")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .set("Cookie", [refreshToken])
+      .expect(200)
+    expect(refreshTokenProcedure.body).toEqual({accessToken: expect.any(String)})
+
+    await request(server)
+      .post("/auth/refresh-token")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .set("Cookie", [refreshToken])
+      .expect(401)
+  }, 10000)
 
 
 

@@ -33,6 +33,13 @@ export class Common {
       login : Obj2.login
     }
   }
+   delay = async (milliseconds: number): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, milliseconds)
+    })
+  }
   getPaginationCriteria(QueryParams: any) {
     const searchNameTerm = QueryParams.searchNameTerm ? QueryParams.searchNameTerm.toString() : null;
     const searchLoginTerm = QueryParams.searchLoginTerm ? QueryParams.searchLoginTerm.toString() : null;
