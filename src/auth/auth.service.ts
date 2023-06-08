@@ -33,17 +33,17 @@ export class AuthService implements OnModuleInit{
   async onModuleInit(){
     const token = await this.jwtService.signAsync({userId : randomUUID(), deviceId: randomUUID()},
       {secret : jwtConstants.secret})
-    console.log(token);
+    //console.log(token);
     const payload = await this.jwtService.verifyAsync(token,
       {secret : jwtConstants.secret})
-    console.log(payload);
+    //console.log(payload);
 
 
   }
   async signIn(user : User, ip : string, title : string, deviceId : ObjectId) {
 
-    const payload = { userId : user._id.toHexString(), login : user.login,ip, title,deviceId };
-    console.log(user._id.toHexString(), "user._id user._id");
+    const payload = { userId : user._id!.toHexString(), login : user.login,ip, title,deviceId };
+    //console.log(user._id!.toHexString(), "user._id user._id");
     return {
       access_token: await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secret}),
       refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s', secret :jwtConstants.secret}),
@@ -113,7 +113,7 @@ export class AuthService implements OnModuleInit{
 
     //console.log(userId)
     console.log(userId, " userId")
-    console.log(payload, " payload")
+    //console.log(payload, " payload")
     //console.log(accessToken, "accessToken in getUserByToken");
 
     return await this.usersRepository.findUserById(userId)
@@ -129,7 +129,7 @@ export class AuthService implements OnModuleInit{
     const lastActiveDate : Date = new Date()
     const deviceId : string =  refreshTokenVerification.deviceId
     const foundDevice = await this.securityDevicesRepository.gedDeviceByDeviceId(deviceId)
-    if(foundDevice.refreshToken !== refreshToken){
+    if(foundDevice!.refreshToken !== refreshToken){
       console.log("refreshToken is not found in db" );
       return null
     }
@@ -168,7 +168,7 @@ export class AuthService implements OnModuleInit{
     }
     const deviceId : string =  refreshTokenVerification.deviceId
     const foundDevice = await this.securityDevicesRepository.gedDeviceByDeviceId(deviceId)
-    if(foundDevice.refreshToken !== refreshToken){
+    if(foundDevice!.refreshToken !== refreshToken){
       console.log("refreshToken is not found in db" );
       return null
     }

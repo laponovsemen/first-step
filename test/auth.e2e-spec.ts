@@ -56,11 +56,15 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
 
   })
   it("sdfdsfsdfds", async () => {
-    const result = await request(server).post("/auth/registration").send({
+    await request(server).delete("/testing/all-data")
+    const result = await request(server)
+      .post("/auth/registration")
+      .send({
       email : "igorlaponov01011972@gmail.com",
       login : "string",
-      password : "string",
+      password : "stringstring",
     }).expect(204)
+    expect(result.body).toEqual({})
 
 
   }, 10000)
@@ -70,6 +74,56 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       .send({"code":"ee751dc0-bd44-41e2-a303-1c8bfade13bd"})
       .expect(400)
 
+
+  }, 10000)
+  it("creating user, login and get my profile", async () => {
+    //delete all information
+    await request(server).delete("/testing/all-data")
+    // create new user
+    const creationOfUser = await request(server)
+      .post("/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login",
+        password: "password",
+        email: "simsbury65@gmail.com"
+      }).expect(201)
+    expect(creationOfUser.body).toEqual({
+      id: expect.any(String),
+      createdAt: expect.any(String),
+      login: "login",
+      email: "simsbury65@gmail.com"})
+
+    // try to login
+
+    const login = await request(server)
+      .post("/auth/login")
+      .set(authE2eSpec, basic)
+      .send({
+        loginOrEmail: "login",
+        password: "password",
+      }).expect(200)
+    //expect(login).toEqual({}) // in case to see all incoming information
+    const accessToken = login.body.accessToken
+    const refreshToken = login.headers["set-cookie"]
+
+    console.log(accessToken, "accessToken")
+    console.log(refreshToken, "refreshToken")
+
+    // try to get my profile
+    const myProfile = await request(server)
+      .get("/auth/me")
+      .set(authE2eSpec, `Bearer ${accessToken}`)
+      .send({
+        loginOrEmail: "login",
+        password: "password",
+      }).expect(200)
+
+    expect(myProfile.body).toEqual({
+      email: expect.any(String),
+      login: expect.any(String),
+      userId: expect.any(String)
+    })
 
   }, 10000)
 

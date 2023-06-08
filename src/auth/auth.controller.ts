@@ -3,12 +3,13 @@ import {
   Controller,
   Get,
   HttpCode,
-  HttpStatus,
+  HttpStatus, Ip,
   Post,
   Req,
   Res,
   UnauthorizedException,
-  UseGuards
+  UseGuards,
+  Headers
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request, Response } from "express";
@@ -43,25 +44,29 @@ export class AuthController {
   //@UseGuards(AuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Req() req : Request,
+  async login(
+    @Req() req : Request,
               @Res() res: Response,
-              @Body() signInDto: LoginDTO) {
+              @Body() signInDto: LoginDTO,
+    @Headers("user-agent") deviceName = 'unknown',
+    @Ip() ip: string,
+  ) {
 
-    const ip = req.ip
-    const title = req.headers["user-agent"] || 'Default UA'
+    //const ip = req.ip
+    //const title = req.headers["user-agent"] || 'Default UA'
     const lastActiveDate = new Date()
     const deviceId = new ObjectId(this.common.mongoObjectId())
     const user = await this.usersService.findUserByLoginOrEmail(signInDto.loginOrEmail, signInDto.password);
-    console.log(user)
+    //console.log(user)
     if (user?.password !== signInDto.password) {
       throw new UnauthorizedException();
     }
 
 
-    const result = await this.authService.signIn(user, ip, title, deviceId);
+    const result = await this.authService.signIn(user, ip, deviceName, deviceId);
     const newSession = await this.securityDevicesRepository.createNewSession(user._id.toString(),
       ip,
-      title,
+      deviceName,
       lastActiveDate,
       deviceId,
       result.refresh_token)
@@ -146,12 +151,19 @@ export class AuthController {
   @Get('me')
   async getProfile(@Res({passthrough : true}) res: Response,
                    @Req() req : Request) {
-    const accessToken = req.headers.authorization.split(" ")[1]
-    const refreshToken = req.cookies.refreshToken
+    const accessToken = req.headers.authorization
+    //const refreshToken = req.cookies.refreshToken
     const refreshTokenValidation = this.authService.verifyRefreshToken(accessToken)
     if (!refreshTokenValidation) {
       throw new UnauthorizedException()
     }
-    return await this.authService.getUserByToken(accessToken);
+    const result = await this.authService.getUserByToken(accessToken);
+    console.log(result, "result");
+
+    return {
+      userId : result._id,
+      email : result.email,
+      login : result.login
+    }
   }
 }

@@ -25,12 +25,12 @@ export class AuthGuard implements CanActivate {
       // 💡 See this condition
       return true;
     }
-    console.log(this.jwtService, " jwtService");
+    //console.log(this.jwtService, " jwtService");
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     request.user = "skldfndl"
-    console.log(request, "request");
-    console.log(token, " token");
+    //console.log(request, "request");
+    //console.log(token, " token");
 
     if (!token) {
       throw new UnauthorizedException();

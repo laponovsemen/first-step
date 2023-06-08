@@ -145,11 +145,11 @@ export class User {
   password: string
   @Prop({ type: Date, required: true })
   createdAt: Date
-  @Prop()
+  @Prop({ type: Boolean || null })
   isConfirmed: boolean;
-  @Prop()
+  @Prop({ type: String || null })
   code: string | null;
-  @Prop()
+  @Prop({ type: Date || null })
   codeDateOfExpiary: Date | null;
   @Prop({ type: Boolean, required: true })
   isBanned : boolean

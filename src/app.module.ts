@@ -54,7 +54,7 @@ import { SAUsersController } from "./users/sa.users.controller";
     limit: 5,
     }),
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGO_URL),
+    MongooseModule.forRoot(process.env.MONGO_URL!),
     MongooseModule.forFeature([{
       name: Blog.name,
       schema: BlogsSchema
