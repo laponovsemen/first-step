@@ -131,7 +131,7 @@ export class AuthController {
     res.status(HttpStatus.NO_CONTENT).json({})
 
   }
-
+  @UseGuards(AuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Req() req: Request,
