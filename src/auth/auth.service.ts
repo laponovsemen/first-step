@@ -175,4 +175,23 @@ export class AuthService implements OnModuleInit{
 
     return await this.securityDevicesRepository.deleteDeviceById(deviceId)
   }
+
+  async getUserByRefreshToken(refreshToken : string) {
+    if(!refreshToken){
+      return null
+    }
+    const veriable = refreshToken
+    console.log(veriable, "veriable");
+    const payload = this.jwtService.decode(refreshToken)
+    //if (typeof payload === "string") return undefined;
+    if (!payload) return null;
+    const userId = (payload as payloadType).userId
+
+    //console.log(userId)
+    console.log(userId, " userId")
+    //console.log(payload, " payload")
+    //console.log(accessToken, "accessToken in getUserByToken");
+
+    return await this.usersRepository.findUserById(userId)
+  }
 }

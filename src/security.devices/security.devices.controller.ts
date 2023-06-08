@@ -70,7 +70,7 @@ export class SecurityDevicesController{
     const foundDevice : APISession = await this.securityDevicesRepository.findDeviceById(deviceId)
     if(!foundDevice) throw new NotFoundException();
 
-    const userFromToken : User  = await this.authService.getUserByToken(req.cookies.refreshToken)
+    const userFromToken : User  = await this.authService.getUserByRefreshToken(req.cookies.refreshToken)
     if(!userFromToken) throw new UnauthorizedException()
 
     if(foundDevice.userId.toString() !== userFromToken!._id.toString()) throw new ForbiddenException();

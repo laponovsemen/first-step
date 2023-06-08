@@ -15,6 +15,7 @@ const mongoURI = process.env.MONGO_URL
 
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
+const someRandomObjectIdToString = "64820e7bce17712b5c9e3c23"
 
 describe("TEST OF CHECKING CONNECTED DEVICES", () => {
   let app: INestApplication;
@@ -122,7 +123,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
         email: "simsbury65@gmail.com",
         password : "password"
       }).expect(201)
-    const login = await request(app)
+    const login = await request(server)
         .post("/auth/login")
         .send({
             loginOrEmail : "login",
@@ -130,27 +131,31 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
         }).expect(200)
 
     const accessToken = login.body.accessToken
-    const refreshToken = login.headers['set-cookie'][0]
-    const payload : any = jwt.decode(refreshToken)
-    const deviceId = payload.deviceId
+    const refreshToken = [login.headers['set-cookie'][0].split(";")[0]] //
     //console.log(accessToken)
 
+    console.log("refreshToken ", refreshToken)
 
-    const gettingAllDevicesForSpecificUser = await request(app)
+    const gettingAllDevicesForSpecificUser = await request(server)
         .get("/security/devices")
-        .set("Cookie", [`refreshToken=${refreshToken}`])
+        .set("Cookie", refreshToken)
         .expect(200)
 
-    console.log("refresh - " + deviceId)
-    console.log("body - ", gettingAllDevicesForSpecificUser.body)
+    const deviceId = gettingAllDevicesForSpecificUser.body[0].deviceId
+    console.log("deviceId - " + deviceId)
+    console.log("body of all devices request", gettingAllDevicesForSpecificUser.body)
 
-    const deleteDeviceById = await request(app)
+    const deleteDeviceById = await request(server)
         .delete(`/security/devices/${deviceId}`)
-        .set("Cookie", [`refreshToken=${refreshToken}`])
+        .set("Cookie", refreshToken)
         .expect(204)
-    await request(app)
-        .delete(`/security/devices/${mongoObjectId()}`)
-        .set("Cookie", [`refreshToken=${refreshToken}`])
+    await request(server)
+      .delete(`/security/devices/${deviceId}`)
+      .set("Cookie", refreshToken)
+      .expect(404)
+    await request(server)
+        .delete(`/security/devices/${someRandomObjectIdToString}`)
+        .set("Cookie", refreshToken)
         .expect(404)
     //expect(gettingAllDevicesForSpecificUser.body).toEqual({})
 
