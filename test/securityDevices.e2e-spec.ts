@@ -56,7 +56,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
             password : "password"
         }).expect(200)
 
-    await request(server)
+    const loginizationOfUser2 = await request(server)
         .post("/auth/login")
         .set('user-agent', 'CHROME')
         .send({
@@ -81,6 +81,8 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
 
     const accessToken = login.body.accessToken
     const refreshToken = login.headers['set-cookie'][0].split(";")[0].slice(13)
+    const refreshTokenOfUser2 = loginizationOfUser2.headers['set-cookie'][0].split(";")[0].slice(13)
+
     console.log(accessToken , " access token of first created user")
     console.log(refreshToken, " refresh token of first created user")
 
@@ -109,6 +111,16 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
           "lastActiveDate": expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
           "title": "unknown"}]
 )
+    const logout = await request(server)
+      .post("/auth/logout")
+      .set("Cookie", [`refreshToken=${refreshTokenOfUser2}`])
+      .expect(204)
+
+    const gettingAllDevicesForSpecificUserAfterLogout = await request(server)
+      .get("/security/devices")
+      .set("Cookie", [`refreshToken=${refreshToken}`])
+      .expect(200)
+    expect(gettingAllDevicesForSpecificUserAfterLogout.body.length).toEqual(3)
 
   })
   it("creating user and login and try to delete sessions by id", async () => {
