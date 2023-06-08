@@ -165,11 +165,13 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
     // try to logout
     const logoutProcedure = await request(server)
       .post("/auth/logout")
-      .set("Authorization", accessToken)
+      .set("Authorization", `Bearer ${accessToken}`)
       //.set([{"Cookie", [`refreshToken=${refreshToken}`]},{ authE2eSpec, `Bearer ${accessToken}`}])
       .set("Cookie", [refreshToken])
       .expect(204)
-
+    console.log(new Date(), "new date");
+    console.log(new Date().toString(), "new date in string format");
+    console.log(new Date().toISOString(), "new date in ISOstring format");
   }, 10000)
 
 
