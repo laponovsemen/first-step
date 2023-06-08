@@ -22,7 +22,7 @@ export class SecurityDevicesRepository {
       const device = {
         ip:	ip, // IP address of device during signing in
         title:	title, // Device name: for example Chrome 105 (received by parsing http header "user-agent")
-        lastActiveDate:	lastActiveDate, // Date of the last generating of refresh/access tokens
+        lastActiveDate:	lastActiveDate.toISOString(), // Date of the last generating of refresh/access tokens
         deviceId:	deviceId, //  Id of connected device session
       }
     return await this.sessionModel.create({
