@@ -88,6 +88,7 @@ export class AuthController {
     const result = await this.authService.refreshToken(refreshToken)
     if (!result) {
       res.status(401).json({})
+      return
     }
 
     res.cookie('refreshToken', result.refresh_token, { httpOnly: true, secure: true })
