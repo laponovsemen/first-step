@@ -74,25 +74,28 @@ export class UsersRepository{
     const password = DTO.password
     const email = DTO.email
     const createdAt = dateOfCreation
-    const newlyCreatedUser = await this.usersModel.create({
+    const newlyCreatedUser : User = await this.usersModel.create({
       login,
       password,
       email,
       createdAt,
-      isBanned:false
+      banInfo: {
+        banDate: null,
+        banReason: null,
+        isBanned: false,
+      }
     })
-    //console.log(newlyCreatedUser);
-    /*console.log({
-      login,
-      password,
-      email,
-      createdAt
-    });*/
+
     return {
       id: newlyCreatedUser._id,
       login,
       email,
-      createdAt
+      createdAt,
+      banInfo: {
+        banDate: null,
+        banReason: null,
+        isBanned: false,
+      }
     }
   }
 
@@ -121,7 +124,11 @@ export class UsersRepository{
       isConfirmed: false,
       code: codeToSend,
       codeDateOfExpiary: codeDateOfExpiary,
-      isBanned: false
+      banInfo : {
+        banDate : null,
+        banReason : null,
+        isBanned : false
+      }
     }
     const newlyCreatedUser = await this.usersModel.create(newUnconfirmedUser)
     return {

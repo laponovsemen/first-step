@@ -88,7 +88,8 @@ export class commentatorInfoModel {
   userLogin: string;
 }
 
-const coIS= SchemaFactory.createForClass(commentatorInfoModel)
+const coIS = SchemaFactory.createForClass(commentatorInfoModel)
+
 
 @Schema({versionKey: false})
 export class APIComment {
@@ -133,6 +134,18 @@ export enum parentTypeEnum {
   comment = "comment",
   post = "post"
 }
+
+@Schema({_id: false, id: false, versionKey: false})
+export class BanInfoDB {
+  @Prop({ type: Date || null})
+  banDate: Date | null
+  @Prop({ type: String || null})
+  banReason: String | null
+  @Prop({ type: Boolean})
+  isBanned: boolean
+}
+const BanInfoDBIS= SchemaFactory.createForClass(BanInfoDB)
+
 @Schema({versionKey: false})
 export class User {
   //({type: ObjectId, required: true, unique: true, default: new ObjectId()})
@@ -151,11 +164,12 @@ export class User {
   code: string | null;
   @Prop({ type: Date || null })
   codeDateOfExpiary: Date | null;
-  @Prop({ type: Boolean, required: true })
-  isBanned : boolean
+  @Prop({ type: BanInfoDBIS})
+  banInfo: BanInfoDB
 }
 
 export type BlogDocument = HydratedDocument<Blog>;
+export type BanInfoDBDocument = HydratedDocument<BanInfoDB>;
 export type PostDocument = HydratedDocument<APIPost>;
 export type CommentsDocument = HydratedDocument<APIComment>;
 export type UsersDocument = HydratedDocument<User>;
