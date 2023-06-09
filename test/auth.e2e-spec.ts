@@ -115,7 +115,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
     // try to get my profile
     const myProfile = await request(server)
       .get("/auth/me")
-      .set(authE2eSpec, `Bearer ${accessToken}`)
+      .set("Cookie", refreshToken)
       .send({
         loginOrEmail: "login",
         password: "password",
@@ -229,6 +229,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       .set("Authorization", `Bearer ${accessToken}`)
       .set("Cookie", [refreshToken])
       .expect(200)
+
     expect(refreshTokenProcedure.body).toEqual({accessToken: expect.any(String)})
     const accessTokenAfterRefresh = refreshTokenProcedure.body.accessToken
     const refreshTokenAfterRefresh = refreshTokenProcedure.headers["set-cookie"][0]

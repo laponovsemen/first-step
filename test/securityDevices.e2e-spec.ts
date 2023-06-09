@@ -173,23 +173,16 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
 
   })
   it("creating user and check for deleting all devices excluding current device", async () => {
-    await request(app).delete("/testing/all-data")
-    const registration = await request(app)
-      .post("/auth/registration")
+    await request(server).delete("/testing/all-data")
+    const registration = await request(server)
+      .post("/users")
+      .set("Authorization", basic)
       .send({
         login: "login",
         email : "igorlaponov01011972@gmail.com",
         password : "password"
       }).expect(201)
-    expect(registration.body.code).toEqual(expect.any(String))
-    const registrationCode = registration.body.code
 
-
-    const registrationConfirmation = await request(app)
-      .post("/auth/registration-confirmation")
-      .send({
-        code : registrationCode
-      }).expect(204)
 
 
     const login = await request(app)
