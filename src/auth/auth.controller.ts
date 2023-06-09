@@ -13,7 +13,7 @@ import {
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request, Response } from "express";
-import { AuthGuard } from "./auth.guard";
+import { AuthGuard, RefreshTokenAuthGuard } from "./auth.guard";
 import { emailDTO, LoginDTO, UserDTO } from "../input.classes";
 import { JwtService } from "@nestjs/jwt";
 import { SecurityDevicesRepository } from "../security.devices/security.devices.repository";
@@ -76,6 +76,7 @@ export class AuthController {
       accessToken: result.access_token
     })
   }
+  @UseGuards(RefreshTokenAuthGuard)
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
   async refreshToken(@Req() req: Request,
