@@ -17,7 +17,7 @@ import { Request, Response } from "express";
 import { SecurityDevicesRepository } from "./security.devices.repository";
 import { SecurityDevicesService } from "./security.devices.service";
 import { JwtService } from "@nestjs/jwt";
-import { AuthGuard } from "../auth/auth.guard";
+import { AuthGuard, RefreshTokenAuthGuard } from "../auth/auth.guard";
 import { ObjectId } from "mongodb";
 import { AuthService } from "../auth/auth.service";
 import { APISession, User } from "../mongo/mongooseSchemas";
@@ -45,7 +45,7 @@ export class SecurityDevicesController{
   }
 
 
-  @UseGuards(AuthGuard)
+  @UseGuards(RefreshTokenAuthGuard)
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteAllOtherDevices (@Req() req: Request,
