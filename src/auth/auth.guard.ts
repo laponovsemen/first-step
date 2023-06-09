@@ -1,7 +1,8 @@
 import {
+  BadRequestException,
   CanActivate,
   ExecutionContext,
-  Injectable,
+  Injectable, NotFoundException,
   UnauthorizedException, UseGuards
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
@@ -92,21 +93,33 @@ export class AllPostsForSpecificBlogGuard implements CanActivate {
 
 
 }
+@Injectable()
 export class RefreshTokenAuthGuard implements CanActivate {
-  constructor(protected readonly jwtService : JwtService) {
+  constructor(protected jwtService : JwtService) {
+
   }
 
   canActivate(context: ExecutionContext): boolean {
     try {
       const req = context.switchToHttp().getRequest();
       const refreshTokenInCookie = req.cookies.refreshToken
-      if (!refreshTokenInCookie) throw new UnauthorizedException();
+      console.log(refreshTokenInCookie);
+      if (!refreshTokenInCookie){
+        console.log("refreshTokenInCookie is present");
+        throw new BadRequestException();
+      }
 
       const result = this.jwtService.verify(refreshTokenInCookie, {secret : jwtConstants.secretForRefresh})
-      if (!result) throw new UnauthorizedException();
+      if (!result) {
+        console.log("refreshTokenInCookie is not verified");
+        throw new NotFoundException();
+
+      }
       req.refreshToken = refreshTokenInCookie
       return true
     } catch (e) {
+      console.log(e);
+      console.log("refreshTokenInCookie is not present")
       throw new UnauthorizedException()
     }
 

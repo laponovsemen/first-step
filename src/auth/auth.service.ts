@@ -143,7 +143,7 @@ export class AuthService implements OnModuleInit{
       title: refreshTokenVerification.title,
       deviceId: refreshTokenVerification.deviceId }
 
-    const newAccessToken = await this.jwtService.signAsync(payload)
+    const newAccessToken = await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secretForAccess})
     const newRefreshToken = await this.jwtService.signAsync(payload, {expiresIn: '20s',secret :jwtConstants.secretForRefresh})
     const updatedSession = await this.securityDevicesRepository.updateSessionByDeviceId(deviceId, lastActiveDate, newRefreshToken)
     return {
