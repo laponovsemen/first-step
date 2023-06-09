@@ -218,7 +218,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
 
     //expect(login).toEqual({}) // in case to see all incoming information
     const accessToken = login.body.accessToken
-    const refreshToken = login.headers["set-cookie"][0].split()
+    const refreshToken = login.headers["set-cookie"][0].split(";")[0]
 
     console.log(accessToken, "accessToken")
     console.log(refreshToken, "refreshToken")
