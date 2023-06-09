@@ -185,7 +185,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
 
 
 
-    const login = await request(app)
+    const login = await request(server)
       .post("/auth/login")
       .set('user-agent', 'FIREFOX')
       .send({
@@ -193,7 +193,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
         password : "password"
       }).expect(200)
 
-    await request(app)
+    await request(server)
       .post("/auth/login")
       .set('user-agent', 'CHROME')
       .send({
@@ -201,7 +201,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
         password : "password"
       }).expect(200)
 
-    await request(app)
+    await request(server)
       .post("/auth/login")
       .set('user-agent', 'SAFARI')
       .send({
@@ -209,7 +209,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
         password : "password"
       }).expect(200)
 
-    await request(app)
+    await request(server)
       .post("/auth/login")
       .send({
         loginOrEmail : "login",

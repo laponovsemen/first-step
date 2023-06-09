@@ -45,7 +45,7 @@ export class AuthService implements OnModuleInit{
     const payload = { userId : user._id!.toHexString(), login : user.login,ip, title,deviceId };
     //console.log(user._id!.toHexString(), "user._id user._id");
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, {expiresIn: '10s', secret :jwtConstants.secretForAccess}),
       refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s', secret :jwtConstants.secretForRefresh}),
     };
   }
