@@ -21,6 +21,7 @@ import { AuthGuard, RefreshTokenAuthGuard } from "../auth/auth.guard";
 import { ObjectId } from "mongodb";
 import { AuthService } from "../auth/auth.service";
 import { APISession, User } from "../mongo/mongooseSchemas";
+import { SkipThrottle } from "@nestjs/throttler";
 
 @Controller("security/devices")
 export class SecurityDevicesController{
@@ -29,7 +30,7 @@ export class SecurityDevicesController{
               protected readonly authService : AuthService,
               protected readonly jwtService : JwtService) {
   }
-
+  @SkipThrottle()
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllDevicesForCurrentUser(@Req() req: Request,
@@ -44,7 +45,7 @@ export class SecurityDevicesController{
     return result
   }
 
-
+  @SkipThrottle()
   @UseGuards(RefreshTokenAuthGuard)
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -59,6 +60,7 @@ export class SecurityDevicesController{
     await this.securityDevicesRepository.deleteAllDevicesExcludeCurrentDB(userIdFromRefreshToken, deviceIdFromRefreshToken)
     return
   }
+  @SkipThrottle()
   @Delete(":deviceId")
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteDeviceById (@Req() req: Request,
