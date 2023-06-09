@@ -231,11 +231,17 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       .post("/auth/refresh-token")
       .set("Authorization", `Bearer ${accessToken}`)
       .set("Cookie", [refreshToken])
+      .expect(401)
+
+    await request(server)
+      .post("/auth/refresh-token")
+      .set("Authorization", `Bearer ${accessTokenAfterRefresh}`)
+      .set("Cookie", [refreshTokenAfterRefresh])
       .expect(200)
 
     const gettingAllDevices2 = await request(server)
       .get("/security/devices")
-      .set("Cookie", [refreshToken])
+      .set("Cookie", [refreshTokenAfterRefresh])
       .expect(200)
     console.log(gettingAllDevices2.body, "2")
     expect(gettingAllDevices2.body[0].lastActiveDate).not.toEqual(gettingAllDevices.body[0].lastActiveDate)
