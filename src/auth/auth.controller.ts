@@ -117,9 +117,10 @@ export class AuthController {
     @Body() userDTO: UserDTO) {
     const result = await this.authService.registration(userDTO)
     if(!result.result){
-      res.status(400).json({ errorsMessages: [{ message: "email already confirmed", field: result.field }] })
+      return res.status(400).json({ errorsMessages: [{ message: "email already confirmed", field: result.field }] })
+
     }
-    res.status(204).json({})
+    return res.status(204).json({})
 
   }
 
