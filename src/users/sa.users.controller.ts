@@ -16,11 +16,12 @@ import { Common } from "../common";
 import { IsNotEmpty, Length, Matches } from "class-validator";
 import { AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
 import { UserDTO } from "../input.classes";
+import { SkipThrottle } from "@nestjs/throttler";
 
 
 
 
-
+@SkipThrottle()
 @UseGuards(BasicAuthGuard)
 @Controller('sa/users')
 export class SAUsersController{
