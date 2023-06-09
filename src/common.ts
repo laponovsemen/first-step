@@ -107,7 +107,8 @@ export class Common {
       id: Obj2._id,
       login: Obj2.login,
       email: Obj2.email,
-      createdAt : Obj2.createdAt
+      createdAt : Obj2.createdAt,
+      banInfo : Obj2.banInfo
     };
   };
 

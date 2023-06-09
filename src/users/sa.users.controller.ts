@@ -6,8 +6,8 @@ import {
   HttpCode, HttpStatus,
   NotFoundException,
   Param,
-  Post,
-  Query,
+  Post, Put,
+  Query, Req, Res,
   UseGuards
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
@@ -15,19 +15,31 @@ import { paginationCriteriaType } from "../appTypes";
 import { Common } from "../common";
 import { IsNotEmpty, Length, Matches } from "class-validator";
 import { AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
-import { UserDTO } from "../input.classes";
+import { BanUserDTO, UserDTO } from "../input.classes";
 import { SkipThrottle } from "@nestjs/throttler";
+import { Response } from "express";
 
 
 
 
 @SkipThrottle()
 @UseGuards(BasicAuthGuard)
-@Controller('sa/users')
+@Controller('/sa/users')
 export class SAUsersController{
   constructor(protected readonly usersService : UsersService,
               protected readonly common : Common) {
   }
+
+  @Put("/:userId/ban")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async banUnbanUser(@Param("userId") userId,
+                     @Req() req : Request,
+                     @Res({passthrough : true}) res : Response,
+                     @Body() DTO : BanUserDTO
+                     ){
+    return await this.usersService.banUnbanUser(userId, DTO)
+  }
+
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllUsers(@Query() QueryParams){

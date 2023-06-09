@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { UsersRepository } from "./users.reposiroty";
 import { paginationCriteriaType } from "../appTypes";
+import { BanUserDTO } from "../input.classes";
 
 
 @Injectable()
@@ -21,5 +22,9 @@ export class UsersService{
 
   async findUserByLoginOrEmail(loginOrEmail : string, pass : string) {
     return this.usersRepository.findUserByLoginOrEmail(loginOrEmail, pass)
+  }
+
+  async banUnbanUser(userId: string, DTO: BanUserDTO) {
+    return await this.usersRepository.banUnbanUserDB(userId, DTO)
   }
 }

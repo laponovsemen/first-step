@@ -8,6 +8,7 @@ import add from 'date-fns/add'
 import { ObjectId } from "mongodb";
 import { addMinutes } from "date-fns";
 import { SkipThrottle } from "@nestjs/throttler";
+import { BanUserDTO } from "../input.classes";
 
 @SkipThrottle()
 @Injectable()
@@ -181,5 +182,19 @@ export class UsersRepository{
     const result = await this.usersModel.findOne({_id : userId});
     console.log(result, "result findUserById findUserById");
     return result
+  }
+
+  async banUnbanUserDB(userId: string, DTO: BanUserDTO) {
+    const banDate = new Date()
+    const banReason = DTO.banReason
+    const isBanned = DTO.isBanned
+    return this.usersModel.updateOne({ _id: userId },
+      {
+        $set: {
+          "banInfo.banDate": banDate,
+          "banInfo.banReason": banReason,
+          "banInfo.isBanned": isBanned,
+        }
+      });
   }
 }

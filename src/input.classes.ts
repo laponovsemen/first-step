@@ -1,4 +1,15 @@
-import { IsEnum, IsNotEmpty, IsNotIn, IsObject, IsString, IsUrl, Length, Matches, Validate } from "class-validator";
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsNotIn,
+  IsObject,
+  IsString,
+  IsUrl,
+  Length,
+  Matches,
+  Validate
+} from "class-validator";
 import { Transform } from "class-transformer";
 import { StatusTypeEnum } from "./mongo/mongooseSchemas";
 import { BlogIdExistsRule } from "./auth/custom.validators/blogIdExists.validator";
@@ -68,6 +79,15 @@ export class PostDTO {
   @IsNotEmpty()
   @Validate(BlogIdExistsRule)
   blogId: string
+}
+export class BanUserDTO {
+  @IsBoolean()
+  isBanned: boolean //maxLength: 30
+
+  @IsNotEmpty()
+  @Length(20)
+  banReason: string // maxLength: 100
+
 }
 
 export class UserDTO {
