@@ -163,12 +163,26 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
     console.log(refreshToken, "refreshToken")
 
     // try to logout
+    await request(server)
+      .post("/auth/logout")
+      .set("Authorization", `Bearer sadasd`)
+      .set("Cookie", [])
+      .expect(401)
+
+    await request(server)
+      .post("/auth/logout")
+      .set("Cookie", [])
+      .expect(401)
+
+
     const logoutProcedure = await request(server)
       .post("/auth/logout")
       .set("Authorization", `Bearer ${accessToken}`)
-      //.set([{"Cookie", [`refreshToken=${refreshToken}`]},{ authE2eSpec, `Bearer ${accessToken}`}])
       .set("Cookie", [refreshToken])
       .expect(204)
+    // try to login
+
+
     console.log(new Date(), "new date");
     console.log(new Date().toString(), "new date in string format");
     console.log(new Date().toISOString(), "new date in ISOstring format");
