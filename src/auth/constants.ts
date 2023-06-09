@@ -1,4 +1,4 @@
 export const jwtConstants = {
-  secret:
-    'fdgfdlkjkmauirukennmz',
+  secretForAccess:  'fdgfdlkjkmauirukennmz',
+  secretForRefresh:  'fdgfdlkpojqwpkmsl;kojcxiozmklm;sakennmz',
 };

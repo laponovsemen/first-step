@@ -36,9 +36,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.secret
-      });
+      const payload = await this.jwtService.verifyAsync(token);
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
       request["user"] = payload;
@@ -102,7 +100,7 @@ export class RefreshTokenAuthGuard implements CanActivate {
       const refreshTokenInCookie = req.cookies.refreshToken
       if (!refreshTokenInCookie) throw new UnauthorizedException();
 
-      const result = this.jwtService.verify(refreshTokenInCookie, {secret : jwtConstants.secret})
+      const result = this.jwtService.verify(refreshTokenInCookie, {secret : jwtConstants.secretForRefresh})
       if (!result) throw new UnauthorizedException();
       req.refreshToken = result
       return true

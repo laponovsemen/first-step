@@ -32,10 +32,10 @@ export class AuthService implements OnModuleInit{
   ) {}
   async onModuleInit(){
     const token = await this.jwtService.signAsync({userId : randomUUID(), deviceId: randomUUID()},
-      {secret : jwtConstants.secret})
+      {secret : jwtConstants.secretForAccess})
     //console.log(token);
     const payload = await this.jwtService.verifyAsync(token,
-      {secret : jwtConstants.secret})
+      {secret : jwtConstants.secretForAccess})
     //console.log(payload);
 
 
@@ -45,8 +45,8 @@ export class AuthService implements OnModuleInit{
     const payload = { userId : user._id!.toHexString(), login : user.login,ip, title,deviceId };
     //console.log(user._id!.toHexString(), "user._id user._id");
     return {
-      access_token: await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secret}),
-      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s', secret :jwtConstants.secret}),
+      access_token: await this.jwtService.signAsync(payload),
+      refresh_token: await this.jwtService.signAsync(payload, {expiresIn: '20s', secret :jwtConstants.secretForRefresh}),
     };
   }
 
@@ -143,8 +143,8 @@ export class AuthService implements OnModuleInit{
       title: refreshTokenVerification.title,
       deviceId: refreshTokenVerification.deviceId }
 
-    const newAccessToken = await this.jwtService.signAsync(payload, {expiresIn: '10s',secret :jwtConstants.secret})
-    const newRefreshToken = await this.jwtService.signAsync(payload, {expiresIn: '20s',secret :jwtConstants.secret})
+    const newAccessToken = await this.jwtService.signAsync(payload)
+    const newRefreshToken = await this.jwtService.signAsync(payload, {expiresIn: '20s',secret :jwtConstants.secretForRefresh})
     const updatedSession = await this.securityDevicesRepository.updateSessionByDeviceId(deviceId, lastActiveDate, newRefreshToken)
     return {
       access_token: newAccessToken,
@@ -155,7 +155,7 @@ export class AuthService implements OnModuleInit{
   public async verifyRefreshToken(refreshToken: string) {
     try {
       return await this.jwtService.verifyAsync(refreshToken, {
-        secret: jwtConstants.secret
+        secret: jwtConstants.secretForRefresh
       })
     } catch (e) {
       return null

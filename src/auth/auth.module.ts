@@ -12,7 +12,7 @@ import { AllPostsForSpecificBlogGuard, AuthGuard, RefreshTokenAuthGuard } from "
     UsersModule,
     JwtModule.register({
       global: true,
-      secret: jwtConstants.secret,
+      secret: jwtConstants.secretForAccess,
       signOptions: { expiresIn: '60s' },
     }),
   ],
