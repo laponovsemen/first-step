@@ -59,7 +59,7 @@ export class SecurityDevicesRepository {
       return this.sessionModel.deleteMany({
         $and: [
           { userId: userIdFromRefreshToken },
-          {$ne: {"device.deviceId" : deviceIdFromRefreshToken}}
+          {"device.deviceId" : {$ne: deviceIdFromRefreshToken}}
         ]
       });
 
