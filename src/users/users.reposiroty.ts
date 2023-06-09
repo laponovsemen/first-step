@@ -7,7 +7,9 @@ import { paginationCriteriaType } from "../appTypes";
 import add from 'date-fns/add'
 import { ObjectId } from "mongodb";
 import { addMinutes } from "date-fns";
+import { SkipThrottle } from "@nestjs/throttler";
 
+@SkipThrottle()
 @Injectable()
 export class UsersRepository{
   constructor(@InjectModel(User.name) private  usersModel : Model<UsersDocument>,
