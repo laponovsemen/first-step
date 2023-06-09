@@ -21,6 +21,7 @@ import { UsersService } from "../users/users.service";
 import { Common } from "../common";
 import { ObjectId } from "mongodb";
 import { jwtConstants } from "./constants";
+import { RefreshToken } from "./decorators/public.decorator";
 
 
 @Controller('auth')
@@ -80,8 +81,8 @@ export class AuthController {
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
   async refreshToken(@Req() req: Request,
-                     @Res() res: Response) {
-    const refreshToken = req.cookies.refreshToken
+                     @Res() res: Response,
+                     @RefreshToken() refreshToken) {
     console.log(refreshToken);
 
     const result = await this.authService.refreshToken(refreshToken)
