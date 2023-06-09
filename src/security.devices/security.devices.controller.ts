@@ -51,7 +51,6 @@ export class SecurityDevicesController{
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteAllOtherDevices (@Req() req: Request,
                           @Res({ passthrough: true }) res: Response){
-    const accessToken : string = req.headers.authorization.split(" ")[1]
 
     const refreshToken : string = req.cookies.refreshToken
     const refreshTokenPayload: any = this.jwtService.decode(refreshToken)
