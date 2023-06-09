@@ -169,7 +169,8 @@ export class AuthService implements OnModuleInit{
     }
     const deviceId : string =  refreshTokenVerification.deviceId
     const foundDevice = await this.securityDevicesRepository.gedDeviceByDeviceId(deviceId)
-    if(foundDevice!.refreshToken !== refreshToken){
+    if(!foundDevice) return null;
+    if(foundDevice.refreshToken !== refreshToken){
       console.log("refreshToken is not found in db" );
       return null
     }
