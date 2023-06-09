@@ -82,12 +82,12 @@ export class UsersRepository{
       isBanned:false
     })
     //console.log(newlyCreatedUser);
-    console.log({
+    /*console.log({
       login,
       password,
       email,
       createdAt
-    });
+    });*/
     return {
       id: newlyCreatedUser._id,
       login,

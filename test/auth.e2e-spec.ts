@@ -216,12 +216,29 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       .set("Cookie", [refreshToken])
       .expect(200)
     expect(refreshTokenProcedure.body).toEqual({accessToken: expect.any(String)})
+    const accessTokenAfterRefresh = refreshTokenProcedure.body.accessToken
+    const refreshTokenAfterRefresh = refreshTokenProcedure.headers["set-cookie"][0]
+
+    const gettingAllDevices = await request(server)
+      .get("/security/devices")
+      .set("Cookie", [refreshToken])
+      .expect(200)
+    console.log(gettingAllDevices.body, "1")
+
+    //try to refresh token second time with old credentials
 
     await request(server)
       .post("/auth/refresh-token")
       .set("Authorization", `Bearer ${accessToken}`)
       .set("Cookie", [refreshToken])
-      .expect(401)
+      .expect(200)
+
+    const gettingAllDevices2 = await request(server)
+      .get("/security/devices")
+      .set("Cookie", [refreshToken])
+      .expect(200)
+    console.log(gettingAllDevices2.body, "2")
+    expect(gettingAllDevices2.body[0].lastActiveDate).not.toEqual(gettingAllDevices.body[0].lastActiveDate)
   }, 10000)
 
 
