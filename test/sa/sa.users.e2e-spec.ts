@@ -210,6 +210,24 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
         isBanned: false,
         banReason: "stringstringstringst",
       })
+
+    const resultAfterUnban = await request(server)
+      .get("/sa/users")
+      .set(authE2eSpec, basic)
+
+    const oneUserAfterUnban = resultAfterUnban.body.items[0]
+    expect(oneUserAfterUnban).toEqual({
+      id: userId,
+      login: 'login',
+      email: 'simsbury65@gmail.com',
+      createdAt: expect.any(String),
+      banInfo: {
+        banDate: null,
+        banReason: null,
+        isBanned: false
+      }
+    })
+
     }, 10000)
 
 

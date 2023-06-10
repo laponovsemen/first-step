@@ -185,16 +185,29 @@ export class UsersRepository{
   }
 
   async banUnbanUserDB(userId: string, DTO: BanUserDTO) {
-    const banDate = new Date()
-    const banReason = DTO.banReason
     const isBanned = DTO.isBanned
-    return this.usersModel.updateOne({ _id: userId },
-      {
-        $set: {
-          "banInfo.banDate": banDate,
-          "banInfo.banReason": banReason,
-          "banInfo.isBanned": isBanned,
-        }
-      });
+    if (isBanned){
+      const banDate = new Date()
+      const banReason = DTO.banReason
+
+      return this.usersModel.updateOne({ _id: userId },
+        {
+          $set: {
+            "banInfo.banDate": banDate,
+            "banInfo.banReason": banReason,
+            "banInfo.isBanned": isBanned,
+          }
+        });
+    } else {
+      return this.usersModel.updateOne({ _id: userId },
+        {
+          $set: {
+            "banInfo.banDate": null,
+            "banInfo.banReason": null,
+            "banInfo.isBanned": isBanned,
+          }
+        });
+    }
+
   }
 }
