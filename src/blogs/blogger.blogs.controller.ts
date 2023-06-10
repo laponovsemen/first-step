@@ -30,8 +30,9 @@ import { BlogDTO, PostForSpecificBlogDTO } from "../input.classes";
 
 
 
+@UseGuards(AuthGuard)
 
-@Controller('blogger/blogs')
+@Controller('/blogger/blogs')
 export class BloggerBlogsController {
   constructor(
     private readonly blogsService: BlogsService,
@@ -49,7 +50,6 @@ export class BloggerBlogsController {
       this.common.getPaginationCriteria(QueryParams);
     return this.blogsService.getAllBlogs(paginationCriteria);
   }
-  @UseGuards(BasicAuthGuard)
   @Post()
   async createNewBlog(@Body() DTO : BlogDTO): Promise<Blog> {
     return this.blogsService.createNewBlog(DTO);
@@ -72,7 +72,6 @@ export class BloggerBlogsController {
     return result
 
   }
-  @UseGuards(BasicAuthGuard)
   @Post(':id/posts')
   @HttpCode(201)
   async createPostForSpecificBlog(
@@ -96,7 +95,6 @@ export class BloggerBlogsController {
     }
     return result
   }
-  @UseGuards(BasicAuthGuard)
   @Put(':id')
   @HttpCode(204)
   async updateBlogById(@Res({passthrough : true}) res: Response,
@@ -109,7 +107,6 @@ export class BloggerBlogsController {
     return
 
   }
-  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   async deleteBlogById(@Res({passthrough : true}) res: Response,

@@ -35,9 +35,5 @@ export class BanProcedureUseCase implements ICommandHandler<BanProcedureCommand>
       await this.commentsRepository.makeCommentsHiden(command.userId)
       return await this.usersRepository.banUserDB(command.userId, command.DTO)
     }
-
   }
-
-
-
 }
