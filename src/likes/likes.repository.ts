@@ -225,4 +225,11 @@ export class LikeRepository{
     return result
 
   }
+
+  async makeLikesHiden(userId: string) {
+    await this.likesModel.updateMany({userId: userId},{$set : {isHiden : true}})
+  }
+  async makeLikesVisible(userId: string) {
+    await this.likesModel.updateMany({userId: userId},{$set : {isHiden : false}})
+  }
 }

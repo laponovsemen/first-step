@@ -62,4 +62,11 @@ export class CommentsRepository{
   async getCommentByIdWithOutLikes(commentId: string) {
     return this.commentsModel.findOne({ _id: new ObjectId(commentId) });
   }
+
+  async makeCommentsHiden(userId: string) {
+      await this.commentsModel.updateMany({"commentatorInfo.userId": userId},{$set : {isHiden : true}})
+  }
+  async makeCommentsVisible(userId: string) {
+    await this.commentsModel.updateMany({"commentatorInfo.userId": userId},{$set : {isHiden : false}})
+  }
 }
