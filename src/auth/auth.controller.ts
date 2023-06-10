@@ -52,14 +52,13 @@ export class AuthController {
     @Headers("user-agent") deviceName = 'unknown',
     @Ip() ip: string,
   ) {
-
-    //const ip = req.ip
-    //const title = req.headers["user-agent"] || 'Default UA'
     const lastActiveDate = new Date()
     const deviceId = new ObjectId(this.common.mongoObjectId())
     const user = await this.usersService.findUserByLoginOrEmail(signInDto.loginOrEmail, signInDto.password);
+    console.log(user?.banInfo.isBanned , " is user banned");
     //console.log(user)
-    if (user?.password !== signInDto.password) {
+    if (user?.password !== signInDto.password || user?.banInfo.isBanned) {
+
       throw new UnauthorizedException();
     }
 

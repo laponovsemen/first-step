@@ -229,6 +229,42 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
     })
 
     }, 10000)
+  it("shoud create user , ban it by SA and try to login => result must be 401", async ()=>{
+    await request(server).delete("/testing/all-data")
+    const user = await request(server)
+      .post("/sa/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login",
+        password: "password",
+        email: "simsbury65@gmail.com"
+      })
+      .expect(201)
+
+    const result = await request(server)
+      .get("/sa/users")
+      .set(authE2eSpec, basic)
+
+    const oneUser = result.body.items[0]
+    const userId = oneUser.id
+    console.log(oneUser , "oneUser");
+
+    const banUser = await request(server)
+      .put(`/sa/users/${userId}/ban`)
+      .set(authE2eSpec, basic)
+      .send({
+        isBanned: true,
+        banReason: "stringstringstringst",
+      })
+
+    await request(server)
+      .post(`/auth/login`)
+      .send({
+        loginOrEmail: "simsbury65@gmail.com",
+        password: "password"
+      })
+      .expect(401)
+  })
 
 
 
