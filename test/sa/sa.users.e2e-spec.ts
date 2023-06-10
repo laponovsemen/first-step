@@ -139,7 +139,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
     const idOfUserToBan = allUsers.body.items[0].id
 
     await request(server)
-      .post(`/sa/users/${idOfUserToBan}/ban`)
+      .put(`/sa/users/${idOfUserToBan}/ban`)
       .send({
         isBanned: true,
         banReason: "stringstringstringst",
@@ -147,7 +147,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       .expect(401)
 
     const bannedUser = await request(server)
-      .post(`/sa/users/${idOfUserToBan}/ban`)
+      .put(`/sa/users/${idOfUserToBan}/ban`)
       .set(authE2eSpec, basic)
       .send({
         isBanned: true,
@@ -155,7 +155,62 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       })
       .expect(204)
 
+    //delete everything
+     await request(server).delete("/testing/all-data")
+
+    //create one user
+    await request(server)
+      .post("/sa/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login",
+        password: "password",
+        email: "simsbury65@gmail.com"
+      })
+      .expect(201)
+
+    const result = await request(server)
+      .get("/sa/users")
+      .set(authE2eSpec, basic)
+
+    const oneUser = result.body.items[0]
+    const userId = oneUser.id
+    console.log(oneUser , "oneUser");
+
+    const banUser = await request(server)
+      .put(`/sa/users/${userId}/ban`)
+      .set(authE2eSpec, basic)
+      .send({
+        isBanned: true,
+        banReason: "stringstringstringst",
+      })
+
+    const resultAfterBan = await request(server)
+      .get("/sa/users")
+      .set(authE2eSpec, basic)
+
+    const oneUserAfterBan = resultAfterBan.body.items[0]
+    expect(oneUserAfterBan).toEqual({
+      id: userId,
+      login: 'login',
+      email: 'simsbury65@gmail.com',
+      createdAt: expect.any(String),
+      banInfo: {
+        banDate: expect.any(String),
+        banReason: 'stringstringstringst',
+        isBanned: true
+      }
     })
+    console.log(oneUserAfterBan, "oneUserAfterBan");
+
+    const unbanUser = await request(server)
+      .put(`/sa/users/${userId}/ban`)
+      .set(authE2eSpec, basic)
+      .send({
+        isBanned: false,
+        banReason: "stringstringstringst",
+      })
+    }, 10000)
 
 
 

@@ -49,10 +49,10 @@ import { SAUsersController } from "./users/sa.users.controller";
 @Module({
   imports: [
     JwtModule.register({secret: "123"}),
-    ThrottlerModule.forRoot({
+    /*ThrottlerModule.forRoot({
     ttl: 10,
     limit: 5,
-    }),
+    }),*/
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL!),
     MongooseModule.forFeature([{

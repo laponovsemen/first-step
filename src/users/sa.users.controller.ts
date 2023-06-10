@@ -30,7 +30,7 @@ export class SAUsersController{
               protected readonly common : Common) {
   }
 
-  @Put("/:userId/ban")
+  @Put(":userId/ban")
   @HttpCode(HttpStatus.NO_CONTENT)
   async banUnbanUser(@Param("userId") userId,
                      @Req() req : Request,
