@@ -102,7 +102,9 @@ export class APIComment {
   @Prop({ type: Date, required: true })
   createdAt: Date;
   @Prop({ type: ObjectId, required: true })
-  postId : ObjectId
+  postId : ObjectId;
+  @Prop({ type: Boolean, required: true})
+  isHiden : boolean
 }
 
 @Schema({versionKey: false})
@@ -120,7 +122,8 @@ export class APILike{
   login : string
   @Prop({ type: String, required: true })
   status : StatusTypeEnum
-
+  @Prop({ type: Boolean, required: true })
+  isHiden : boolean
 }
 
 export enum StatusTypeEnum {

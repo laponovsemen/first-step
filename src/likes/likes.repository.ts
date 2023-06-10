@@ -33,7 +33,8 @@ export class LikeRepository{
         addedAt: addedAt,
         userId: userId,
         login: login,
-        status: status
+        status: status,
+        isHiden : false
       }
       await this.likesModel.create({
         parentId: parentId,
@@ -159,7 +160,8 @@ export class LikeRepository{
         addedAt: addedAt,
         userId: userId,
         login: login,
-        status: status
+        status: status,
+        isHiden : false
       }
       await this.likesModel.create({
         parentId: parentId,

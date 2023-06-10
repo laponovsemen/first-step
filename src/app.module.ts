@@ -45,9 +45,12 @@ import { SecurityDevicesController } from "./security.devices/security.devices.c
 import { BlogsController } from "./blogs/blogs.controller";
 import { SABlogsController } from "./blogs/sa.blogs.controller";
 import { SAUsersController } from "./users/sa.users.controller";
+import { BanProcedureCommand, BanProcedureUseCase } from "./users/use-cases/banProcedure-use-case";
+import { CommandBus, CqrsModule } from "@nestjs/cqrs";
 
 @Module({
   imports: [
+    CqrsModule,
     JwtModule.register({secret: "123"}),
     ThrottlerModule.forRoot({
     ttl: 10,
@@ -79,7 +82,8 @@ import { SAUsersController } from "./users/sa.users.controller";
     PostsController, UsersController, AuthController, CommentsController, SecurityDevicesController],
 
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
-    BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,
+    BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,BanProcedureUseCase,
+    BanProcedureCommand,
     Common, AuthModule, JwtService,BlogIdExistsRule,SecurityDevicesRepository, SecurityDevicesService,
     {
       provide: APP_GUARD,

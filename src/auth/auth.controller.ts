@@ -43,6 +43,7 @@ export class AuthController {
   newPassword(@Body() signInDto: Record<string, any>) {
   }
   //@UseGuards(AuthGuard)
+
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(

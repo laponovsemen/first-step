@@ -13,11 +13,12 @@ import {
 import { UsersService } from "./users.service";
 import { paginationCriteriaType } from "../appTypes";
 import { Common } from "../common";
-import { IsNotEmpty, Length, Matches } from "class-validator";
-import { AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
+import { BasicAuthGuard } from "../auth/auth.guard";
 import { BanUserDTO, UserDTO } from "../input.classes";
 import { SkipThrottle } from "@nestjs/throttler";
 import { Response } from "express";
+import { BanProcedureCommand } from "./use-cases/banProcedure-use-case";
+import { CommandBus } from "@nestjs/cqrs";
 
 
 
@@ -27,6 +28,7 @@ import { Response } from "express";
 @Controller('/sa/users')
 export class SAUsersController{
   constructor(protected readonly usersService : UsersService,
+              protected readonly commandBus : CommandBus,
               protected readonly common : Common) {
   }
 
@@ -37,7 +39,9 @@ export class SAUsersController{
                      @Res({passthrough : true}) res : Response,
                      @Body() DTO : BanUserDTO
                      ){
-    return await this.usersService.banUnbanUser(userId, DTO)
+
+    return this.commandBus.execute( new BanProcedureCommand(userId, DTO))
+    //return {}
   }
 
   @Get()

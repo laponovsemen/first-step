@@ -135,7 +135,8 @@ export class PostsService{
         userLogin: user.login,
       },
       postId : postId,
-      createdAt: new Date()
+      createdAt: new Date(),
+      isHiden : false
     }
     console.log(newComment);
     const createdComment = await this.commentsRepository.createNewComment({...newComment})
