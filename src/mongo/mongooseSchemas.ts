@@ -67,7 +67,7 @@ export class APIPostDTO {
   createdAt: Date;
 }
 
-@Schema()
+@Schema({_id: false, id: false, versionKey: false})
 export class blogOwnerInfoModel{
   @Prop({type : String || null, require : true})
   userId : string | null;
