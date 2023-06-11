@@ -43,6 +43,7 @@ export class LikeRepository{
         userId: userId,
         login: login,
         status: status,
+        isHiden : false
       })
       return true
     } else {
