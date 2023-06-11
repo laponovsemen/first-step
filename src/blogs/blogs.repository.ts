@@ -130,8 +130,7 @@ export class BlogsRepository {
       description,
       websiteUrl,
       isMembership,
-      createdAt,
-      blogOwnerInfo
+      createdAt
     }
   }
   async getBlogById(id: string) {
