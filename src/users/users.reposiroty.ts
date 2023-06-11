@@ -224,4 +224,60 @@ export class UsersRepository{
   }
 
 
+  async getAllUsersSA(paginationCriteria: paginationCriteriaType) {
+    const banStatus = paginationCriteria.banStatus
+    const searchLoginTerm = paginationCriteria.searchLoginTerm
+    const searchEmailTerm = paginationCriteria.searchEmailTerm
+    let searchParams: any[] = []
+    if (searchEmailTerm) searchParams.push({ email: { $regex: searchEmailTerm, $options: "i" } })
+    if (searchLoginTerm) searchParams.push({ login: { $regex: searchLoginTerm, $options: "i" } })
+    if (banStatus === "banned") {
+      searchParams.push({"banInfo.isBanned" : true})
+    } else if (banStatus === "notBanned"){
+      searchParams.push({"banInfo.isBanned" : false})
+    }
+
+    let filter: { $or?: any[] } = { $or: searchParams }
+    if (searchParams.length === 0) filter = {}
+
+
+    const pageSize = paginationCriteria.pageSize;
+    const totalCount = await this.usersModel.countDocuments(filter);
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    const page = paginationCriteria.pageNumber;
+    const sortBy = paginationCriteria.sortBy;
+    const sortDirection: 'asc' | 'desc' = paginationCriteria.sortDirection;
+    const ToSkip = paginationCriteria.pageSize * (paginationCriteria.pageNumber - 1);
+
+
+    const result = await this.usersModel
+      .find(filter)
+      .sort({ [sortBy]: sortDirection })
+      .skip(ToSkip)
+      .limit(pageSize)
+      .lean() //.exec()
+    const items = result.map((item) => {
+      return this.common.mongoUserSlicing(item)
+    })
+
+
+    console.log(
+      {
+        pageSize: pageSize,
+        totalCount: totalCount,
+        pagesCount: pagesCount,
+        page: page,
+        items: items,
+      },
+      'its fucking result',
+    );
+    return {
+      pageSize: pageSize,
+      totalCount: totalCount,
+      pagesCount: pagesCount,
+      page: page,
+      items: items,
+    };
+
+  }
 }

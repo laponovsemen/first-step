@@ -19,6 +19,7 @@ import { SkipThrottle } from "@nestjs/throttler";
 import { Response } from "express";
 import { BanProcedureCommand } from "./use-cases/banProcedure-use-case";
 import { CommandBus } from "@nestjs/cqrs";
+import { GettingAllUsersForSuperAdminCommand } from "./use-cases/getting-all-users-for-super-admin";
 
 
 
@@ -47,9 +48,7 @@ export class SAUsersController{
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllUsers(@Query() QueryParams){
-    const paginationCriteria: paginationCriteriaType =
-      this.common.getPaginationCriteria(QueryParams);
-    return this.usersService.getAllUsers(paginationCriteria)
+    return this.commandBus.execute( new GettingAllUsersForSuperAdminCommand(QueryParams))
   }
 
 

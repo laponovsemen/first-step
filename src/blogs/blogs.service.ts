@@ -14,6 +14,7 @@ export class BlogsService {
   getAllBlogs(paginationCriteria) {
     return this.blogsRepository.getAllBlogs(paginationCriteria);
   }
+
   async getAllPostsForSpecificBlog(paginationCriteria: paginationCriteriaType, blogId: string, token: string) {
     const user = await this.authService.getUserByToken(token)
     console.log(user, 'user');

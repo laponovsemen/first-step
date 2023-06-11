@@ -9,6 +9,7 @@ export type paginationCriteriaType = {
   sortBy: string;
   sortDirection: 'asc' | 'desc';
   pageSize: number;
+  banStatus : "all" | "banned" | "notBanned"
 };
 
 export enum sortDirectionEnum {

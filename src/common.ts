@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { Mongoose } from 'mongoose';
-import { BlogViewModelType, PostDBModel } from './appTypes';
+import { BlogViewModelType, paginationCriteriaType, PostDBModel } from "./appTypes";
 import { APIComment, APILike, APIPost, Blog, commentatorInfoModel, User, WithMongoId } from "./mongo/mongooseSchemas";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
@@ -40,7 +40,8 @@ export class Common {
       }, milliseconds)
     })
   }
-  getPaginationCriteria(QueryParams: any) {
+  getPaginationCriteria(QueryParams: any) : paginationCriteriaType{
+    const banStatus = QueryParams.banStatus ? QueryParams.banStatus.toString() : "all";
     const searchNameTerm = QueryParams.searchNameTerm ? QueryParams.searchNameTerm.toString() : null;
     const searchLoginTerm = QueryParams.searchLoginTerm ? QueryParams.searchLoginTerm.toString() : null;
     const searchEmailTerm = QueryParams.searchEmailTerm ? QueryParams.searchEmailTerm.toString() : null;
@@ -56,6 +57,7 @@ export class Common {
       pageSize,
       sortBy,
       sortDirection,
+      banStatus
     };
   }
   mongoPostSlicing = (Obj2: WithMongoId<APIPost>) => {
