@@ -64,6 +64,52 @@ export class BlogsRepository {
       };
     }
   }
+  async getAllBlogsForSpecifiedUser(blogsPagination: paginationCriteriaType, userId : string) {
+    const filter: { name?: any,  "blogOwnerInfo.userId" : string} = {"blogOwnerInfo.userId" : userId}
+    if (blogsPagination.searchNameTerm) {
+      filter.name = {$regex: blogsPagination.searchNameTerm, $options: 'i'}
+    }
+    const pageSize = blogsPagination.pageSize;
+    const totalCount = await this.blogModel.countDocuments(filter);
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    const page = blogsPagination.pageNumber;
+    const sortBy = blogsPagination.sortBy;
+    const sortDirection: 'asc' | 'desc' = blogsPagination.sortDirection;
+    const ToSkip = blogsPagination.pageSize * (blogsPagination.pageNumber - 1);
+
+
+
+    const result = await this.blogModel
+      .find(filter)
+      .sort({ [sortBy]: sortDirection })
+      .skip(ToSkip)
+      .limit(pageSize)
+      .lean() //.exec()
+
+    if (result) {
+      const items = result.map((item) => {
+        return this.common.mongoBlogSlicing(item);
+      });
+      const array = await Promise.all(items);
+      console.log(
+        {
+          pageSize: pageSize,
+          totalCount: totalCount,
+          pagesCount: pagesCount,
+          page: page,
+          items: array,
+        },
+        'its fucking result',
+      );
+      return {
+        pageSize: pageSize,
+        totalCount: totalCount,
+        pagesCount: pagesCount,
+        page: page,
+        items: array,
+      };
+    }
+  }
   async getAllPostsForSpecificBlog(paginationCriteria: paginationCriteriaType, blogId: string,) {
     const foundBlog = await this.blogModel.findOne({_id : new  ObjectId(blogId)}).lean()
     if(!foundBlog) {
