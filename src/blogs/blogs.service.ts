@@ -70,4 +70,8 @@ export class BlogsService {
   createNewBlog(DTO: any, user : any) {
     return this.blogsRepository.createNewBlog(DTO,user);
   }
+
+  async getBlogByIdWithBloggerInfo(id) {
+    return this.blogsRepository.getBlogByIdWithBloggerInfo(id);
+  }
 }

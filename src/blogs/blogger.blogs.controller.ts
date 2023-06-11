@@ -1,7 +1,7 @@
 import {
   Body,
   Controller,
-  Delete,
+  Delete, ForbiddenException,
   Get, HttpCode, HttpStatus, NotFoundException,
   Param,
   Post,
@@ -108,9 +108,14 @@ export class BloggerBlogsController {
   @Put(':id')
   @HttpCode(204)
   async updateBlogById(@Res({passthrough : true}) res: Response,
+                       @Req() req: Request,
                        @Body() DTO : BlogDTO,
+                       @User() user,
                        @Param('id') id): Promise<void> {
-    const foundBlog = await this.blogsService.getBlogById(id)
+    const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(id)
+    if (foundBlog.blogOwnerInfo.userId.toString() !== user.userId){
+      throw new ForbiddenException("Blog not found")
+    }
 
     const updateResult = await this.blogsService.updateBlogById(DTO, id);
     if(!updateResult){
@@ -122,7 +127,14 @@ export class BloggerBlogsController {
   @Delete(':id')
   @HttpCode(204)
   async deleteBlogById(@Res({passthrough : true}) res: Response,
+                       @User() user,
                        @Param('id') id) {
+
+    const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(id)
+    if (foundBlog.blogOwnerInfo.userId.toString() !== user.userId){
+      throw new ForbiddenException("Blog not found")
+    }
+
     const deletedBlog = await this.blogsService.deleteBlogById(id);
     if(!deletedBlog){
       throw new NotFoundException("Blog not found")

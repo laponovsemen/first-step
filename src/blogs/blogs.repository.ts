@@ -240,4 +240,24 @@ export class BlogsRepository {
   async deleteAllData(){
     await this.blogModel.deleteMany({})
   }
+
+  async getBlogByIdWithBloggerInfo(id) {
+    const blogId = this.common.tryConvertToObjectId(id)
+    if (!blogId) {
+      return null
+    }
+    const foundBlog = await this.blogModel.findOne({ _id: blogId });
+    if (!foundBlog) {
+      return null
+    }
+    return {
+      id: foundBlog._id,
+      name: foundBlog.name,
+      description: foundBlog.description,
+      websiteUrl: foundBlog.websiteUrl,
+      isMembership: foundBlog.isMembership,
+      createdAt: foundBlog.createdAt,
+      blogOwnerInfo: foundBlog.blogOwnerInfo
+    }
+  }
 }
