@@ -92,6 +92,8 @@ export class BloggerBlogsController {
       return result
     }
   }
+
+
   @Get(':id')
   async getBlogById(@Res({passthrough : true}) res: Response,
     @Param('id') id): Promise<Blog> {
@@ -101,11 +103,15 @@ export class BloggerBlogsController {
     }
     return result
   }
+
+
   @Put(':id')
   @HttpCode(204)
   async updateBlogById(@Res({passthrough : true}) res: Response,
                        @Body() DTO : BlogDTO,
                        @Param('id') id): Promise<void> {
+    const foundBlog = await this.blogsService.getBlogById(id)
+
     const updateResult = await this.blogsService.updateBlogById(DTO, id);
     if(!updateResult){
       throw new NotFoundException("Blog not found")

@@ -47,6 +47,10 @@ import { SABlogsController } from "./blogs/sa.blogs.controller";
 import { SAUsersController } from "./users/sa.users.controller";
 import { BanProcedureCommand, BanProcedureUseCase } from "./users/use-cases/banProcedure-use-case";
 import { CommandBus, CqrsModule } from "@nestjs/cqrs";
+import {
+  GettingAllUsersForSuperAdminCommand,
+  GettingAllUsersForSuperAdminUseCase
+} from "./users/use-cases/getting-all-users-for-super-admin";
 
 @Module({
   imports: [
@@ -83,7 +87,7 @@ import { CommandBus, CqrsModule } from "@nestjs/cqrs";
 
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
     BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,BanProcedureUseCase,
-    BanProcedureCommand,
+    BanProcedureCommand,GettingAllUsersForSuperAdminCommand, GettingAllUsersForSuperAdminUseCase,
     Common, AuthModule, JwtService,BlogIdExistsRule,SecurityDevicesRepository, SecurityDevicesService,
     {
       provide: APP_GUARD,
