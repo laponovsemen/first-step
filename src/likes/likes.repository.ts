@@ -93,8 +93,16 @@ export class LikeRepository{
   }
 
   async findNewestLikesForSpecificPost(postId:ObjectId) {
-    const likesFilter = { $and: [{ parentId: postId }, { parentType: parentTypeEnum.post }, { status: StatusTypeEnum.Like }] }
-    const newestLikesToUpdate = await this.likesModel.find(likesFilter, { _id: 0, status: 0, parentId: 0, parentType:0 }).sort({ addedAt: "desc" }).limit(3)
+    const likesFilter = { $and: [
+        { parentId: postId },
+        { parentType: parentTypeEnum.post },
+        { status: StatusTypeEnum.Like },
+        { isHiden : false}
+      ] }
+    const newestLikesToUpdate = await this.likesModel
+      .find(likesFilter, { _id: 0, status: 0, parentId: 0, parentType:0 })
+      .sort({ addedAt: "desc" })
+      .limit(3)
 
     //console.log(newestLikesToUpdate, " newestLikesToUpdate")
     return newestLikesToUpdate
