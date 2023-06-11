@@ -11,16 +11,17 @@ import {
 import {
   APIPost,
   APIPostDTO,
-  Blog,
-  WithPagination,
-} from '../mongo/mongooseSchemas';
+  Blog, WithMongoId,
+  WithPagination
+} from "../mongo/mongooseSchemas";
 import { Common } from '../common';
 import {
-  BlogsPaginationCriteriaType,
+  BlogInsertModelType,
+  BlogsPaginationCriteriaType, BlogViewModelType,
   paginationCriteriaType,
   PaginatorViewModelType,
-  PostsPaginationCriteriaType,
-} from '../appTypes';
+  PostsPaginationCriteriaType
+} from "../appTypes";
 import express, {Request, Response} from 'express';
 import { BlogsService } from './blogs.service';
 import { isNotEmpty, IsNotEmpty, IsString, IsUrl, Length } from "class-validator";
@@ -55,7 +56,7 @@ export class BloggerBlogsController {
   @Post()
   async createNewBlog(@Body() DTO : BlogDTO,
                       @User() user
-                      ): Promise<Blog> {
+                      ): Promise<any> {
 
     return this.blogsService.createNewBlog(DTO, user);
   }
