@@ -89,7 +89,7 @@ export class BlogsController {
   }
   @Get(':id')
   async getBlogById(@Res({passthrough : true}) res: Response,
-    @Param('id') id): Promise<Blog> {
+    @Param('id') id): Promise<any> {
     const result = await  this.blogsService.getBlogById(id);
     if(!result){
       throw new NotFoundException("Blog not found")
