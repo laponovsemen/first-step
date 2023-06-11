@@ -64,9 +64,9 @@ export class CommentsRepository{
   }
 
   async makeCommentsHiden(userId: string) {
-      await this.commentsModel.updateMany({"commentatorInfo.userId": userId},{$set : {isHiden : true}})
+      await this.commentsModel.updateMany({"commentatorInfo.userId": new ObjectId(userId)},{$set : {isHiden : true}})
   }
   async makeCommentsVisible(userId: string) {
-    await this.commentsModel.updateMany({"commentatorInfo.userId": userId},{$set : {isHiden : false}})
+    await this.commentsModel.updateMany({"commentatorInfo.userId": new ObjectId(userId)},{$set : {isHiden : false}})
   }
 }

@@ -1,5 +1,5 @@
 import {
-  IsBoolean,
+  IsBoolean, IsDefined,
   IsEnum,
   IsNotEmpty,
   IsNotIn,
@@ -45,16 +45,17 @@ export class PostForSpecificBlogDTO{
 
 
 export class BlogDTO {
-  @Transform(item => item.value.trim() )
+  @IsDefined()
+  @Transform(item => item.value.trim())
   @IsNotEmpty()
   @Length(1, 15)
   name : string // maxLength: 15
-
+  @IsDefined()
   @IsNotEmpty()
   @IsString()
   @Length(1, 500)
   description: string // maxLength: 500
-
+  @IsDefined()
   @IsNotEmpty()
   @IsString()
   @IsUrl()

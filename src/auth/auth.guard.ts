@@ -29,7 +29,6 @@ export class AuthGuard implements CanActivate {
     //console.log(this.jwtService, " jwtService");
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    request.user = "skldfndl"
     //console.log(request, "request");
     //console.log(token, " token");
 

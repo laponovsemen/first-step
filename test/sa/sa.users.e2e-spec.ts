@@ -1,11 +1,13 @@
 // @ts-ignore
 import request from "supertest";
 import mongoose from "mongoose";
-import { INestApplication } from "@nestjs/common";
+import { BadRequestException, INestApplication, ValidationPipe } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import process from "process";
 import cookieParser from "cookie-parser";
 import { AppModule } from "../../src/app.module";
+import { HttpExceptionFilter } from "../../src/exception.filter";
+import { useContainer } from "class-validator";
 
 
 const authE2eSpec = 'Authorization'
@@ -22,6 +24,35 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
 
     app = moduleFixture.createNestApplication();
     app.use(cookieParser())
+
+    app.useGlobalPipes(new ValidationPipe(
+        {
+          stopAtFirstError: true,
+          exceptionFactory: (errors) => {
+            const errorsForResponse = []
+            console.log(errors , 'ERRORS')
+
+            errors.forEach(e => {
+              const constrainedKeys = Object.keys(e.constraints)
+              //console.log(constrainedKeys, "constrainedKeys");
+              constrainedKeys.forEach((ckey) => {
+                errorsForResponse.push({
+                  message : e.constraints[ckey],
+                  field : e.property
+                })
+                console.log(errorsForResponse , "errorsForResponse");
+
+              })
+
+            })
+            throw new BadRequestException(errorsForResponse);
+          }
+        }
+      )
+    )
+    app.useGlobalFilters(new HttpExceptionFilter())
+    useContainer(app.select(AppModule), {fallbackOnErrors: true})
+
     await app.init();
     server = app.getHttpServer()
   });
@@ -29,7 +60,9 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
     await app.close()
   });
   it("should create user by super admin", async () => {
+
     await request(server).delete("/testing/all-data")
+
     const user = await request(server)
       .post("/sa/users")
       .set(authE2eSpec, basic)
@@ -39,6 +72,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
         email: "simsbury65@gmail.com"
       })
       .expect(201)
+
     expect(user.body).toEqual({
       "createdAt": expect.any(String),
       "email": "simsbury65@gmail.com",
@@ -169,6 +203,8 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       })
       .expect(201)
 
+
+
     const result = await request(server)
       .get("/sa/users")
       .set(authE2eSpec, basic)
@@ -249,6 +285,87 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
     const userId = oneUser.id
     console.log(oneUser , "oneUser");
 
+    // login of user
+    const loginProcedure = await request(server)
+      .post(`/auth/login`)
+      .send({
+        loginOrEmail: "simsbury65@gmail.com",
+        password: "password"
+      })
+      .expect(200)
+
+    //access token of user
+    expect(loginProcedure.body).toEqual({accessToken : expect.any(String)})
+    const accessTokenOfUser = loginProcedure.body.accessToken
+
+    // try to create blog by blogger with wrong input data
+    await request(server)
+      .post(`/blogger/blogs`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .send({
+        name : "",
+        description: "",
+        websiteUrl : ""
+      })
+      .expect(400)
+
+    // try to create blog by blogger with correct input data
+    const createdBlog = await request(server)
+      .post(`/blogger/blogs`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .send({
+        name : "string",
+        description: "stringstring",
+        websiteUrl : "simsbury65@gmail.com"
+      })
+      .expect(201)
+
+    const blogId = createdBlog.body.id
+    console.log(blogId, " blogId of created blog");
+
+    //try to create post by blogger with wrong input data
+    const createdPost = await request(server)
+      .post(`/blogger/blogs/${blogId}/posts`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .send({
+        title: "title",
+        shortDescription: "shortDescription",
+        content: "content",
+      })
+      .expect(201)
+
+    const postId = createdPost.body.id
+    console.log(postId, " postId of created blog");
+    const createdComment = await request(server)
+      .post(`/posts/${postId}/comments`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .send({
+        "content": "good comment 1 blablalba"
+      })
+      .expect(201)
+
+    const commentId = createdComment.body.id
+    const foundComment = await request(server)
+      .get(`/comments/${commentId}`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .expect(200)
+
+    expect(foundComment.body).toEqual({
+      "commentatorInfo": {
+        "userId": expect.any(String),
+        "userLogin": "login"
+      },
+      "content": "good comment 1 blablalba",
+      "createdAt": expect.any(String),
+      "id": expect.any(String),
+      "likesInfo": {
+        "dislikesCount": 0,
+        "likesCount": 0,
+        "myStatus": "None"
+      }
+    });
+      // try to ban user
+
     const banUser = await request(server)
       .put(`/sa/users/${userId}/ban`)
       .set(authE2eSpec, basic)
@@ -258,13 +375,11 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       })
 
     await request(server)
-      .post(`/auth/login`)
-      .send({
-        loginOrEmail: "simsbury65@gmail.com",
-        password: "password"
-      })
-      .expect(401)
-  })
+      .get(`/comments/${commentId}`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .expect(404)
+
+  }, 10000)
 
 
 

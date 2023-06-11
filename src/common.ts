@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { Mongoose } from 'mongoose';
 import { BlogViewModelType, PostDBModel } from './appTypes';
-import { APIComment, APILike, APIPost, commentatorInfoModel, User, WithMongoId } from "./mongo/mongooseSchemas";
+import { APIComment, APILike, APIPost, Blog, commentatorInfoModel, User, WithMongoId } from "./mongo/mongooseSchemas";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 import {v4 as uuidv4} from "uuid";
@@ -88,7 +88,7 @@ export class Common {
       },
     };
   };
-  mongoBlogSlicing = (Obj2: BlogViewModelType) => {
+  mongoBlogSlicing = (Obj2: Blog) => {
     return {
       id: Obj2._id,
       name: Obj2.name,
@@ -96,6 +96,7 @@ export class Common {
       websiteUrl: Obj2.websiteUrl,
       isMembership: Obj2.isMembership,
       createdAt: Obj2.createdAt,
+      blogOwnerInfo: Obj2.blogOwnerInfo
     };
   };
 

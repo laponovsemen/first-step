@@ -49,11 +49,11 @@ export class BlogsController {
       this.common.getPaginationCriteria(QueryParams);
     return this.blogsService.getAllBlogs(paginationCriteria);
   }
-  @UseGuards(BasicAuthGuard)
+  /*@UseGuards(BasicAuthGuard)
   @Post()
   async createNewBlog(@Body() DTO : BlogDTO): Promise<Blog> {
     return this.blogsService.createNewBlog(DTO);
-  }
+  }*/
 
   @Get(':id/posts')
   @HttpCode(200)
@@ -62,7 +62,7 @@ export class BlogsController {
                                    @Query() QueryParams,
                                    @Param('id') blogId) {
     const token = req.headers.authorization
-    console.log(token, "accessTtoken")
+    console.log(token, "accessToken")
     const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
     const result =  await this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId, token);
     console.log(result)

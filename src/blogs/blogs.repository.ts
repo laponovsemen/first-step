@@ -104,7 +104,11 @@ export class BlogsRepository {
       };
     }
 
-  async createNewBlog(DTO: any) {
+  async createNewBlog(DTO: any, user: any) {
+    const blogOwnerInfo = {
+      userId : user.userId,
+      userLogin :user.login,
+    }
     const createdAt = new Date()
     const description = DTO.description
     const isMembership = false
@@ -116,7 +120,8 @@ export class BlogsRepository {
       description,
       websiteUrl,
       isMembership,
-      createdAt
+      createdAt,
+      blogOwnerInfo
     }
     const createdBlog = await this.blogModel.create(blogToCreate);
     return {
@@ -125,7 +130,8 @@ export class BlogsRepository {
       description,
       websiteUrl,
       isMembership,
-      createdAt
+      createdAt,
+      blogOwnerInfo
     }
   }
   async getBlogById(id: string) {
@@ -143,7 +149,8 @@ export class BlogsRepository {
       description: foundBlog.description,
       websiteUrl: foundBlog.websiteUrl,
       isMembership: foundBlog.isMembership,
-      createdAt: foundBlog.createdAt
+      createdAt: foundBlog.createdAt,
+      blogOwnerInfo : foundBlog.blogOwnerInfo
     }
   }
   async updateBlogById(DTO: any, id: string) {

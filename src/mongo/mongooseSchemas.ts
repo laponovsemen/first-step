@@ -68,7 +68,16 @@ export class APIPostDTO {
 }
 
 @Schema()
+export class blogOwnerInfoModel{
+  @Prop({type : String || null, require : true})
+  userId : string | null;
+  @Prop({type : String || null, require : true})
+  userLogin :string | null;
+}
+const blogOwnerInfoSchema = SchemaFactory.createForClass(blogOwnerInfoModel)
+@Schema()
 export class Blog {
+  _id?: ObjectId
   @Prop()
   name: string;
   @Prop()
@@ -79,6 +88,8 @@ export class Blog {
   isMembership: boolean;
   @Prop()
   createdAt: Date;
+  @Prop({type : blogOwnerInfoSchema})
+  blogOwnerInfo : blogOwnerInfoModel
 }
 @Schema({_id: false, id: false, versionKey: false})
 export class commentatorInfoModel {

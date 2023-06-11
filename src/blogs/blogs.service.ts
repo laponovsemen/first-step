@@ -66,7 +66,7 @@ export class BlogsService {
     return this.blogsRepository.createPostForSpecificBlog(DTO, blogId);
   }
 
-  createNewBlog(DTO: any) {
-    return this.blogsRepository.createNewBlog(DTO);
+  createNewBlog(DTO: any, user : any) {
+    return this.blogsRepository.createNewBlog(DTO,user);
   }
 }
