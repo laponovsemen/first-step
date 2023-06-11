@@ -149,7 +149,7 @@ export class BlogsRepository {
       websiteUrl: foundBlog.websiteUrl,
       isMembership: foundBlog.isMembership,
       createdAt: foundBlog.createdAt,
-      blogOwnerInfo : foundBlog.blogOwnerInfo
+      //blogOwnerInfo : foundBlog.blogOwnerInfo
     }
   }
   async updateBlogById(DTO: any, id: string) {
