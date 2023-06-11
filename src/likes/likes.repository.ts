@@ -72,7 +72,8 @@ export class LikeRepository{
     const likes = await this.likesModel.find({ $and: [
         { parentId: postId},
         {  parentType: parentTypeEnum.post},
-        { status: StatusTypeEnum.Like }
+        { status: StatusTypeEnum.Like },
+        {isHiden: false}
       ]})
       .lean().exec();
     return likes.length
@@ -82,7 +83,9 @@ export class LikeRepository{
     const dislikes = await this.likesModel.find({ $and: [
         {parentId: postId},
         {parentType: parentTypeEnum.post},
-        {status: StatusTypeEnum.Dislike},]
+        {status: StatusTypeEnum.Dislike},
+        {isHiden: false}
+      ]
     })
     return dislikes.length
 
