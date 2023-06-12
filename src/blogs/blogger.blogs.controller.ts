@@ -87,8 +87,14 @@ export class BloggerBlogsController {
   async createPostForSpecificBlog(
     @Body() DTO : PostForSpecificBlogDTO,
     @Param('id') blogId,
-    @Res({passthrough : true}) res: Response
+    @Res({passthrough : true}) res: Response,
+    @User() user
   ): Promise<APIPost | void> {
+    const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(blogId)
+    if (foundBlog.blogOwnerInfo.userId.toString() !== user.userId){
+      throw new ForbiddenException("Blog not found")
+    }
+
     const result =  await this.blogsService.createPostForSpecificBlog(DTO, blogId);
     if(!result){
       throw new NotFoundException("Blog not found")
