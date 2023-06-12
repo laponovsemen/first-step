@@ -191,7 +191,7 @@ export class BlogsRepository {
     if (!blogId) {
       return null
     }
-    const foundBlog = await this.blogModel.findOne({ _id: blogId });
+    const foundBlog = await this.blogModel.findOne({ _id: blogId, "banInfo.isBanned": false});
     if(!foundBlog){
       return null
     }

@@ -670,7 +670,11 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       .expect(200)
 
     expect(allBlogsAfterBan.body.items.length).toEqual(1)
-  })
+
+    const BlogAfterBan = await request(server)
+      .get(`/blogs/${blogId}`)
+      .expect(404)
+  },10000)
 
 
 
