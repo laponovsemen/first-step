@@ -166,7 +166,9 @@ export class BloggerBlogsController {
                        @Param('postId') postId,
                                       ): Promise<void> {
     const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(blogId)
-
+    if(!foundBlog){
+      throw new NotFoundException("Blog not found")
+    }
     //console.log(foundBlog, "foundBlog in /:blogId/posts/:postId");
     //console.log(foundBlog.blogOwnerInfo.userId.toString(), "foundBlog.blogOwnerInfo.userId.toString()");
     //console.log(user.userId, "user.userId");
@@ -194,13 +196,17 @@ export class BloggerBlogsController {
                                       ) {
 
     const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(blogId)
+    if(!foundBlog){
+      throw new NotFoundException("Blog not found")
+    }
+
     if (foundBlog.blogOwnerInfo.userId.toString() !== user.userId){
       throw new ForbiddenException("Blog not found")
     }
 
     const deletedPost = await this.postsService.deletePostById(postId);
     if(!deletedPost){
-      throw new NotFoundException("Blog not found")
+      throw new NotFoundException("Post not found")
     }
     return
 
