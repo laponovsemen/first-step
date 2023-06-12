@@ -133,14 +133,15 @@ export class BloggerBlogsController {
                        @Param('id') id) {
 
     const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(id)
+    if(!foundBlog){
+      throw new NotFoundException("Blog not found")
+    }
     if (foundBlog.blogOwnerInfo.userId.toString() !== user.userId){
       throw new ForbiddenException("Blog not found")
     }
 
     const deletedBlog = await this.blogsService.deleteBlogById(id);
-    if(!deletedBlog){
-      throw new NotFoundException("Blog not found")
-    }
+
     return
 
   }

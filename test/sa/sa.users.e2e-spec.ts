@@ -382,6 +382,100 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
   }, 10000)
 
 
+  it("shoud create user , create blog and try to delete blog", async ()=> {
+    await request(server).delete("/testing/all-data")
+    const user = await request(server)
+      .post("/sa/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login",
+        password: "password",
+        email: "simsbury65@gmail.com"
+      })
+      .expect(201)
+
+    const userNumberTwo = await request(server)
+      .post("/sa/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login2",
+        password: "password2",
+        email: "simsbury652@gmail.com"
+      })
+      .expect(201)
+
+    const result = await request(server)
+      .get("/sa/users")
+      .set(authE2eSpec, basic)
+
+    const oneUser = result.body.items[0]
+    const userId = oneUser.id
+    console.log(oneUser, "oneUser");
+
+    // login of user
+    const loginProcedure = await request(server)
+      .post(`/auth/login`)
+      .send({
+        loginOrEmail: "simsbury65@gmail.com",
+        password: "password"
+      })
+      .expect(200)
+
+    const loginProcedureOfUserTwo = await request(server)
+      .post(`/auth/login`)
+      .send({
+        loginOrEmail: "simsbury652@gmail.com",
+        password: "password2"
+      })
+      .expect(200)
+
+
+    //access token of user
+    expect(loginProcedure.body).toEqual({ accessToken: expect.any(String) })
+    const accessTokenOfUser = loginProcedure.body.accessToken
+    const accessTokenOfUserNumberTwo = loginProcedureOfUserTwo.body.accessToken
+
+    // try to create blog by blogger with wrong input data
+    await request(server)
+      .post(`/blogger/blogs`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .send({
+        name: "",
+        description: "",
+        websiteUrl: ""
+      })
+      .expect(400)
+
+    // try to create blog by blogger with correct input data
+    const createdBlog = await request(server)
+      .post(`/blogger/blogs`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .send({
+        name: "string",
+        description: "stringstring",
+        websiteUrl: "simsbury65@gmail.com"
+      })
+      .expect(201)
+
+    const deletedBlogByOtherUser = await request(server)
+      .delete(`/blogger/blogs/${createdBlog.body.id}`)
+      .set("Authorization", `Bearer ${accessTokenOfUserNumberTwo}`)
+      .expect(403)
+
+    await request(server)
+      .delete(`/blogger/blogs/63189b06003380064c4193be`)
+      .set("Authorization", `Bearer ${accessTokenOfUserNumberTwo}`)
+      .expect(404)
+
+    const deletedBlog = await request(server)
+      .delete(`/blogger/blogs/${createdBlog.body.id}`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .expect(204)
+
+    await request(server)
+      .delete(`/blogger/blogs/${createdBlog.body.id}`)
+      .expect(401)
+  })
 
 
 
