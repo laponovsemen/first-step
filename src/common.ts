@@ -98,7 +98,8 @@ export class Common {
       websiteUrl: Obj2.websiteUrl,
       isMembership: Obj2.isMembership,
       createdAt: Obj2.createdAt,
-      blogOwnerInfo: Obj2.blogOwnerInfo
+      blogOwnerInfo: Obj2.blogOwnerInfo,
+      banInfo : Obj2.banInfo
     };
   };
   mongoBlogSlicingWithoutBlogOwnerInfo = (Obj2: Blog) => {
@@ -109,6 +110,7 @@ export class Common {
       websiteUrl: Obj2.websiteUrl,
       isMembership: Obj2.isMembership,
       createdAt: Obj2.createdAt,
+      banInfo : Obj2.banInfo
 
     };
   };
@@ -125,6 +127,8 @@ export class Common {
       banInfo : Obj2.banInfo
     };
   };
+
+
 
 
 }
