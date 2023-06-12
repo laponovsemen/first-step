@@ -565,6 +565,91 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
         blogId:createdBlog.body.id})
       .expect(204)
   })
+  it("shoud create user , create blog and ban blog", async ()=> {
+    await request(server).delete("/testing/all-data")
+    const user = await request(server)
+      .post("/sa/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login",
+        password: "password",
+        email: "simsbury65@gmail.com"
+      })
+      .expect(201)
+
+    const userNumberTwo = await request(server)
+      .post("/sa/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login2",
+        password: "password2",
+        email: "simsbury652@gmail.com"
+      })
+      .expect(201)
+
+    const result = await request(server)
+      .get("/sa/users")
+      .set(authE2eSpec, basic)
+
+    const oneUser = result.body.items[0]
+    const userId = oneUser.id
+    console.log(oneUser, "oneUser");
+
+    // login of user
+    const loginProcedure = await request(server)
+      .post(`/auth/login`)
+      .send({
+        loginOrEmail: "simsbury65@gmail.com",
+        password: "password"
+      })
+      .expect(200)
+
+    const loginProcedureOfUserTwo = await request(server)
+      .post(`/auth/login`)
+      .send({
+        loginOrEmail: "simsbury652@gmail.com",
+        password: "password2"
+      })
+      .expect(200)
+
+
+    //access token of user
+    expect(loginProcedure.body).toEqual({ accessToken: expect.any(String) })
+    const accessTokenOfUser = loginProcedure.body.accessToken
+    const accessTokenOfUserNumberTwo = loginProcedureOfUserTwo.body.accessToken
+
+
+    // try to create blog by blogger with correct input data
+    const createdBlog = await request(server)
+      .post(`/blogger/blogs`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .send({
+        name: "string",
+        description: "stringstring",
+        websiteUrl: "simsbury65@gmail.com"
+      })
+      .expect(201)
+
+    const blogId = createdBlog.body.id
+
+    await request(server)
+      .put(`/sa/blogs/${blogId}/ban`)
+      .set("Authorization", basic)
+      .send({
+        name: "string",
+        description: "stringstring",
+        websiteUrl: "simsbury65@gmail.com"
+      })
+      .expect(400)
+
+
+    const bannedBlog = await request(server)
+        .put(`/sa/blogs/${blogId}/ban`)
+        .set("Authorization", basic)
+        .send({"isBanned":true})
+        .expect(204)
+
+  })
 
 
 

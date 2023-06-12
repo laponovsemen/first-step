@@ -55,6 +55,7 @@ import {
   GettingAllBlogsForSpecifiedBloggerCommand,
   GettingAllBlogsForSpecifiedBloggerUseCase
 } from "./blogs/use-cases/getting-all-blogs-for-specified-blogger";
+import { BanBlogCommand, BanBlogUseCase } from "./blogs/use-cases/ban-blog-use-case";
 
 @Module({
   imports: [
@@ -92,7 +93,7 @@ import {
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
     BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,BanProcedureUseCase,
     BanProcedureCommand,GettingAllUsersForSuperAdminCommand, GettingAllUsersForSuperAdminUseCase,GettingAllBlogsForSpecifiedBloggerCommand,
-    GettingAllBlogsForSpecifiedBloggerUseCase,
+    GettingAllBlogsForSpecifiedBloggerUseCase,BanBlogCommand, BanBlogUseCase,
     Common, AuthModule, JwtService,BlogIdExistsRule,SecurityDevicesRepository, SecurityDevicesService,
     {
       provide: APP_GUARD,
