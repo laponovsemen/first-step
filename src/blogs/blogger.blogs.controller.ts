@@ -28,6 +28,9 @@ import { isNotEmpty, IsNotEmpty, IsString, IsUrl, Length } from "class-validator
 import { AllPostsForSpecificBlogGuard, AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
 import { BlogDTO, PostForSpecificBlogDTO } from "../input.classes";
 import { User } from "../auth/decorators/public.decorator";
+import { GettingAllUsersForSuperAdminCommand } from "../users/use-cases/getting-all-users-for-super-admin";
+import { CommandBus } from "@nestjs/cqrs";
+import { GettingAllBlogsForSpecifiedBloggerCommand } from "./use-cases/getting-all-blogs-for-specified-blogger";
 
 
 
@@ -39,19 +42,18 @@ export class BloggerBlogsController {
   constructor(
     private readonly blogsService: BlogsService,
     private readonly common: Common,
+    private readonly commandBus: CommandBus,
   ) {}
 
 
 
   @Get()
   @HttpCode(200)
-  async getAllBlogs(
-    @Query() QueryParams,
-  ): Promise<PaginatorViewModelType<Blog>> {
+  async getAllBlogs(@Query() QueryParams,
+                    @User() user ): Promise<PaginatorViewModelType<Blog>> {
     console.log("getting all blogs procedure");
-    const paginationCriteria: paginationCriteriaType =
-      this.common.getPaginationCriteria(QueryParams);
-    return this.blogsService.getAllBlogs(paginationCriteria);
+    const userId = user.userId
+    return this.commandBus.execute( new GettingAllBlogsForSpecifiedBloggerCommand(QueryParams,userId))
   }
   @Post()
   async createNewBlog(@Body() DTO : BlogDTO,

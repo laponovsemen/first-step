@@ -64,7 +64,7 @@ export class BlogsRepository {
       };
     }
   }
-  async getAllBlogsForSpecifiedUser(blogsPagination: paginationCriteriaType, userId : string) {
+  async getAllBlogsForSpecifiedBlogger(blogsPagination: paginationCriteriaType, userId : string) {
     const filter: { name?: any,  "blogOwnerInfo.userId" : string} = {"blogOwnerInfo.userId" : userId}
     if (blogsPagination.searchNameTerm) {
       filter.name = {$regex: blogsPagination.searchNameTerm, $options: 'i'}
@@ -260,4 +260,6 @@ export class BlogsRepository {
       blogOwnerInfo: foundBlog.blogOwnerInfo
     }
   }
+
+
 }
