@@ -58,6 +58,7 @@ export class BlogsService {
     return this.blogsRepository.getBlogById(id);
   }
   updateBlogById(DTO: any, id: string) {
+    console.log("we are in updateBlogById in blogs.service");
     return this.blogsRepository.updateBlogById(DTO, id);
   }
   deleteBlogById(id: string) {

@@ -31,6 +31,7 @@ import { User } from "../auth/decorators/public.decorator";
 import { GettingAllUsersForSuperAdminCommand } from "../users/use-cases/getting-all-users-for-super-admin";
 import { CommandBus } from "@nestjs/cqrs";
 import { GettingAllBlogsForSpecifiedBloggerCommand } from "./use-cases/getting-all-blogs-for-specified-blogger";
+import { PostsService } from "../posts/posts.service";
 
 
 
@@ -43,6 +44,7 @@ export class BloggerBlogsController {
     private readonly blogsService: BlogsService,
     private readonly common: Common,
     private readonly commandBus: CommandBus,
+    private readonly postsService: PostsService,
   ) {}
 
 
@@ -154,15 +156,25 @@ export class BloggerBlogsController {
                        @Req() req: Request,
                        @Body() DTO : PostForSpecificBlogDTO,
                        @User() user,
-                       @Param('blogId') blogId): Promise<void> {
+                       @Param('blogId') blogId,
+                       @Param('postId') postId,
+                                      ): Promise<void> {
     const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(blogId)
+
+    //console.log(foundBlog, "foundBlog in /:blogId/posts/:postId");
+    //console.log(foundBlog.blogOwnerInfo.userId.toString(), "foundBlog.blogOwnerInfo.userId.toString()");
+    //console.log(user.userId, "user.userId");
+
     if (foundBlog.blogOwnerInfo.userId.toString() !== user.userId){
       throw new ForbiddenException("Blog not found")
     }
 
-    const updateResult = await this.blogsService.updateBlogById(DTO, blogId);
+    const updateResult = await this.postsService.updatePostById(DTO, postId);
+
+    //console.log(updateResult, "updateResult");
+
     if(!updateResult){
-      throw new NotFoundException("Blog not found")
+      throw new NotFoundException("Post not found")
     }
     return
 
@@ -171,15 +183,17 @@ export class BloggerBlogsController {
   @HttpCode(204)
   async deletePostForSpecificBlogById(@Res({passthrough : true}) res: Response,
                        @User() user,
-                       @Param('blogId') blogId) {
+                       @Param('blogId') blogId,
+                       @Param('postId') postId,
+                                      ) {
 
     const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(blogId)
     if (foundBlog.blogOwnerInfo.userId.toString() !== user.userId){
       throw new ForbiddenException("Blog not found")
     }
 
-    const deletedBlog = await this.blogsService.deleteBlogById(blogId);
-    if(!deletedBlog){
+    const deletedPost = await this.postsService.deletePostById(blogId);
+    if(!deletedPost){
       throw new NotFoundException("Blog not found")
     }
     return

@@ -126,6 +126,7 @@ export class PostsRepository {
   }
   async updatePostById( DTO : any, id : string) {
     const postId = this.common.tryConvertToObjectId(id)
+    console.log(postId, " postId after convert");
     if(!postId){
       return null
     }

@@ -200,7 +200,9 @@ export class BlogsRepository {
   }
   async updateBlogById(DTO: any, id: string) {
     const blogId = this.common.tryConvertToObjectId(id)
+
     if (!blogId) {
+      console.log("blogId convertation failed");
       return null
     }
     const updateResult = await this.blogModel.updateOne({ _id: blogId }, { $set: DTO });

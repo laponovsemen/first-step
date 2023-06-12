@@ -72,6 +72,7 @@ export class PostsService{
     }
   }
   updatePostById(DTO : any,id : string){
+    console.log("we are in updatePostById in posts.service");
     return this.postsRepository.updatePostById(DTO , id)
   }
   deletePostById(id : string){
