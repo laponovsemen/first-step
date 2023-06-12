@@ -28,6 +28,7 @@ import { AllPostsForSpecificBlogGuard, AuthGuard, BasicAuthGuard } from "../auth
 import { BanBlogDTO, BlogDTO, PostForSpecificBlogDTO } from "../input.classes";
 import { CommandBus } from "@nestjs/cqrs";
 import { BanBlogCommand } from "./use-cases/ban-blog-use-case";
+import { BlogsQueryRepository } from "./blogs.query.repository";
 
 
 
@@ -37,6 +38,7 @@ import { BanBlogCommand } from "./use-cases/ban-blog-use-case";
 export class SABlogsController {
   constructor(
     private readonly blogsService: BlogsService,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly common: Common,
     private readonly commandBus: CommandBus,
   ) {}
@@ -48,7 +50,7 @@ export class SABlogsController {
   async getAllBlogs(@Query() QueryParams,): Promise<PaginatorViewModelType<any>> {
     const paginationCriteria: paginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
-    return this.blogsService.getAllBlogs(paginationCriteria);
+    return this.blogsQueryRepository.getAllBlogs(paginationCriteria);
   }
 
   @Put("/:blogId/ban")
