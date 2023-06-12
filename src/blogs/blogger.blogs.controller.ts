@@ -192,7 +192,7 @@ export class BloggerBlogsController {
       throw new ForbiddenException("Blog not found")
     }
 
-    const deletedPost = await this.postsService.deletePostById(blogId);
+    const deletedPost = await this.postsService.deletePostById(postId);
     if(!deletedPost){
       throw new NotFoundException("Blog not found")
     }
