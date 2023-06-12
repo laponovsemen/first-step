@@ -52,7 +52,7 @@ export class SABlogsController {
       this.common.getPaginationCriteria(QueryParams);
     return this.blogsQueryRepository.getAllBlogs(paginationCriteria);
   }
-
+  @UseGuards(AuthGuard)
   @Put("/:blogId/ban")
   @HttpCode(204)
   async banBlog(@Body() DTO : BanBlogDTO,
