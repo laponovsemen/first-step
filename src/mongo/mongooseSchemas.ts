@@ -15,7 +15,7 @@ export class NewestLike {
   @Prop()
   login: string;
 }
-
+@Schema({_id: false, id: false, versionKey: false})
 export class BanInfoDB {
   @Prop({ type: Date || null})
   banDate: Date | null
@@ -24,6 +24,7 @@ export class BanInfoDB {
   @Prop({ type: Boolean})
   isBanned: boolean
 }
+@Schema({_id: false, id: false, versionKey: false})
 export class BlogBanInfoDB {
   @Prop({ type: Date || null})
   banDate: Date | null

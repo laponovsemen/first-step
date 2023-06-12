@@ -20,7 +20,7 @@ export class BlogsRepository {
     protected readonly common: Common,
   ) {}
   async getAllBlogs(blogsPagination: paginationCriteriaType) {
-    const filter: { name?: any, "banInfo.isBanned" : boolean } = {"banInfo.isBanned" : true}
+    const filter: { name?: any, "banInfo.isBanned" : boolean } = {"banInfo.isBanned" : false}
     if (blogsPagination.searchNameTerm) {
       filter.name = {$regex: blogsPagination.searchNameTerm, $options: 'i'}
     }
@@ -166,14 +166,14 @@ export class BlogsRepository {
       isBanned: false
     }
 
-    const blogToCreate = {
+    const blogToCreate : Blog = {
       name,
       description,
       websiteUrl,
       isMembership,
       createdAt,
       blogOwnerInfo,
-      banInfo : banInfo
+       banInfo
     }
     const createdBlog : Blog = await this.blogModel.create(blogToCreate);
     return {
@@ -182,7 +182,8 @@ export class BlogsRepository {
       description,
       websiteUrl,
       isMembership,
-      createdAt
+      createdAt,
+      banInfo
     }
   }
   async getBlogById(id: string) {
