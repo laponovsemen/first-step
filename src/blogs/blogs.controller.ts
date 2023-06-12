@@ -44,7 +44,7 @@ export class BlogsController {
   @HttpCode(200)
   async getAllBlogs(
     @Query() QueryParams,
-  ): Promise<PaginatorViewModelType<Blog>> {
+  ): Promise<PaginatorViewModelType<any>> {
     const paginationCriteria: paginationCriteriaType =
       this.common.getPaginationCriteria(QueryParams);
     return this.blogsService.getAllBlogs(paginationCriteria);

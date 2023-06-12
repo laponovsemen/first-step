@@ -16,6 +16,23 @@ export class NewestLike {
   login: string;
 }
 
+export class BanInfoDB {
+  @Prop({ type: Date || null})
+  banDate: Date | null
+  @Prop({ type: String || null})
+  banReason: String | null
+  @Prop({ type: Boolean})
+  isBanned: boolean
+}
+export class BlogBanInfoDB {
+  @Prop({ type: Date || null})
+  banDate: Date | null
+   @Prop({ type: Boolean})
+  isBanned: boolean
+}
+const BanInfoDBIS= SchemaFactory.createForClass(BanInfoDB)
+const BlogBanInfoDBIS= SchemaFactory.createForClass(BlogBanInfoDB)
+
 @Schema({_id: false, id: false, versionKey: false})
 export class APIDeviceModel {
   @Prop({ type: String, required: true })
@@ -89,7 +106,9 @@ export class Blog {
   @Prop()
   createdAt: Date;
   @Prop({type : blogOwnerInfoSchema})
-  blogOwnerInfo : blogOwnerInfoModel
+  blogOwnerInfo : blogOwnerInfoModel;
+  @Prop({ type: BlogBanInfoDBIS})
+  banInfo: BlogBanInfoDB
 }
 @Schema({_id: false, id: false, versionKey: false})
 export class commentatorInfoModel {
@@ -150,15 +169,7 @@ export enum parentTypeEnum {
 }
 
 @Schema({_id: false, id: false, versionKey: false})
-export class BanInfoDB {
-  @Prop({ type: Date || null})
-  banDate: Date | null
-  @Prop({ type: String || null})
-  banReason: String | null
-  @Prop({ type: Boolean})
-  isBanned: boolean
-}
-const BanInfoDBIS= SchemaFactory.createForClass(BanInfoDB)
+
 
 @Schema({versionKey: false})
 export class User {

@@ -90,6 +90,10 @@ export class BanUserDTO {
   banReason: string // maxLength: 100
 
 }
+export class BanBlogDTO {
+  @IsBoolean()
+  isBanned: boolean //maxLength: 30
+}
 
 export class UserDTO {
   @IsNotEmpty()

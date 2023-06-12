@@ -10,6 +10,7 @@ import { paginationCriteriaType } from '../appTypes';
 import { Common } from '../common';
 import { ObjectId } from 'mongodb';
 import { Injectable } from "@nestjs/common";
+import { BanBlogDTO } from "../input.classes";
 
 @Injectable()
 export class BlogsRepository {
@@ -264,4 +265,12 @@ export class BlogsRepository {
   }
 
 
+  async changeBanStatusOfBlog(DTO: BanBlogDTO, blogId: string) {
+    return this.blogModel.updateOne({ _id: blogId },
+      {$set: {
+          "banInfo.banDate" : DTO.isBanned ?  new Date().toISOString() : null,
+          "banInfo.isBanned" : DTO.isBanned
+        }}
+    );
+  }
 }
