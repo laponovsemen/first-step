@@ -88,7 +88,7 @@ export class BlogsRepository {
 
     if (result) {
       const items = result.map((item) => {
-        return this.common.mongoBlogSlicing(item);
+        return this.common.mongoBlogSlicingWithoutBlogOwnerInfo(item);
       });
       const array = await Promise.all(items);
       console.log(

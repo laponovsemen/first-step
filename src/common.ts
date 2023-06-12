@@ -101,6 +101,17 @@ export class Common {
       blogOwnerInfo: Obj2.blogOwnerInfo
     };
   };
+  mongoBlogSlicingWithoutBlogOwnerInfo = (Obj2: Blog) => {
+    return {
+      id: Obj2._id,
+      name: Obj2.name,
+      description: Obj2.description,
+      websiteUrl: Obj2.websiteUrl,
+      isMembership: Obj2.isMembership,
+      createdAt: Obj2.createdAt,
+
+    };
+  };
 
   createEmailSendCode() {
     return uuidv4()
