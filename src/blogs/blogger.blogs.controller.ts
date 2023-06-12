@@ -91,6 +91,9 @@ export class BloggerBlogsController {
     @User() user
   ): Promise<APIPost | void> {
     const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(blogId)
+    if(!foundBlog){
+      throw new NotFoundException("Blog not found")
+    }
     if (foundBlog.blogOwnerInfo.userId.toString() !== user.userId){
       throw new ForbiddenException("Blog not found")
     }
