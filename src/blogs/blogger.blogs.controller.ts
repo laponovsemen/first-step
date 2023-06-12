@@ -151,7 +151,7 @@ export class BloggerBlogsController {
   @HttpCode(204)
   async updatePostForSpecificBlogById(@Res({passthrough : true}) res: Response,
                        @Req() req: Request,
-                       @Body() DTO : BlogDTO,
+                       @Body() DTO : PostForSpecificBlogDTO,
                        @User() user,
                        @Param('blogId') blogId): Promise<void> {
     const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(blogId)
