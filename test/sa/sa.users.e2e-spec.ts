@@ -630,6 +630,21 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       })
       .expect(201)
 
+    await request(server)
+      .post(`/blogger/blogs`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .send({
+        name: "string2",
+        description: "stringstring2",
+        websiteUrl: "simsbury65@gmail.com"
+      })
+      .expect(201)
+
+    const allBlogsBeforeBan = await request(server)
+      .get(`/blogs`)
+      .expect(200)
+
+    expect(allBlogsBeforeBan.body.items.length).toEqual(2)
     const blogId = createdBlog.body.id
 
     await request(server)
@@ -649,6 +664,12 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
         .send({"isBanned":true})
         .expect(204)
 
+
+    const allBlogsAfterBan = await request(server)
+      .get(`/blogs`)
+      .expect(200)
+
+    expect(allBlogsAfterBan.body.items.length).toEqual(1)
   })
 
 
