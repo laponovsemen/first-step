@@ -51,6 +51,10 @@ import {
   GettingAllUsersForSuperAdminCommand,
   GettingAllUsersForSuperAdminUseCase
 } from "./users/use-cases/getting-all-users-for-super-admin";
+import {
+  GettingAllBlogsForSpecifiedBloggerCommand,
+  GettingAllBlogsForSpecifiedBloggerUseCase
+} from "./blogs/use-cases/getting-all-blogs-for-specified-blogger";
 
 @Module({
   imports: [
@@ -87,7 +91,8 @@ import {
 
   providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
     BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,BanProcedureUseCase,
-    BanProcedureCommand,GettingAllUsersForSuperAdminCommand, GettingAllUsersForSuperAdminUseCase,
+    BanProcedureCommand,GettingAllUsersForSuperAdminCommand, GettingAllUsersForSuperAdminUseCase,GettingAllBlogsForSpecifiedBloggerCommand,
+    GettingAllBlogsForSpecifiedBloggerUseCase,
     Common, AuthModule, JwtService,BlogIdExistsRule,SecurityDevicesRepository, SecurityDevicesService,
     {
       provide: APP_GUARD,
