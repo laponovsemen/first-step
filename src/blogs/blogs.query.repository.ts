@@ -240,6 +240,7 @@ export class BlogsQueryRepository {
       blogId: new ObjectId(id),
       blogName : blog.name,
       createdAt: createdAt,
+      isHiden: false
 
     }
     const createdPostForSpecificBlog = await this.postModel.create(newPost);

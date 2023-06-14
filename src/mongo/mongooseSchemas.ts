@@ -73,6 +73,8 @@ export class APIPost {
   blogName: string;
   @Prop()
   createdAt: Date;
+  @Prop()
+  isHiden: boolean;
 
 }
 @Schema()

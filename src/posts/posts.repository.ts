@@ -57,7 +57,7 @@ export class PostsRepository {
     if (!postId) {
       return null
     }
-    const foundPost = await this.postsModel.findOne({ _id: postId })
+    const foundPost = await this.postsModel.findOne({ _id: postId, isHiden : false })
     if (!foundPost) {
       return null
     } else {
@@ -181,5 +181,19 @@ export class PostsRepository {
       return null
     }
     return this.postsModel.findOne({ _id: new ObjectId(postId) });
+  }
+
+  async makeAllPostsForBlogHiden(blogId: string) {
+    await this.postsModel.updateMany({blogId : new ObjectId(blogId)},
+      {$set : {
+          isHiden : true
+        }})
+  }
+
+  async makeAllPostsForBlogVisible(blogId: string) {
+    await this.postsModel.updateMany({blogId : blogId},
+      {$set : {
+          isHiden : false
+        }})
   }
 }

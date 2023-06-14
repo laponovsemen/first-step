@@ -78,8 +78,8 @@ export class BlogsController {
   async createPostForSpecificBlog(
     @Body() DTO : PostForSpecificBlogDTO,
     @Param('id') blogId,
-    @Res({passthrough : true}) res: Response
-  ): Promise<APIPost | void> {
+    @Res({passthrough : true}) res: Response): Promise<any | void> {
+
     const result =  await this.blogsService.createPostForSpecificBlog(DTO, blogId);
     if(!result){
       throw new NotFoundException("Blog not found")

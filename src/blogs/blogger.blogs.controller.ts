@@ -61,8 +61,9 @@ export class BloggerBlogsController {
   async createNewBlog(@Body() DTO : BlogDTO,
                       @User() user
                       ): Promise<any> {
-
-    return this.blogsService.createNewBlog(DTO, user);
+    const foundBlog = await this.blogsService.createNewBlog(DTO, user);
+    const {banInfo, ...result} = foundBlog // ask what it is ???
+    return result
   }
 
   @Get(':id/posts')
@@ -89,9 +90,10 @@ export class BloggerBlogsController {
     @Param('id') blogId,
     @Res({passthrough : true}) res: Response,
     @User() user
-  ): Promise<APIPost | void> {
+  ): Promise<any | void> {
     const foundBlog = await this.blogsService.getBlogByIdWithBloggerInfo(blogId)
     if(!foundBlog){
+
       throw new NotFoundException("Blog not found")
     }
     if (foundBlog.blogOwnerInfo.userId.toString() !== user.userId){
