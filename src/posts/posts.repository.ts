@@ -191,7 +191,7 @@ export class PostsRepository {
   }
 
   async makeAllPostsForBlogVisible(blogId: string) {
-    await this.postsModel.updateMany({blogId : blogId},
+    await this.postsModel.updateMany({blogId : new ObjectId(blogId)},
       {$set : {
           isHiden : false
         }})

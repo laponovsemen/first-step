@@ -148,7 +148,18 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       .set("Authorization", `Bearer ${accessTokenOfUser}`)
       .expect(404)
 
+    await request(server)
+      .put(`/sa/blogs/${createdBlog.body.id}/ban`)
+      .set("Authorization", basic)
+      .send({
+        "isBanned": false
+      })
+      .expect(204)
 
+    await request(server)
+      .get(`/posts/${postId}`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .expect(200)
 
 
 
