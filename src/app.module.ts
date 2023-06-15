@@ -57,6 +57,26 @@ import {
 } from "./blogs/use-cases/getting-all-blogs-for-specified-blogger";
 import { BanBlogCommand, BanBlogUseCase } from "./blogs/use-cases/ban-blog-use-case";
 import { BlogsQueryRepository } from "./blogs/blogs.query.repository";
+import { BanUserByBloggerCommand, BanUserByBloggerUseCase } from "./blogs/use-cases/ban-user-by-blogger-use-case";
+import {
+  GetBannedUsersForSpecificBlogCommand,
+  GetBannedUsersForSpecificBlogUseCase
+} from "./blogs/use-cases/get-banned-users-for-specific-blog-use-case";
+const modules = [AuthModule]
+
+const services = [AppService,BlogsService, PostsService, TestingService, UsersService, AuthService,
+  LikeService, CommentsService, JwtService, SecurityDevicesService]
+
+const repositories = [BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository,
+  BlogsQueryRepository, SecurityDevicesRepository]
+
+const useCases = [BanProcedureUseCase, GettingAllUsersForSuperAdminUseCase,
+  GettingAllBlogsForSpecifiedBloggerUseCase, BanBlogUseCase,BanUserByBloggerUseCase , GetBannedUsersForSpecificBlogUseCase]
+
+const commands = [BanProcedureCommand, GettingAllUsersForSuperAdminCommand,
+  GettingAllBlogsForSpecifiedBloggerCommand, BanBlogCommand,BanUserByBloggerCommand, GetBannedUsersForSpecificBlogCommand]
+
+const adapters = [EmailAdapter, Common, BlogIdExistsRule]
 
 @Module({
   imports: [
@@ -91,11 +111,12 @@ import { BlogsQueryRepository } from "./blogs/blogs.query.repository";
   controllers: [AppController, BloggerBlogsController, TestingController,BlogsController,SABlogsController,SAUsersController,
     PostsController, UsersController, AuthController, CommentsController, SecurityDevicesController],
 
-  providers: [AppService, BlogsService, PostsService,TestingService, UsersService,AuthService,EmailAdapter, LikeService,
-    BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository, CommentsService,BanProcedureUseCase,
-    BanProcedureCommand,GettingAllUsersForSuperAdminCommand, GettingAllUsersForSuperAdminUseCase,GettingAllBlogsForSpecifiedBloggerCommand,
-    GettingAllBlogsForSpecifiedBloggerUseCase,BanBlogCommand, BanBlogUseCase,BlogsQueryRepository,
-    Common, AuthModule, JwtService,BlogIdExistsRule,SecurityDevicesRepository, SecurityDevicesService,
+  providers: [...modules,
+    ...services,
+    ...repositories,
+    ...useCases,
+    ...commands,
+    ...adapters,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
