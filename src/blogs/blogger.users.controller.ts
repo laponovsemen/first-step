@@ -34,6 +34,7 @@ import { GettingAllBlogsForSpecifiedBloggerCommand } from "./use-cases/getting-a
 import { PostsService } from "../posts/posts.service";
 import { BanUserByBloggerCommand } from "./use-cases/ban-user-by-blogger-use-case";
 import { GetBannedUsersForSpecificBlogCommand } from "./use-cases/get-banned-users-for-specific-blog-use-case";
+import { BlogsQueryRepository } from "./blogs.query.repository";
 
 
 
@@ -46,6 +47,7 @@ export class BloggerUsersController {
     private readonly blogsService: BlogsService,
     private readonly common: Common,
     private readonly commandBus: CommandBus,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly postsService: PostsService,
   ) {}
 
@@ -59,8 +61,15 @@ export class BloggerUsersController {
                          @Param("userIdToBan") userIdToBan): Promise<PaginatorViewModelType<Blog>> {
 
     console.log("ban user procedure");
-    const ownerId = user.userId
-    const result = await this.commandBus.execute( new BanUserByBloggerCommand(DTO, userIdToBan, ownerId))
+    const blogOwnerFromToken = user.userId
+    const blog = await this.blogsQueryRepository.getBlogByIdWithBloggerInfo(DTO.blogId)
+    const blogOwnerFromDB = blog.blogOwnerInfo.userId
+    console.log(blogOwnerFromToken.toString(), "userid from token");
+    console.log(blogOwnerFromDB.toString(), "userid from DB");
+    if(blogOwnerFromToken.toString() !== blogOwnerFromDB.toString()){
+      throw new ForbiddenException()
+    }
+    const result = await this.commandBus.execute( new BanUserByBloggerCommand(DTO, userIdToBan, blogOwnerFromToken))
     if(!result){
       throw new NotFoundException()
     } else {
