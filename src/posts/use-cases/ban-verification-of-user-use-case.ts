@@ -27,6 +27,6 @@ export class BanVerificationOfUserUseCase implements ICommandHandler<BanVerifica
   async execute(command: BanVerificationOfUserCommand) {
     const post = await this.postsRepository.getPostByIdWithOutLikes(command.postId)
     const blogId = post.blogId
-    return !this.bansRepository.findBanStatusForSpecificUser(blogId.toString(), command.commentatorId)
+    return !await this.bansRepository.findBanStatusForSpecificUser(blogId.toString(), command.commentatorId)
   }
 }
