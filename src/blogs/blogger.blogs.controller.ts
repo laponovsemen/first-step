@@ -50,7 +50,7 @@ export class BloggerBlogsController {
   ) {}
 
 
-  @Get(':id/posts')
+  @Get('/comments')
   @HttpCode(200)
   async getAllCommentsForSpecificBlog(@Req() req : Request,
                                       @Res({passthrough : true}) res: Response,
@@ -64,7 +64,7 @@ export class BloggerBlogsController {
     if(!result){
       throw new NotFoundException("Blog not found")
     }*/
-    return "result"
+    return
 
   }
 
