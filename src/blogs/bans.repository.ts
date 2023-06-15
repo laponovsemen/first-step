@@ -1,6 +1,6 @@
 import { InjectModel, Prop } from "@nestjs/mongoose";
 import {
-  APIPost, Ban, BanInfoDB,
+  APIPost, BanInfoDB,
   Blog,
   BlogDocument,
   BloggerBansForSpecificBlog,
@@ -82,10 +82,9 @@ export class BansRepository {
       .lean() //.exec()
 
     if (result) {
-      /*const items = result.map((item) => {
-        return this.common.mongoBlogSlicingWithoutBlogOwnerInfo(item);
-      });*/
-      const items = result
+      const items = result.map((item) => {
+        return this.common.mongoBanSlicing(item);
+      });
       const array = await Promise.all(items);
       console.log(
         {

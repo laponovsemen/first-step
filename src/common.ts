@@ -1,7 +1,16 @@
 import { ObjectId } from 'mongodb';
 import { Mongoose } from 'mongoose';
 import { BlogViewModelType, paginationCriteriaType, PostDBModel } from "./appTypes";
-import { APIComment, APILike, APIPost, Blog, commentatorInfoModel, User, WithMongoId } from "./mongo/mongooseSchemas";
+import {
+  APIComment,
+  APILike,
+  APIPost,
+  Blog,
+  BloggerBansForSpecificBlog,
+  commentatorInfoModel,
+  User,
+  WithMongoId
+} from "./mongo/mongooseSchemas";
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 import {v4 as uuidv4} from "uuid";
@@ -129,6 +138,13 @@ export class Common {
   };
 
 
-
-
+  mongoBanSlicing= (Obj2: BloggerBansForSpecificBlog) => {
+    return {banInfo:
+        {banDate: Obj2.banInfo.banDate,
+          banReason:Obj2.banInfo.banReason,
+          isBanned: Obj2.banInfo.isBanned
+        },
+      id: Obj2._id,
+      login: Obj2.login}
+  }
 }

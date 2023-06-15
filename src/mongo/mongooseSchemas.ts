@@ -59,12 +59,7 @@ export class APISession {
   refreshToken: string;
 }
 
-@Schema()
-export class Ban {
 
-
-
-}
 @Schema()
 export class BloggerBansForSpecificBlog {
   _id?: ObjectId;
