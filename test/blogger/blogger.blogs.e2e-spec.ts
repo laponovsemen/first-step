@@ -169,6 +169,11 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       })
       .expect(404)
 
+    await request(server)
+      .get(`/blogger/users/blog/63189b06003380064c4193be`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .expect(404)
+
 
 
 

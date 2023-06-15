@@ -86,8 +86,21 @@ export class BloggerUsersController {
                           @User() user,
                           @Param("blogId") blogId): Promise<PaginatorViewModelType<Blog>>{
     console.log("getting all banned users for specific blog procedure");
-    const userId = user.userId
-    return this.commandBus.execute( new GetBannedUsersForSpecificBlogCommand(QueryParams,userId, blogId))
+    const blogOwnerFromToken = user.userId
+    const blog = await this.blogsQueryRepository.getBlogByIdWithBloggerInfo(blogId)
+    const blogOwnerFromDB = blog.blogOwnerInfo.userId
+    console.log(blogOwnerFromToken.toString(), "userid from token");
+    console.log(blogOwnerFromDB.toString(), "userid from DB");
+    if(blogOwnerFromToken.toString() !== blogOwnerFromDB.toString()){
+      throw new ForbiddenException()
+    }
+    const result = await this.commandBus.execute( new GetBannedUsersForSpecificBlogCommand(QueryParams,blogOwnerFromToken, blogId))
+    if(!result){
+      throw new NotFoundException()
+    } else {
+      return
+    }
+
   }
 
 }
