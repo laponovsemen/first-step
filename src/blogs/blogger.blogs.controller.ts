@@ -56,15 +56,15 @@ export class BloggerBlogsController {
                                       @Res({passthrough : true}) res: Response,
                                       @Query() QueryParams,
                                       @Param('id') blogId) {
-    const token = req.headers.authorization
+    /*const token = req.headers.authorization
     console.log(token, "accessToken")
     const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
     const result =  await this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId, token);
     console.log(result)
     if(!result){
       throw new NotFoundException("Blog not found")
-    }
-    return result
+    }*/
+    return "result"
 
   }
 
