@@ -72,6 +72,25 @@ export class BlogsController {
     return result
 
   }
+  @UseGuards(AuthGuard)
+  @Get(':id/posts')
+  @HttpCode(200)
+  async getAllCommentsForSpecificBlog(@Req() req : Request,
+                                   @Res({passthrough : true}) res: Response,
+                                   @Query() QueryParams,
+                                   @Param('id') blogId) {
+    const token = req.headers.authorization
+    console.log(token, "accessToken")
+    const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
+    const result =  await this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId, token);
+    console.log(result)
+    if(!result){
+      throw new NotFoundException("Blog not found")
+    }
+    return result
+
+  }
+
   @UseGuards(BasicAuthGuard)
   @Post(':id/posts')
   @HttpCode(201)
