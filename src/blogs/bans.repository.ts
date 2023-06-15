@@ -1,6 +1,6 @@
 import { InjectModel, Prop } from "@nestjs/mongoose";
 import {
-  APIPost, Ban,
+  APIPost, Ban, BanInfoDB,
   Blog,
   BlogDocument,
   BloggerBansForSpecificBlog,
@@ -26,51 +26,34 @@ export class BansRepository {
   ) {}
   async banUserForSpecificBlog(ownerId : string, userToBanId : string, DTO : BanUserByBloggerDTO){
     const blogId = DTO.blogId
-    const BlackListExists = await this.banModel.findOne({
+    const banExists = await this.banModel.findOne({
       blogId : new ObjectId(blogId),
-      userId : new ObjectId(ownerId),
+      ownerId : new ObjectId(ownerId),
     })
     const userToBan = await  this.usersRepository.findUserById(userToBanId)
-    const newBan = {
-      banInfo:{
-        banReason: DTO.banReason,
-        banDate: new Date().toISOString(),
-        isBanned : true
-      },
-      userId: new ObjectId(userToBanId),
-      login : userToBan.login
-    }
 
-    if(!BlackListExists && DTO.isBanned){
-      const newBlackList = {
-        userId: new ObjectId(ownerId),
+
+    if(!banExists && DTO.isBanned ){
+      const newBan = {
+        ownerId : new ObjectId(ownerId),
         blogId: new ObjectId(blogId),
-        listOfBans: [newBan]
+        banInfo : {
+          banDate: new Date().toISOString(),
+          banReason: DTO.banReason,
+          isBanned: DTO.isBanned,
+        },
+        userId: new ObjectId(userToBanId),
+        login: userToBan.login,
       }
-      await this.banModel.create(newBlackList)
+      await this.banModel.create(newBan)
     } else {
-      if (DTO.isBanned) {
-        await this.banModel.updateOne({
-            blogId: new ObjectId(blogId),
-            userId: new ObjectId(ownerId)
-          },
-          {
-            $push: {
-              newBan
-            }
-          });
+      if (banExists && !DTO.isBanned) {
+        await this.banModel.deleteOne({ownerId : new ObjectId(ownerId), blogId: new ObjectId(blogId)})
       } else {
-        await this.banModel.updateOne({
-            blogId: new ObjectId(blogId),
-            userId: new ObjectId(ownerId)
-          },
-          {
-            $pull: {
-              userId : new ObjectId(userToBanId)
-            }
-          });
+        return
       }
     }
+    return
   }
 
   async unbanUserForSpecificBlog(blogId: any) {
@@ -99,9 +82,10 @@ export class BansRepository {
       .lean() //.exec()
 
     if (result) {
-      const items = result.map((item) => {
+      /*const items = result.map((item) => {
         return this.common.mongoBlogSlicingWithoutBlogOwnerInfo(item);
-      });
+      });*/
+      const items = result
       const array = await Promise.all(items);
       console.log(
         {
@@ -121,5 +105,9 @@ export class BansRepository {
         items: array,
       };
     }
+  }
+
+  async deleteAllData() {
+    await  this.banModel.deleteMany({})
   }
 }

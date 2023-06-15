@@ -61,26 +61,24 @@ export class APISession {
 
 @Schema()
 export class Ban {
+
+
+
+}
+@Schema()
+export class BloggerBansForSpecificBlog {
+  _id?: ObjectId;
+  @Prop({ type: ObjectId, required: true })
+  ownerId: ObjectId;
+  @Prop({ type: ObjectId, required: true })
+  blogId: ObjectId;
   @Prop({ type: BanInfoDBIS, required: true })
   banInfo : BanInfoDB
 
   @Prop({ type: ObjectId, required: true })
   userId: ObjectId;
-  @Prop({ type: String })
+  @Prop({ type: String, required: true })
   login: string
-
-
-}
-const BanSchema = SchemaFactory.createForClass(Ban)
-@Schema()
-export class BloggerBansForSpecificBlog {
-  _id?: ObjectId;
-  @Prop({ type: ObjectId, required: true })
-  userId: ObjectId;
-  @Prop({ type: ObjectId, required: true })
-  blogId: ObjectId;
-  @Prop({ type: [BanSchema], required: true })
-  listOfBans: Ban[]
 
 }
 

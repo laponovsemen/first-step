@@ -153,7 +153,11 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
         "blogId": createdBlog.body.id
       })
       .expect(204)
-
+    const allBansForSpecificBlog = await request(server)
+      .get(`/blogger/users/blog/${createdBlog.body.id}`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .expect(200)
+    expect(allBansForSpecificBlog.body).toEqual({})
 
 
 

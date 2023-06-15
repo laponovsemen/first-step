@@ -5,6 +5,7 @@ import { UsersRepository } from "../users/users.reposiroty";
 import { PostsRepository } from "../posts/posts.repository";
 import { LikeRepository } from "../likes/likes.repository";
 import { SecurityDevicesRepository } from "../security.devices/security.devices.repository";
+import { BansRepository } from "../blogs/bans.repository";
 
 
 @Injectable()
@@ -14,6 +15,7 @@ export class TestingService {
               private readonly usersRepository: UsersRepository,
               private readonly commentsRepository: CommentsRepository,
               private readonly likeRepository: LikeRepository,
+              private readonly bansRepository: BansRepository,
               private readonly securityDevicesRepository: SecurityDevicesRepository,
               ) {
   }
@@ -24,5 +26,6 @@ export class TestingService {
     await this.commentsRepository.deleteAllData()
     await this.likeRepository.deleteAllData()
     await this.securityDevicesRepository.deleteAllData()
+    await this.bansRepository.deleteAllData()
   }
 }
