@@ -7,9 +7,11 @@ import { paginationCriteriaType } from "../../appTypes";
 import { Common } from "../../common";
 import { BlogsRepository } from "../blogs.repository";
 import { PostsRepository } from "../../posts/posts.repository";
+import { BansRepository } from "../bans.repository";
 
 export class GetBannedUsersForSpecificBlogCommand{
-  constructor(public DTO : BanBlogDTO,
+  constructor(public queryParams : any,
+              public userId : string,
               public blogId : string
   ) {
   }
@@ -17,19 +19,13 @@ export class GetBannedUsersForSpecificBlogCommand{
 @CommandHandler(GetBannedUsersForSpecificBlogCommand)
 export class GetBannedUsersForSpecificBlogUseCase implements ICommandHandler<GetBannedUsersForSpecificBlogCommand>{
   constructor(
-    protected securityDevicesRepository: SecurityDevicesRepository,
-    protected postsRepository: PostsRepository,
-    protected blogsRepository: BlogsRepository,
     protected common: Common,
+    public bansRepository : BansRepository
   ) {
 
   }
   async execute(command : GetBannedUsersForSpecificBlogCommand) {
-    if (command.DTO.isBanned){
-      await this.postsRepository.makeAllPostsForBlogHiden(command.blogId)
-    }else {
-      await this.postsRepository.makeAllPostsForBlogVisible(command.blogId)
-    }
-    return this.blogsRepository.changeBanStatusOfBlog(command.DTO, command.blogId);
+    const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(command.queryParams);
+    return this.bansRepository.getAllBannedUsersForSpecificBlog(paginationCriteria, command.userId, command.blogId)
   }
 }

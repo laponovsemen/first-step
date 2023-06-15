@@ -71,7 +71,7 @@ export class BloggerUsersController {
                           @Param("blogId") blogId): Promise<PaginatorViewModelType<Blog>>{
     console.log("getting all banned users for specific blog procedure");
     const userId = user.userId
-    return this.commandBus.execute( new GetBannedUsersForSpecificBlogCommand(QueryParams,userId))
+    return this.commandBus.execute( new GetBannedUsersForSpecificBlogCommand(QueryParams,userId, blogId))
   }
 
 }

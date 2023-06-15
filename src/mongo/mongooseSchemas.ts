@@ -61,12 +61,14 @@ export class APISession {
 
 @Schema()
 export class Ban {
-  @Prop({ type: String, required: true })
-  banReason: string
+  @Prop({ type: BanInfoDBIS, required: true })
+  banInfo : BanInfoDB
+
   @Prop({ type: ObjectId, required: true })
   userId: ObjectId;
-  @Prop({ type: Date || null})
-  banDate: Date | null
+  @Prop({ type: String })
+  login: string
+
 
 }
 const BanSchema = SchemaFactory.createForClass(Ban)
