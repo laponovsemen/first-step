@@ -29,6 +29,7 @@ export class BansRepository {
     const banExists = await this.banModel.findOne({
       blogId : new ObjectId(blogId),
       ownerId : new ObjectId(ownerId),
+      userId : new ObjectId(userToBanId)
     })
     const userToBan = await  this.usersRepository.findUserById(userToBanId)
 
