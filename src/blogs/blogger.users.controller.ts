@@ -84,6 +84,7 @@ export class BloggerUsersController {
   async getBannedUsersForSpecificBlog(
                           @Query() QueryParams,
                           @User() user,
+                          @Res({passthrough : true}) res : Response,
                           @Param("blogId") blogId): Promise<PaginatorViewModelType<Blog>>{
     console.log("getting all banned users for specific blog procedure");
     const blogOwnerFromToken = user.userId
@@ -100,7 +101,5 @@ export class BloggerUsersController {
     } else {
       return
     }
-
   }
-
 }
