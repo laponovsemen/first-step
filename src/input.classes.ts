@@ -108,6 +108,16 @@ export class UserDTO {
   @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
   email : string // pattern: ^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$
 }
+export class BanUserByBloggerDTO {
+  @IsBoolean()
+  isBanned: true
+  @IsNotEmpty()
+  @Length(20)
+  banReason: string
+  @IsNotEmpty()
+  blogId: string
+}
+
 
 export class LoginDTO {
   @IsNotEmpty()
