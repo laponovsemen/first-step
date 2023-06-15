@@ -7,7 +7,7 @@ import process from "process";
 import cookieParser from "cookie-parser";
 import { AppModule } from "../../src/app.module";
 import { HttpExceptionFilter } from "../../src/exception.filter";
-import { useContainer } from "class-validator";
+import { ArrayContains, useContainer } from "class-validator";
 
 
 const authE2eSpec = 'Authorization'
@@ -176,6 +176,38 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       .set("Authorization", `Bearer ${accessTokenOfUser}`)
       .expect(404)
 
+    const allBansForSpecificBlog2 = await request(server)
+      .get(`/blogger/users/blog/${createdBlog.body.id}`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .expect(200)
+
+    expect(allBansForSpecificBlog2.body.items).toEqual([{
+      "banInfo": {
+        "banDate": expect.any(String),
+        "banReason": "stringstringstringst",
+        "isBanned": true
+      },
+      "id": expect.any(String),
+      "login": "login2"
+    }]);
+
+
+    await request(server)
+      .put(`/blogger/users/${idOfSecondUser}/ban`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .send({
+        "isBanned": false,
+        "banReason": "stringstringstringst",
+        "blogId": createdBlog.body.id
+      })
+      .expect(204)
+
+    const allBansForSpecificBlog3 = await request(server)
+      .get(`/blogger/users/blog/${createdBlog.body.id}`)
+      .set("Authorization", `Bearer ${accessTokenOfUser}`)
+      .expect(200)
+
+    expect(allBansForSpecificBlog3.body.items).toEqual([]);
 
 
 

@@ -61,7 +61,7 @@ export class BansRepository {
         return true
       }
     }
-    return true
+
   }
 
   async unbanUserForSpecificBlog(blogId: any) {
