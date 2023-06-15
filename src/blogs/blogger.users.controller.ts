@@ -105,7 +105,7 @@ export class BloggerUsersController {
     if(!result){
       throw new NotFoundException()
     } else {
-      return
+      return result
     }
   }
 }
