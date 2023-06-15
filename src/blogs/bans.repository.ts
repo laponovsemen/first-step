@@ -52,7 +52,7 @@ export class BansRepository {
       return true
     } else {
       if (banExists && !DTO.isBanned) {
-        await this.banModel.deleteOne({
+        await this.banModel.deleteMany({
           ownerId : new ObjectId(ownerId),
           blogId: new ObjectId(blogId),
           userId : new ObjectId(userToBanId)})
