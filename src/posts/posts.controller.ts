@@ -82,7 +82,7 @@ export class PostsController {
       throw new NotFoundException()
     }
     const banVerification = await this.commandBus.execute(new BanVerificationOfUserCommand(commentatorId, postId))
-    if(banVerification){
+    if(!banVerification){
       throw new ForbiddenException()
     }
     const result = await this.postsService.createCommentForSpecificPost(DTO, postId, token);
