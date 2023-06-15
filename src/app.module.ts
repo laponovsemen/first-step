@@ -64,6 +64,10 @@ import {
 } from "./blogs/use-cases/get-banned-users-for-specific-blog-use-case";
 import { BansRepository } from "./blogs/bans.repository";
 import { BloggerUsersController } from "./blogs/blogger.users.controller";
+import {
+  BanVerificationOfUserCommand,
+  BanVerificationOfUserUseCase
+} from "./posts/use-cases/ban-verification-of-user-use-case";
 const modules = [AuthModule]
 
 const services = [AppService,BlogsService, PostsService, TestingService, UsersService, AuthService,
@@ -72,10 +76,10 @@ const services = [AppService,BlogsService, PostsService, TestingService, UsersSe
 const repositories = [BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository,
   BlogsQueryRepository, SecurityDevicesRepository,BansRepository]
 
-const useCases = [BanProcedureUseCase, GettingAllUsersForSuperAdminUseCase,
+const useCases = [BanProcedureUseCase, GettingAllUsersForSuperAdminUseCase,BanVerificationOfUserUseCase,
   GettingAllBlogsForSpecifiedBloggerUseCase, BanBlogUseCase,BanUserByBloggerUseCase , GetBannedUsersForSpecificBlogUseCase]
 
-const commands = [BanProcedureCommand, GettingAllUsersForSuperAdminCommand,
+const commands = [BanProcedureCommand, GettingAllUsersForSuperAdminCommand,BanVerificationOfUserCommand,
   GettingAllBlogsForSpecifiedBloggerCommand, BanBlogCommand,BanUserByBloggerCommand, GetBannedUsersForSpecificBlogCommand]
 
 const adapters = [EmailAdapter, Common, BlogIdExistsRule]
