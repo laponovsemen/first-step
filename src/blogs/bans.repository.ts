@@ -31,7 +31,7 @@ export class BansRepository {
       ownerId : new ObjectId(ownerId),
       userId : new ObjectId(userToBanId)
     })
-    const userToBan = await  this.usersRepository.findUserById(userToBanId)
+    const userToBan = await this.usersRepository.findUserById(userToBanId)
     if(!userToBan){
       return null
     }
