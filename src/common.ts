@@ -144,7 +144,7 @@ export class Common {
           banReason:Obj2.banInfo.banReason,
           isBanned: Obj2.banInfo.isBanned
         },
-      id: Obj2._id,
+      id: Obj2.userId,
       login: Obj2.login}
   }
 }
