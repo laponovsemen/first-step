@@ -63,6 +63,9 @@ export class BloggerUsersController {
     console.log("ban user procedure");
     const blogOwnerFromToken = user.userId
     const blog = await this.blogsQueryRepository.getBlogByIdWithBloggerInfo(DTO.blogId)
+    if(!blog){
+      throw new NotFoundException()
+    }
     const blogOwnerFromDB = blog.blogOwnerInfo.userId
     console.log(blogOwnerFromToken.toString(), "userid from token");
     console.log(blogOwnerFromDB.toString(), "userid from DB");
@@ -89,6 +92,9 @@ export class BloggerUsersController {
     console.log("getting all banned users for specific blog procedure");
     const blogOwnerFromToken = user.userId
     const blog = await this.blogsQueryRepository.getBlogByIdWithBloggerInfo(blogId)
+    if(!blog){
+      throw new NotFoundException()
+    }
     const blogOwnerFromDB = blog.blogOwnerInfo.userId
     console.log(blogOwnerFromToken.toString(), "userid from token");
     console.log(blogOwnerFromDB.toString(), "userid from DB");
