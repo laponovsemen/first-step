@@ -1,7 +1,7 @@
 import {
   Body,
   Controller,
-  Delete,
+  Delete, ForbiddenException,
   Get,
   HttpCode, HttpStatus,
   NotFoundException,
@@ -22,6 +22,9 @@ import { LikeRepository } from "../likes/likes.repository";
 import { LikeService } from "../likes/likes.service";
 import { AuthGuard, BasicAuthGuard } from "../auth/auth.guard";
 import { Request, Response } from "express";
+import { User } from "../auth/decorators/public.decorator";
+import { CommandBus } from "@nestjs/cqrs";
+import { BanVerificationOfUserCommand } from "./use-cases/ban-verification-of-user-use-case";
 
 
 
@@ -31,6 +34,7 @@ export class PostsController {
   constructor(
     private readonly postsService: PostsService,
     private readonly common: Common,
+    private readonly commandBus: CommandBus,
     private readonly likeService : LikeService
   ) {
   }
@@ -69,8 +73,18 @@ export class PostsController {
   async createCommentForSpecificPost(@Req() req : Request,
                                      @Res({passthrough : true}) res : Response,
                                      @Param('id') postId,
+                                     @User() user,
                                      @Body() DTO : CommentForSpecifiedPostDTO) {
     const token = req.headers.authorization
+    const commentatorId = user.userId
+    const postForComment = await this.postsService.getPostById(postId, token)
+    if(!postForComment){
+      throw new NotFoundException()
+    }
+    const banVerification = await this.commandBus.execute(new BanVerificationOfUserCommand(commentatorId, postId))
+    if(!banVerification){
+      throw new ForbiddenException()
+    }
     const result = await this.postsService.createCommentForSpecificPost(DTO, postId, token);
     if(!result){
       throw new NotFoundException()

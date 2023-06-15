@@ -117,4 +117,8 @@ export class BansRepository {
   async deleteAllData() {
     await  this.banModel.deleteMany({})
   }
+
+  async findBanStatusForSpecificUser(blogId: string, commentatorId: string) {
+    return this.banModel.findOne({ blogId: new ObjectId(blogId), userId: new ObjectId(commentatorId) });
+  }
 }
