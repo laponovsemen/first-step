@@ -24,7 +24,7 @@ export class BanUserByBloggerUseCase implements ICommandHandler<BanUserByBlogger
   async execute(command : BanUserByBloggerCommand) {
     console.log("start execution of BanUserByBloggerCommand");
 
-    await this.bansRepository.banUserForSpecificBlog(command.ownerId, command.userIdToBan, command.DTO )
+    return await this.bansRepository.banUserForSpecificBlog(command.ownerId, command.userIdToBan, command.DTO )
 
     //return this.blogsRepository.changeBanStatusOfBlog(command.DTO, command.blogId);
   }

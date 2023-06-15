@@ -32,7 +32,9 @@ export class BansRepository {
       userId : new ObjectId(userToBanId)
     })
     const userToBan = await  this.usersRepository.findUserById(userToBanId)
-
+    if(!userToBan){
+      return null
+    }
 
     if(!banExists && DTO.isBanned ){
       const newBan = {
@@ -47,17 +49,19 @@ export class BansRepository {
         login: userToBan.login,
       }
       await this.banModel.create(newBan)
+      return true
     } else {
       if (banExists && !DTO.isBanned) {
         await this.banModel.deleteOne({
           ownerId : new ObjectId(ownerId),
           blogId: new ObjectId(blogId),
           userId : new ObjectId(userToBanId)})
+        return true
       } else {
-        return
+        return true
       }
     }
-    return
+    return true
   }
 
   async unbanUserForSpecificBlog(blogId: any) {

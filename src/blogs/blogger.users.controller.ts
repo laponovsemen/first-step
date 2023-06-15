@@ -54,12 +54,19 @@ export class BloggerUsersController {
   @HttpCode(204)
   async banUserByBlogger(@Query() QueryParams,
                          @User() user,
+                         @Res({passthrough : true}) res : Response,
                          @Body() DTO : BanUserByBloggerDTO,
                          @Param("userIdToBan") userIdToBan): Promise<PaginatorViewModelType<Blog>> {
 
     console.log("ban user procedure");
     const ownerId = user.userId
-    return this.commandBus.execute( new BanUserByBloggerCommand(DTO, userIdToBan, ownerId))
+    const result = await this.commandBus.execute( new BanUserByBloggerCommand(DTO, userIdToBan, ownerId))
+    if(!result){
+      throw new NotFoundException()
+    } else {
+      return
+    }
+
   }
 
   @UseGuards(AuthGuard)
