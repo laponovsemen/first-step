@@ -1,11 +1,12 @@
 import {
+  IS_UUID,
   IsBoolean, IsDefined,
   IsEnum,
   IsNotEmpty,
   IsNotIn,
   IsObject,
   IsString,
-  IsUrl,
+  IsUrl, IsUUID, isUUID,
   Length,
   Matches,
   Validate
@@ -13,6 +14,8 @@ import {
 import { Transform } from "class-transformer";
 import { StatusTypeEnum } from "./mongo/mongooseSchemas";
 import { BlogIdExistsRule } from "./auth/custom.validators/blogIdExists.validator";
+import { ObjectId } from "mongodb";
+import {  IsObjectIdValidator } from "./auth/custom.validators/isObjectId.validator";
 
 export class CommentForSpecifiedPostDTO{
   @Length(20, 300)
@@ -115,6 +118,7 @@ export class BanUserByBloggerDTO {
   @Length(20)
   banReason: string
   @IsNotEmpty()
+  @Validate(IsObjectIdValidator)
   blogId: string
 }
 

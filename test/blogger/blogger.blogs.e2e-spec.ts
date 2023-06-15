@@ -73,6 +73,18 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
       })
       .expect(201)
 
+    const secondUser = await request(server)
+      .post("/sa/users")
+      .set(authE2eSpec, basic)
+      .send({
+        login: "login2",
+        password: "password2",
+        email: "simsbury652@gmail.com"
+      })
+      .expect(201)
+
+    const idOfSecondUser = secondUser.body.id
+
     expect(user.body).toEqual({
       "createdAt": expect.any(String),
       "email": "simsbury65@gmail.com",
@@ -84,6 +96,14 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
         "isBanned": false,
       },
     })
+
+    await request(server)
+      .post("/auth/login")
+      .send({
+        loginOrEmail: "login2",
+        password: "password2",
+      })
+      .expect(200)
 
     const login = await request(server)
       .post("/auth/login")
@@ -114,33 +134,34 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
          "websiteUrl": "simsbury65@gmail.com",
     })
 
-    const createdPostForSpecificBlog = await request(server)
-      .post(`/blogger/blogs/${createdBlog.body.id}/posts`)
+    await request(server)
+      .put(`/blogger/users/${idOfSecondUser}/ban`)
       .set("Authorization", `Bearer ${accessTokenOfUser}`)
       .send({
-        "title": "string",
-        "shortDescription": "stringstring",
-        "content": "string"
+        "isBanned": true,
+        "banReason": "stringstringstringst",
+        "blogId": "string"
       })
-      .expect(201)
-    //extract postId
-    const postId = createdPostForSpecificBlog.body.id
+      .expect(400)
 
-    await request(server)
-      .get(`/posts/${postId}`)
+    const banUserByBlogger = await request(server)
+      .put(`/blogger/users/${idOfSecondUser}/ban`)
       .set("Authorization", `Bearer ${accessTokenOfUser}`)
-      .expect(200)
+      .send({
+        "isBanned": true,
+        "banReason": "stringstringstringst",
+        "blogId": createdBlog.body.id
+      })
+      .expect(204)
+
+
+
+
 
 
 
 
 
   }, 10000)
-
-
-
-
-
-
 
 })

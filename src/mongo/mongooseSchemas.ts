@@ -60,6 +60,29 @@ export class APISession {
 }
 
 @Schema()
+export class Ban {
+  @Prop({ type: String, required: true })
+  banReason: string
+  @Prop({ type: ObjectId, required: true })
+  userId: ObjectId;
+  @Prop({ type: Date || null})
+  banDate: Date | null
+
+}
+const BanSchema = SchemaFactory.createForClass(Ban)
+@Schema()
+export class BloggerBansForSpecificBlog {
+  _id?: ObjectId;
+  @Prop({ type: ObjectId, required: true })
+  userId: ObjectId;
+  @Prop({ type: ObjectId, required: true })
+  blogId: ObjectId;
+  @Prop({ type: [BanSchema], required: true })
+  listOfBans: Ban[]
+
+}
+
+@Schema()
 export class APIPost {
   @Prop()
   title: string; //    maxLength: 30
@@ -204,9 +227,11 @@ export type UsersDocument = HydratedDocument<User>;
 export type SessionDocument = HydratedDocument<APISession>;
 export type DeviceDocument = HydratedDocument<APIDeviceModel>;
 export type LikesDocument = HydratedDocument<APILike>;
+export type BloggerBansForSpecificBlogDocument = HydratedDocument<BloggerBansForSpecificBlog>;
 export const BlogsSchema = SchemaFactory.createForClass(Blog);
 export const PostsSchema = SchemaFactory.createForClass(APIPost);
 export const CommentsSchema = SchemaFactory.createForClass(APIComment);
 export const UsersSchema = SchemaFactory.createForClass(User);
 export const LikesSchema = SchemaFactory.createForClass(APILike);
 export const SessionSchema = SchemaFactory.createForClass(APISession);
+export const BloggerBansForSpecificBlogSchema = SchemaFactory.createForClass(BloggerBansForSpecificBlog);

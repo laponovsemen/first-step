@@ -1,4 +1,4 @@
-import { BanBlogDTO, BanUserDTO } from "../../input.classes";
+import { BanBlogDTO, BanUserByBloggerDTO, BanUserDTO } from "../../input.classes";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { SecurityDevicesRepository } from "../../security.devices/security.devices.repository";
 import { LikeRepository } from "../../likes/likes.repository";
@@ -7,29 +7,27 @@ import { paginationCriteriaType } from "../../appTypes";
 import { Common } from "../../common";
 import { BlogsRepository } from "../blogs.repository";
 import { PostsRepository } from "../../posts/posts.repository";
+import { BansRepository } from "../bans.repository";
 
 export class BanUserByBloggerCommand{
-  constructor(public DTO : BanBlogDTO,
-              public blogId : string
+  constructor(public DTO : BanUserByBloggerDTO,
+              public userIdToBan : string,
+              public ownerId : string
   ) {
   }
 }
 @CommandHandler(BanUserByBloggerCommand)
 export class BanUserByBloggerUseCase implements ICommandHandler<BanUserByBloggerCommand>{
-  constructor(
-    protected securityDevicesRepository: SecurityDevicesRepository,
-    protected postsRepository: PostsRepository,
-    protected blogsRepository: BlogsRepository,
-    protected common: Common,
-  ) {
+  constructor( public bansRepository : BansRepository ) {
 
   }
   async execute(command : BanUserByBloggerCommand) {
+    console.log("start execution of BanUserByBloggerCommand");
     if (command.DTO.isBanned){
-      await this.postsRepository.makeAllPostsForBlogHiden(command.blogId)
+      await this.bansRepository.banUserForSpecificBlog(command.ownerId, command.userIdToBan, command.DTO )
     }else {
-      await this.postsRepository.makeAllPostsForBlogVisible(command.blogId)
+      await this.bansRepository.unbanUserForSpecificBlog(command.ownerId)
     }
-    return this.blogsRepository.changeBanStatusOfBlog(command.DTO, command.blogId);
+    //return this.blogsRepository.changeBanStatusOfBlog(command.DTO, command.blogId);
   }
 }

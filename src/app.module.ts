@@ -9,7 +9,7 @@ import * as process from "process";
 import {
   APIComment, APILike,
   APIPost, APISession,
-  Blog,
+  Blog, BloggerBansForSpecificBlog, BloggerBansForSpecificBlogSchema,
   BlogsSchema,
   CommentsSchema, LikesSchema,
   PostsSchema, SessionSchema,
@@ -62,13 +62,15 @@ import {
   GetBannedUsersForSpecificBlogCommand,
   GetBannedUsersForSpecificBlogUseCase
 } from "./blogs/use-cases/get-banned-users-for-specific-blog-use-case";
+import { BansRepository } from "./blogs/bans.repository";
+import { BloggerUsersController } from "./blogs/blogger.users.controller";
 const modules = [AuthModule]
 
 const services = [AppService,BlogsService, PostsService, TestingService, UsersService, AuthService,
   LikeService, CommentsService, JwtService, SecurityDevicesService]
 
 const repositories = [BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository,
-  BlogsQueryRepository, SecurityDevicesRepository]
+  BlogsQueryRepository, SecurityDevicesRepository,BansRepository]
 
 const useCases = [BanProcedureUseCase, GettingAllUsersForSuperAdminUseCase,
   GettingAllBlogsForSpecifiedBloggerUseCase, BanBlogUseCase,BanUserByBloggerUseCase , GetBannedUsersForSpecificBlogUseCase]
@@ -106,10 +108,13 @@ const adapters = [EmailAdapter, Common, BlogIdExistsRule]
     }, {
       name: APISession.name,
       schema: SessionSchema
+    }, {
+      name: BloggerBansForSpecificBlog.name,
+      schema: BloggerBansForSpecificBlogSchema
     }])],
 
   controllers: [AppController, BloggerBlogsController, TestingController,BlogsController,SABlogsController,SAUsersController,
-    PostsController, UsersController, AuthController, CommentsController, SecurityDevicesController],
+    PostsController, UsersController, AuthController, CommentsController, SecurityDevicesController, BloggerUsersController],
 
   providers: [...modules,
     ...services,

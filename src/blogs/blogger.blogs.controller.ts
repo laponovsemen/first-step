@@ -49,30 +49,7 @@ export class BloggerBlogsController {
     private readonly postsService: PostsService,
   ) {}
 
-  @UseGuards(AuthGuard)
-  @Put("/users/:userIdToBan/ban")
-  @HttpCode(204)
-  async banUserByBlogger(@Query() QueryParams,
-                         @User() user,
-                         @Body() DTO : BanUserByBloggerDTO,
-                         @Param("userIdToBan") userIdToBan): Promise<PaginatorViewModelType<Blog>> {
 
-    console.log("ban user procedure");
-    const userId = user.userId
-    return this.commandBus.execute( new BanUserByBloggerCommand(QueryParams,userId))
-  }
-
-  @UseGuards(AuthGuard)
-  @Get("users/blog/:blogId")
-  @HttpCode(200)
-  async getBannedUsersForSpecificBlog(
-                          @Query() QueryParams,
-                          @User() user,
-                          @Param("blogId") blogId): Promise<PaginatorViewModelType<Blog>>{
-    console.log("getting all banned users for specific blog procedure");
-    const userId = user.userId
-    return this.commandBus.execute( new GetBannedUsersForSpecificBlogCommand(QueryParams,userId))
-  }
 
   @Get()
   @HttpCode(200)
