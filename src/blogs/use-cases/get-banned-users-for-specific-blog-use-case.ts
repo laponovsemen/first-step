@@ -11,7 +11,7 @@ import { BansRepository } from "../bans.repository";
 
 export class GetBannedUsersForSpecificBlogCommand{
   constructor(public queryParams : any,
-              public userId : string,
+              public blogOwnerFromToken : string,
               public blogId : string
   ) {
   }
@@ -26,6 +26,6 @@ export class GetBannedUsersForSpecificBlogUseCase implements ICommandHandler<Get
   }
   async execute(command : GetBannedUsersForSpecificBlogCommand) {
     const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(command.queryParams);
-    return this.bansRepository.getAllBannedUsersForSpecificBlog(paginationCriteria, command.userId, command.blogId)
+    return this.bansRepository.getAllBannedUsersForSpecificBlog(paginationCriteria, command.blogOwnerFromToken, command.blogId)
   }
 }

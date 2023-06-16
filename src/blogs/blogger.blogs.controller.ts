@@ -34,6 +34,7 @@ import { GettingAllBlogsForSpecifiedBloggerCommand } from "./use-cases/getting-a
 import { PostsService } from "../posts/posts.service";
 import { BanUserByBloggerCommand } from "./use-cases/ban-user-by-blogger-use-case";
 import { GetBannedUsersForSpecificBlogCommand } from "./use-cases/get-banned-users-for-specific-blog-use-case";
+import { GetAllCommentForUserCommand } from "./use-cases/get-all-comments-for-user";
 
 
 
@@ -55,15 +56,16 @@ export class BloggerBlogsController {
   async getAllCommentsForSpecificBlog(@Req() req : Request,
                                       @Res({passthrough : true}) res: Response,
                                       @Query() QueryParams,
-                                      @Param('id') blogId) {
-    /*const token = req.headers.authorization
+                                      @User() userFromToken,
+                                      ) {
+    const token = req.headers.authorization
     console.log(token, "accessToken")
-    const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(QueryParams);
-    const result =  await this.blogsService.getAllPostsForSpecificBlog(paginationCriteria, blogId, token);
+
+    const result =  await this.commandBus.execute(new GetAllCommentForUserCommand(QueryParams, userFromToken));
     console.log(result)
     if(!result){
       throw new NotFoundException("Blog not found")
-    }*/
+    }
     return
 
   }
