@@ -280,4 +280,9 @@ export class BlogsQueryRepository {
         }}
     );
   }
+
+  async getListOfBlogsByUserId(userFromToken: string) {
+    const result = await this.blogModel.find({"blogOwnerInfo.userId" : userFromToken}, {_id : 1}).lean().exec()
+    return result.map(item => item._id.toString())
+  }
 }

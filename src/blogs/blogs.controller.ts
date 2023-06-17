@@ -49,11 +49,7 @@ export class BlogsController {
       this.common.getPaginationCriteria(QueryParams);
     return this.blogsService.getAllBlogs(paginationCriteria);
   }
-  /*@UseGuards(BasicAuthGuard)
-  @Post()
-  async createNewBlog(@Body() DTO : BlogDTO): Promise<Blog> {
-    return this.blogsService.createNewBlog(DTO);
-  }*/
+
 
   @Get(':id/posts')
   @HttpCode(200)

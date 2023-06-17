@@ -58,15 +58,10 @@ export class BloggerBlogsController {
                                       @Query() QueryParams,
                                       @User() userFromToken,
                                       ) {
-    const token = req.headers.authorization
-    console.log(token, "accessToken")
+     return await this.commandBus.execute(new GetAllCommentForUserCommand(QueryParams, userFromToken));
 
-    const result =  await this.commandBus.execute(new GetAllCommentForUserCommand(QueryParams, userFromToken));
-    console.log(result)
-    if(!result){
-      throw new NotFoundException("Blog not found")
-    }
-    return
+
+
 
   }
 

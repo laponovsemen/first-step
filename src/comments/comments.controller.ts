@@ -18,7 +18,6 @@ import { CommentsService } from "./comments.service";
 import { AuthService } from "../auth/auth.service";
 import { LikeService } from "../likes/likes.service";
 
-
 @Controller('comments')
 export class CommentsController {
   constructor(protected readonly commentsService : CommentsService,
@@ -41,6 +40,8 @@ export class CommentsController {
     }
     return true
   }
+
+
   @UseGuards(AuthGuard)
   @Put(':commentId')
   @HttpCode(HttpStatus.NO_CONTENT)

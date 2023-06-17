@@ -113,7 +113,7 @@ export class UserDTO {
 }
 export class BanUserByBloggerDTO {
   @IsBoolean()
-  isBanned: boolean
+  isBanned: boolean //<-- tut oshybka byla
   @IsNotEmpty()
   @Length(20)
   banReason: string

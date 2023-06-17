@@ -29,7 +29,7 @@ import { BanVerificationOfUserCommand } from "./use-cases/ban-verification-of-us
 
 
 
-@Controller('posts')
+@Controller('/posts')
 export class PostsController {
   constructor(
     private readonly postsService: PostsService,
