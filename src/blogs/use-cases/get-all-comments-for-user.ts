@@ -37,6 +37,6 @@ export class GetAllCommentForUserUseCase implements ICommandHandler<GetAllCommen
     const listOfAllCommentsForSuchPosts = await this.commentsQueryRepository.getListOfCommentsByPostIds(paginationCriteria, listOfPostsForBlogs)
     console.log(listOfPostsForBlogs , " listOfPostsForBlogs");
 
-    return listOfPostsForBlogs
+    return listOfAllCommentsForSuchPosts
   }
 }

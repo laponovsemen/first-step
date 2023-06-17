@@ -70,12 +70,13 @@ import {
 } from "./posts/use-cases/ban-verification-of-user-use-case";
 import { GetAllCommentForUserCommand, GetAllCommentForUserUseCase } from "./blogs/use-cases/get-all-comments-for-user";
 import { PostsQueryRepository } from "./posts/posts.query.repository";
+import { CommentsQueryRepository } from "./comments/comments.query.repository";
 const modules = [AuthModule]
 
 const services = [AppService,BlogsService, PostsService, TestingService, UsersService, AuthService,
   LikeService, CommentsService, JwtService, SecurityDevicesService]
 
-const repositories = [BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository,
+const repositories = [BlogsRepository, PostsRepository, UsersRepository,CommentsRepository, LikeRepository,CommentsQueryRepository,
   BlogsQueryRepository, SecurityDevicesRepository,BansRepository, PostsQueryRepository]
 
 const useCases = [BanProcedureUseCase, GettingAllUsersForSuperAdminUseCase,BanVerificationOfUserUseCase,GetAllCommentForUserUseCase,
