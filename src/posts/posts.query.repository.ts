@@ -57,7 +57,7 @@ export class PostsQueryRepository {
     let postIdArray = []
     for (let blogId of listOfBlogsForSpecifiedUser) {
       const posts = await this.postsModel.find({blogId : new ObjectId(blogId)}, {_id : 1})
-      postIdArray.push(...posts)
+      postIdArray.push(...posts.map(item => item._id))
     }
     return postIdArray
   }

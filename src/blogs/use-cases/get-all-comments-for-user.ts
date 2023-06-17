@@ -9,6 +9,7 @@ import { BlogsRepository } from "../blogs.repository";
 import { PostsRepository } from "../../posts/posts.repository";
 import { BlogsQueryRepository } from "../blogs.query.repository";
 import { PostsQueryRepository } from "../../posts/posts.query.repository";
+import { CommentsQueryRepository } from "../../comments/comments.query.repository";
 
 export class GetAllCommentForUserCommand{
   constructor(public queryParams : any,
@@ -21,6 +22,7 @@ export class GetAllCommentForUserUseCase implements ICommandHandler<GetAllCommen
   constructor(
     protected securityDevicesRepository: SecurityDevicesRepository,
     protected postsQueryRepository: PostsQueryRepository,
+    protected commentsQueryRepository: CommentsQueryRepository,
     protected blogsRepository: BlogsRepository,
     protected blogsQueryRepository: BlogsQueryRepository,
     protected common: Common,
@@ -28,12 +30,13 @@ export class GetAllCommentForUserUseCase implements ICommandHandler<GetAllCommen
 
   }
   async execute(command : GetAllCommentForUserCommand) {
+
     const paginationCriteria: paginationCriteriaType = this.common.getPaginationCriteria(command.queryParams);
     const listOfBlogsForSpecifiedUser = await this.blogsQueryRepository.getListOfBlogsByUserId(command.userFromToken.userId)
-    console.log(listOfBlogsForSpecifiedUser , " listOfBlogsForSpecifiedUser");
-    //return listOfBlogsForSpecifiedUser
     const listOfPostsForBlogs = await this.postsQueryRepository.getListOfPostsByBlogs(listOfBlogsForSpecifiedUser)
+    const listOfAllCommentsForSuchPosts = await this.commentsQueryRepository.getListOfCommentsByPostIds(paginationCriteria, listOfPostsForBlogs)
     console.log(listOfPostsForBlogs , " listOfPostsForBlogs");
+
     return listOfPostsForBlogs
   }
 }
