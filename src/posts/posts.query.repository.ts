@@ -53,11 +53,19 @@ export class PostsQueryRepository {
   }
 
 
-  async getListOfPostsByBlogs(listOfBlogsForSpecifiedUser: string[]) {
+  async getListOfPostsIdsByBlogs(listOfBlogsForSpecifiedUser: string[]) {
     let postIdArray = []
     for (let blogId of listOfBlogsForSpecifiedUser) {
       const posts = await this.postsModel.find({blogId : new ObjectId(blogId)}, {_id : 1})
       postIdArray.push(...posts.map(item => item._id))
+    }
+    return postIdArray
+  }
+  async getListOfPostsByBlogs(listOfBlogsForSpecifiedUser: string[]) {
+    let postIdArray = []
+    for (let blogId of listOfBlogsForSpecifiedUser) {
+      const posts = await this.postsModel.find({blogId : new ObjectId(blogId)}, {_id : 1})
+      postIdArray.push(...posts)
     }
     return postIdArray
   }
