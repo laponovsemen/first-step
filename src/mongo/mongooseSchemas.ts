@@ -79,6 +79,7 @@ export class BloggerBansForSpecificBlog {
 
 @Schema()
 export class APIPost {
+  _id? : ObjectId;
   @Prop()
   title: string; //    maxLength: 30
   @Prop()

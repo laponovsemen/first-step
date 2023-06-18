@@ -147,4 +147,35 @@ export class Common {
       id: Obj2.userId,
       login: Obj2.login}
   }
+
+  mongoPostAndCommentCommentSlicing = (item : APIComment, listOfPostsForBlogs: APIPost[]) =>  {
+    const post  = listOfPostsForBlogs.find(post => post._id.toString() === item.postId.toString())
+    console.log(post , " post mongoPostAndCommentCommentSlicing");
+    console.log(listOfPostsForBlogs, " listOfPostsForBlogs");
+    console.log(item, "item");
+    console.log(post._id.toString() === item.postId.toString(), "post._id.toString() === item.postId.toString()");
+    console.log(post._id.toString(), " post._id.toString()");
+    console.log(item.postId.toString(), " item.postId.toString()");
+    const result = {id: item.id,
+      content: item.content,
+      createdAt: item.createdAt,
+      commentatorInfo:{
+        userId: item.commentatorInfo.userId,
+        userLogin: item.commentatorInfo.userId
+    },
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: "None"
+    },
+      postInfo:{
+        blogId: post.blogId,
+        blogName: post.blogName,
+        title: post.title,
+        id: post._id
+    }
+    }
+    console.log(result, " blyat blyat");
+    return result
+  }
 }
