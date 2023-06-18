@@ -161,7 +161,7 @@ export class Common {
       createdAt: item.createdAt,
       commentatorInfo:{
         userId: item.commentatorInfo.userId,
-        userLogin: item.commentatorInfo.userId
+        userLogin: item.commentatorInfo.userLogin
     },
       likesInfo: {
         likesCount: 0,
