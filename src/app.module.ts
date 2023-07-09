@@ -72,6 +72,7 @@ import { GetAllCommentForUserCommand, GetAllCommentForUserUseCase } from "./blog
 import { PostsQueryRepository } from "./posts/posts.query.repository";
 import { CommentsQueryRepository } from "./comments/comments.query.repository";
 const modules = [AuthModule]
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 const services = [AppService,BlogsService, PostsService, TestingService, UsersService, AuthService,
   LikeService, CommentsService, JwtService, SecurityDevicesService]
@@ -89,11 +90,21 @@ const adapters = [EmailAdapter, Common, BlogIdExistsRule]
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: '127.0.0.1',
+      port: 3306,
+      username: 'root',
+      password: 'root',
+      database: 'test',
+      autoLoadEntities: false,
+      synchronize: false,
+    }),
     CqrsModule,
     JwtModule.register({secret: "123"}),
     ThrottlerModule.forRoot({
     ttl: 10,
-    limit: 5,
+    limit: 500,
     }),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL!),
